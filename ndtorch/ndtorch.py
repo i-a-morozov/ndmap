@@ -1061,14 +1061,14 @@ def clean_point(power:int,
 
     """
     point = point[torch.all(point.isnan().logical_not(), dim=1)]
-    point = torch.stack([candidate for candidate in point if check_point(power, mapping, candidate, knobs, epsilon=epsilon)])
+    point = torch.stack([candidate for candidate in point if check_point(power, function, candidate, *pars, epsilon=epsilon)])
 
     prime = []
     table = []
 
     for candidate in point:
 
-        value = torch.linalg.eigvals(matrix(power, mapping, candidate, knobs))
+        value = torch.linalg.eigvals(matrix(power, function, candidate, *pars))
         value = torch.stack(sorted(value, key=torch.norm))
 
         if not prime:
