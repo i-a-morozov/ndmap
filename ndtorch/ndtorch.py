@@ -15,6 +15,8 @@ from multimethod import multimethod
 from math import factorial
 from math import prod
 
+from functools import partial
+
 from torch import Tensor
 from typing import TypeAlias, Callable, Iterator, Optional
 
@@ -69,6 +71,35 @@ def flatten(array:tuple, *, target:type=tuple) -> Iterator:
             yield from flatten(element, target=target)
     else:
         yield array
+
+
+def curry_apply(function:Callable, table:tuple[int, ...], *pars) -> Callable:
+    """
+    Curry apply.
+    Given f(x, y, ...) and table = map(len, (x, y, ...)) return g(*x, *y, ...) = f(x, y, ...)
+
+    Parameters
+    ----------
+    function: Callable
+        input function
+    table: tuple[int, ...]
+        map(len, (x, y, ...))
+    *pars:
+        passed to input function
+
+    Returns
+    ------
+    curried function
+
+    """
+    def clouser(*args):
+        start = 0
+        vecs = []
+        for length in table:
+            vecs.append(args[start:start+length])
+            start += length
+        return function(*vecs, *pars)
+    return partial(clouser)
 
 
 @multimethod
