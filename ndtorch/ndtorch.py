@@ -9,7 +9,6 @@ Ivan Morozov, 2022-2023
 from __future__ import annotations
 
 import torch
-import functorch
 
 from multimethod import multimethod
 
@@ -17,10 +16,7 @@ from math import factorial
 from math import prod
 
 from torch import Tensor
-from torch import Size
-
 from typing import TypeAlias, Callable, Iterator, Optional
-
 
 Mapping: TypeAlias = Callable
 Point  : TypeAlias = list[Tensor]
@@ -60,7 +56,7 @@ def flatten(array:tuple, *, target:type=tuple) -> Iterator:
     ----------
     array: tuple
         input nested tuple
-    target: type, optional, default=tuple
+    target: type, default=tuple
         target type to flatten
 
     Yields
@@ -80,7 +76,7 @@ def derivative(order:int,
                function:Callable,
                *args,
                intermediate:bool=True,
-               jacobian:Callable=functorch.jacfwd) -> Table | Tensor:
+               jacobian:Callable=torch.func.jacfwd) -> Table | Tensor:
     """
     Compute input function derivatives with respet to the first function argument upto a given order.
 
@@ -100,10 +96,10 @@ def derivative(order:int,
         input function
     *args:
         input function arguments
-    intermediate: bool, optional, default=True
+    intermediate: bool, default=True
         flag to return intermediate derivatives
-    jacobian: Callable, optional, default=functorch.jacfwd
-        functorch.jacfwd or functorch.jacrev
+    jacobian: Callable, default=torch.func.jacfwd
+        torch.func.jacfwd or torch.func.jacrev
 
     Returns
     -------
@@ -134,7 +130,7 @@ def derivative(order:tuple[int, ...],
                function:Callable,
                *args,
                intermediate:bool=True,
-               jacobian:Callable=functorch.jacfwd) -> Table | Tensor:
+               jacobian:Callable=torch.func.jacfwd) -> Table | Tensor:
     """
     Compute input function derivatives with respet to several first function arguments upto corresponding given orders.
 
@@ -154,10 +150,10 @@ def derivative(order:tuple[int, ...],
         input function
     *args:
         input function arguments
-    intermediate: bool, optional, default=True
+    intermediate: bool, default=True
         flag to return intermediate derivatives
-    jacobian: Callable, optional, default=functorch.jacfwd
-        functorch.jacfwd or functorch.jacrev
+    jacobian: Callable, default=torch.func.jacfwd
+        torch.func.jacfwd or torch.func.jacrev
 
     Returns
     -------
@@ -222,7 +218,7 @@ def signature(table:Table, *, factor:bool=False) -> list[tuple[int, ...]] | list
     ----------
     table: Table
         input derivative table representation
-    fator: bool, optional, default=True
+    fator: bool, default=True
         flag to return elements multipliation factors
 
     Returns
@@ -304,7 +300,7 @@ def set(table:Table, index:tuple[int, ...], value:Tensor | Table) -> None:
 
 def apply(table:Table, index:tuple[int, ...], function:Callable) -> None:
     """
-    Apply function.
+    Apply function (modifies element at index).
 
     Note, index can correspond to a bottom element or a subtable
 
@@ -343,9 +339,9 @@ def index(dimension:int,
         monomial dimension (number of variables)
     order: int, non-negative
         derivative order (total monomial degree)
-    dtype: torch.dtype, optional, default=torch.int64
+    dtype: torch.dtype, default=torch.int64
         data type
-    device: torch.device, optional, default=torch.device('cpu')
+    device: torch.device, default=torch.device('cpu')
         data device
 
     Returns
@@ -382,9 +378,9 @@ def index(dimension:tuple[int, ...],
         monomial dimensions
     order: tuple[int, ...], non-negative
         derivative orders (total monomial degrees)
-    dtype: torch.dtype, optional, default=torch.int64
+    dtype: torch.dtype, default=torch.int64
         data type
-    device: torch.device, optional, default=torch.device('cpu')
+    device: torch.device, default=torch.device('cpu')
         data device
 
     Returns
@@ -445,7 +441,7 @@ def series(dimension:tuple[int, ...],
 def series(index:tuple[int, ...],
            function:Callable,
            *args,
-           jacobian:Callable=functorch.jacfwd) -> Series:
+           jacobian:Callable=torch.func.jacfwd) -> Series:
     """
     Generate series representation of a given input function upto a given monomial index.
 
@@ -457,13 +453,13 @@ def series(index:tuple[int, ...],
     Parameters
     ----------
     index: tuple[int, ...], non-negative
-        list of monomial index, (i, j, k, ...)
+        monomial index, (i, j, k, ...)
     function: Callable,
         input function
     *args:
         input function arguments
-    jacobian: Callable, optional, default=functorch.jacfwd
-        functorch.jacfwd or functorch.jacrev
+    jacobian: Callable, default=torch.func.jacfwd
+        torch.func.jacfwd or torch.func.jacrev
 
     Returns
     -------
@@ -477,7 +473,7 @@ def series(index:tuple[int, ...],
 def series(index:list[tuple[int, ...]],
            function:Callable,
            *args,
-           jacobian:Callable=functorch.jacfwd) -> Series:
+           jacobian:Callable=torch.func.jacfwd) -> Series:
     """
     Generate series representation of a given input function for a given set of monomial indices.
 
@@ -494,8 +490,8 @@ def series(index:list[tuple[int, ...]],
         input function
     *args:
         input function arguments
-    jacobian: Callable, optional, default=functorch.jacfwd
-        functorch.jacfwd or functorch.jacrev
+    jacobian: Callable, default=torch.func.jacfwd
+        torch.func.jacfwd or torch.func.jacrev
 
     Returns
     -------
@@ -509,20 +505,20 @@ def series(index:list[tuple[int, ...]],
 
 
 @multimethod
-def series(index:list[tuple[int, ...]], function:Callable, point:Point, *pars, jacobian:Callable=functorch.jacfwd) -> Series:
-    """ (auxiliary) Generate series representation of a given input function for a given set of monomial indices. """
+def series(index:list[tuple[int, ...]], function:Callable, point:Point, *pars, jacobian:Callable=torch.func.jacfwd) -> Series:
+    """ (auxiliary) Generate series representation of a given input function for a given set of monomial indices. """        
     return series(index, function, *torch.cat(point), *pars, jacobian=jacobian)
 
 
 @multimethod
-def series(index:list[tuple[int, ...]], function:Callable, state:State, knobs:Knobs, *pars, jacobian:Callable=functorch.jacfwd) -> Series:
+def series(index:list[tuple[int, ...]], function:Callable, state:State, knobs:Knobs, *pars, jacobian:Callable=torch.func.jacfwd) -> Series:
     """ (auxiliary) Generate series representation of a given input function for a given set of monomial indices. """
     return series(index, function, *state, *torch.cat(knobs), *pars, jacobian=jacobian)
 
 
 def merge(probe:Series, other:Series) -> Series:
     """
-    (series operation) Merge (sum) series.
+    Merge (sum) series.
 
     Parameters
     ----------
@@ -545,13 +541,13 @@ def merge(probe:Series, other:Series) -> Series:
 
 def clean(probe:Series, *, epsilon:float=1.0E-16) -> Series:
     """
-    (series operation) Clean series.
+    Clean series.
 
     Parameters
     ----------
     probe: Series
         input series to clean
-    epsilon: float, optional, non-negative
+    epsilon: float, non-negative
         clean epsilon
 
     Returns
@@ -564,7 +560,7 @@ def clean(probe:Series, *, epsilon:float=1.0E-16) -> Series:
 
 def fetch(probe:Series, index:list[tuple[int, ...]]) -> Series:
     """
-    (series operation) Fetch series.
+    Fetch series.
 
     Parameters
     ----------
@@ -625,13 +621,11 @@ def evaluate(table:Table,
 
 @multimethod
 def evaluate(index:list[int], table:Table, delta:Delta):
-    """ (auxiliary) Evaluate input derivative table representation at a given delta deviation. """
     return sum(evaluate(index + [i], subtable, delta) for i, subtable in enumerate(table))
 
 
 @multimethod
 def evaluate(index:list[int], table:Tensor, delta:Delta):
-    """ (auxiliary) Evaluate input derivative table representation at a given delta deviation. """
     total = 1.0
     for count, order in enumerate(index):
         total *= 1.0/factorial(order)
@@ -659,8 +653,8 @@ def evaluate(series:Series,
         input series representation
     delta: Delta
         delta deviation
-    epsilon: float, optional, non-negative, default=None
-        fast series evaluation
+    epsilon: Optional[float], non-negative, default=None
+        fast series evaluation / tolerance epsilon
 
     Returns
     ----------
@@ -673,7 +667,7 @@ def evaluate(series:Series,
         state = epsilon + state
         index = torch.tensor([*series.keys()], dtype=torch.int64, device=state.device)
         value = torch.stack([*series.values()])
-        return (value.T * (state**index).prod(-1)).sum(-1)
+        return (value.T*(state**index).prod(-1)).sum(-1)
 
     total, *_ = series.values()
     total = torch.zeros_like(total)
@@ -690,7 +684,7 @@ def table(dimension:tuple[int, ...],
           series:Series,
           *,
           epsilon:Optional[float]=None,
-          jacobian:Callable=functorch.jacfwd) -> Table:
+          jacobian:Callable=torch.func.jacfwd) -> Table:
     """
     Generate derivative table representation from a given series representation.
 
@@ -705,10 +699,10 @@ def table(dimension:tuple[int, ...],
         maximum derivative orders
     series: Series
         input series representation
-    epsilon: float, optional, non-negative, default=None
-        fast series evaluation
-    jacobian: Callable, optional, default=functorch.jacfwd
-        functorch.jacfwd or functorch.jacrev
+    epsilon: Optional[float], non-negative, default=None
+        fast series evaluation / tolerance epsilon
+    jacobian: Callable, default=torch.func.jacfwd
+        torch.func.jacfwd or torch.func.jacrev
 
     Returns
     ----------
@@ -728,11 +722,11 @@ def identity(order:tuple[int, ...],
              point:Point,
              *,
              flag:bool=False,
-             jacobian:Callable=functorch.jacfwd) -> Table | Series:
+             jacobian:Callable=torch.func.jacfwd) -> Table | Series:
     """
-    Generate identity derivative table (or identity series).
+    Generate identity derivative table or identity series.
 
-    Note, identity table or series represent identity mapping
+    Note, identity table or series represent an identity mapping
 
     Parameters
     ----------
@@ -740,10 +734,10 @@ def identity(order:tuple[int, ...],
         maximum derivative orders
     point: Point
         evaluation point
-    flag: bool, optional, default=False
+    flag: bool, default=False
         flag to return identity series instead of table
-    jacobian: Callable, optional, default=functorch.jacfwd
-        functorch.jacfwd or functorch.jacrev
+    jacobian: Callable, default=torch.func.jacfwd
+        torch.func.jacfwd or torch.func.jacrev
 
     Returns
     ----------
@@ -766,7 +760,7 @@ def propagate(dimension:tuple[int, ...],
               mapping:Mapping,
               *pars,
               intermediate:bool=True,
-              jacobian:Callable=functorch.jacfwd) -> Table | Tensor:
+              jacobian:Callable=torch.func.jacfwd) -> Table | Tensor:
     """
     Propagate derivative table representation through a given mapping.
 
@@ -784,10 +778,10 @@ def propagate(dimension:tuple[int, ...],
         input mapping
     *pars:
         additional mapping fixed arguments
-    intermediate: bool, optional, default=True
+    intermediate: bool, default=True
         flag to return intermediate derivatives
-    jacobian: Callable, optional, default=functorch.jacfwd
-        functorch.jacfwd or functorch.jacrev
+    jacobian: Callable, default=torch.func.jacfwd
+        torch.func.jacfwd or torch.func.jacrev
 
     Returns
     ----------
@@ -814,7 +808,7 @@ def propagate(dimension:tuple[int, ...],
               mapping:Mapping,
               *pars,
               epsilon:Optional[float]=None,
-              jacobian:Callable=functorch.jacfwd) -> Series:
+              jacobian:Callable=torch.func.jacfwd) -> Series:
     """
     Propagate series representation through a given mapping.
 
@@ -834,12 +828,12 @@ def propagate(dimension:tuple[int, ...],
         input mapping
     *pars:
         additional mapping fixed arguments
-    epsilon: float, optional, non-negative, default=None
-        fast series evaluation
-    intermediate: bool, optional, default=True
+    epsilon: Optional[float], non-negative, default=None
+        fast series evaluation / tolerance epsilon
+    intermediate: bool, default=True
         flag to return intermediate derivatives
-    jacobian: Callable, optional, default=functorch.jacfwd
-        functorch.jacfwd or functorch.jacrev
+    jacobian: Callable, default=torch.func.jacfwd
+        torch.func.jacfwd or torch.func.jacrev
 
     Returns
     ----------
@@ -863,7 +857,7 @@ def newton(function:Mapping,
            *pars,
            solve:Callable=lambda jacobian, value: torch.linalg.pinv(jacobian) @ value,
            roots:Optional[Tensor]=None,
-           jacobian:Callable=functorch.jacfwd) -> Tensor:
+           jacobian:Callable=torch.func.jacfwd) -> Tensor:
     """
     Perform one Newton root search step.
 
@@ -875,12 +869,12 @@ def newton(function:Mapping,
         initial guess
     *pars:
         additional function arguments
-    solve: Callable, optional, default=lambda jacobian, value: torch.linalg.pinv(jacobian) @ value
+    solve: Callable, default=lambda jacobian, value: torch.linalg.pinv(jacobian) @ value
         linear solver
-    roots: Optional[Tensor], optional, default=None
+    roots: Optional[Tensor], default=None
         known roots to avoid
-    jacobian: Callable, optional, default=functorch.jacfwd
-        functorch.jacfwd or functorch.jacrev
+    jacobian: Callable, default=torch.func.jacfwd
+        torch.func.jacfwd or torch.func.jacrev
 
     Returns
     ----------
@@ -903,7 +897,7 @@ def fixed_point(limit:int,
                 epsilon:Optional[float]=None,
                 solve:Callable=lambda jacobian, value: torch.linalg.pinv(jacobian) @ value,
                 roots:Optional[Tensor]=None,
-                jacobian:Callable=functorch.jacfwd) -> Tensor:
+                jacobian:Callable=torch.func.jacfwd) -> Tensor:
     """
     Estimate (dynamical) fixed point.
 
@@ -914,21 +908,21 @@ def fixed_point(limit:int,
     limit: int, positive
         maximum number of newton iterations
     function: Mapping
-        input function
+        input mapping
     guess: Tensor
         initial guess
     *pars:
         additional function arguments
-    power: int, optional, positive, default=1
-        function power
-    epsilon: Optional[float], optional, default=None
+    power: int, positive, default=1
+        function power / fixed point order
+    epsilon: Optional[float], default=None
         tolerance epsilon
-    solve: Callable, optional, default=lambda jacobian, value: torch.linalg.pinv(jacobian) @ value
+    solve: Callable, default=lambda jacobian, value: torch.linalg.pinv(jacobian) @ value
         linear solver
-    roots: Optional[Tensor], optional, default=None
+    roots: Optional[Tensor], default=None
         known roots to avoid
-    jacobian: Callable, optional, default=functorch.jacfwd
-        functorch.jacfwd or functorch.jacrev
+    jacobian: Callable, default=torch.func.jacfwd
+        torch.func.jacfwd or torch.func.jacrev
 
     Returns
     ----------
@@ -971,7 +965,7 @@ def check_point(power:int,
         fixed point candidate
     *pars:
         additional function arguments
-    epsilon: float, optional, default=1.0E-12
+    epsilon: float, default=1.0E-12
         tolerance epsilon
 
     Returns
@@ -997,41 +991,6 @@ def check_point(power:int,
         return False
 
     return not torch.any((torch.stack(points) - point).norm(dim=-1) < epsilon)
-
-
-def matrix(power:int,
-           function:Mapping,
-           point:Tensor,
-           *pars,
-           jacobian:Callable=functorch.jacfwd) -> Tensor:
-    """
-    Compute matrix around a given fixed point.
-
-    Parameters
-    ----------
-    power: int, positive
-        function power / prime period
-    function: Mapping
-        input function
-    point: Tensor
-        fixed point candidate
-    *pars:
-        additional function arguments
-    jacobian: Callable, optional, default=functorch.jacfwd
-        functorch.jacfwd or functorch.jacrev
-
-    Returns
-    ----------
-    matrix (Tensor)
-
-    """
-    def auxiliary(state:Tensor) -> Tensor:
-        local = torch.clone(state)
-        for _ in range(power):
-            local = function(local, *pars)
-        return local
-
-    return derivative(1, auxiliary, point, intermediate=False, jacobian=jacobian)
 
 
 def clean_point(power:int,
@@ -1120,6 +1079,41 @@ def chain_point(power:int,
     return auxiliary(point)
 
 
+def matrix(power:int,
+           function:Mapping,
+           point:Tensor,
+           *pars,
+           jacobian:Callable=torch.func.jacfwd) -> Tensor:
+    """
+    Compute (monodromy) matrix around given fixed point.
+
+    Parameters
+    ----------
+    power: int, positive
+        function power / prime period
+    function: Mapping
+        input function
+    point: Tensor
+        fixed point candidate
+    *pars:
+        additional function arguments
+    jacobian: Callable, default=torch.func.jacfwd
+        torch.func.jacfwd or torch.func.jacrev
+
+    Returns
+    ----------
+    matrix (Tensor)
+
+    """
+    def auxiliary(state:Tensor) -> Tensor:
+        local = torch.clone(state)
+        for _ in range(power):
+            local = function(local, *pars)
+        return local
+
+    return derivative(1, auxiliary, point, intermediate=False, jacobian=jacobian)
+
+
 def parametric_fixed_point(order:tuple[int, ...],
                            state:State,
                            knobs:Knobs,
@@ -1127,7 +1121,7 @@ def parametric_fixed_point(order:tuple[int, ...],
                            *pars,
                            power:int=1,
                            solve:Callable=lambda jacobian, value: torch.linalg.pinv(jacobian) @ value,
-                           jacobian:Callable=functorch.jacfwd) -> Table:
+                           jacobian:Callable=torch.func.jacfwd) -> Table:
     """
     Compute parametric fixed point.
 
@@ -1143,12 +1137,12 @@ def parametric_fixed_point(order:tuple[int, ...],
         input function
     *pars:
         additional function arguments
-    power: int, optional, positive, default=1
+    power: int, positive, default=1
         function power
-    solve: Callable, optional, default=lambda jacobian, value: torch.linalg.pinv(jacobian) @ value
+    solve: Callable, default=lambda jacobian, value: torch.linalg.pinv(jacobian) @ value
         linear solver
-    jacobian: Callable, optional, default=functorch.jacfwd
-        functorch.jacfwd or functorch.jacrev
+    jacobian: Callable, default=torch.func.jacfwd
+        torch.func.jacfwd or torch.func.jacrev
 
     Returns
     ----------
@@ -1161,7 +1155,7 @@ def parametric_fixed_point(order:tuple[int, ...],
             state = function(state, *knobs, *pars)
         return state
 
-    def objective(value:Tensor, shape:Size, index:tuple[int, ...]) -> Tensor:
+    def objective(value:Tensor, shape, index:tuple[int, ...]) -> Tensor:
         value = value.reshape(*shape)
         set(table, index, value)
         local = propagate(dimension, index, table, knobs, auxiliary, intermediate=False, jacobian=jacobian)
@@ -1198,12 +1192,12 @@ class Jet():
     initialize : bool
         flag to initialize identity derivative table, optional, default=True
     point: Optional[Point]
-        evaluation point, optional, default=None
-    jacobian: Callable, optional, default=functorch.jacfwd
-        functorch.jacfwd or functorch.jacrev
-    dtype: torch.dtype, optional, default=torch.float64
+        evaluation point, default=None
+    jacobian: Callable, default=torch.func.jacfwd
+        torch.func.jacfwd or torch.func.jacrev
+    dtype: torch.dtype, default=torch.float64
         data type
-    device: torch.device, optional, default=torch.device('cpu')
+    device: torch.device, default=torch.device('cpu')
         data device
 
     Attributes
@@ -1214,13 +1208,13 @@ class Jet():
         maximum derivative orders
     initialize : bool
         flag to initialize identity derivative table, optional, default=True
-    point: Optional[Point]
-        evaluation point, optional, default=None
-    jacobian: Callable, optional, default=functorch.jacfwd
-        functorch.jacfwd or functorch.jacrev
-    dtype: torch.dtype, optional, default=torch.float64
+    point: Point
+        evaluation point, default=None
+    jacobian: Callable, default=torch.func.jacfwd
+        torch.func.jacfwd or torch.func.jacrev
+    dtype: torch.dtype, default=torch.float64
         data type
-    device: torch.device, optional, default=torch.device('cpu')
+    device: torch.device, default=torch.device('cpu')
         data device
     state: State
         state
@@ -1238,7 +1232,7 @@ class Jet():
 
     Methods
     ----------
-    __init__(self, dimension:tuple[int, ...], order:tuple[int, ...], *, initialize:bool=True, point:Optional[Point]=None, jacobian:Callable=functorch.jacfwd, dtype:torch.dtype=torch.float64, device:torch.device=torch.device('cpu')) -> None
+    __init__(self, dimension:tuple[int, ...], order:tuple[int, ...], *, initialize:bool=True, point:Optional[Point]=None, jacobian:Callable=torch.func.jacfwd, dtype:torch.dtype=torch.float64, device:torch.device=torch.device('cpu')) -> None
         Jet initialization.
     evaluate(self, delta:Delta) -> Tensor
         Evaluate jet derivative table at a given delta deviation.
@@ -1248,11 +1242,11 @@ class Jet():
         Series representation.
     parametetric(self) -> Table
         Get parametric table (first subtable).
-    from_mapping(cls, dimension:tuple[int, ...], order:tuple[int, ...], point:Point, function:Mapping, *args, jacobian:Callable=functorch.jacfwd, dtype:torch.dtype=torch.float64, device:torch.device=torch.device('cpu')) -> Jet
+    from_mapping(cls, dimension:tuple[int, ...], order:tuple[int, ...], point:Point, function:Mapping, *args, jacobian:Callable=torch.func.jacfwd, dtype:torch.dtype=torch.float64, device:torch.device=torch.device('cpu')) -> Jet
         Jet initialization from mapping.
-    from_table(cls, dimension:tuple[int, ...], order:tuple[int, ...], point:Point, table:Table, jacobian:Callable=functorch.jacfwd, dtype:torch.dtype=torch.float64, device:torch.device=torch.device('cpu')) -> Jet
+    from_table(cls, dimension:tuple[int, ...], order:tuple[int, ...], point:Point, table:Table, jacobian:Callable=torch.func.jacfwd, dtype:torch.dtype=torch.float64, device:torch.device=torch.device('cpu')) -> Jet
         Jet initialization from table.
-    from_series(cls, dimension:tuple[int, ...], order:tuple[int, ...], point:Point, series:Series, jacobian:Callable=functorch.jacfwd, dtype:torch.dtype=torch.float64, device:torch.device=torch.device('cpu')) -> Jet
+    from_series(cls, dimension:tuple[int, ...], order:tuple[int, ...], point:Point, series:Series, jacobian:Callable=torch.func.jacfwd, dtype:torch.dtype=torch.float64, device:torch.device=torch.device('cpu')) -> Jet
         Jet initialization from series.
     propagate(self, function:Mapping, *pars) -> Jet
         Propagate jet.
@@ -1286,7 +1280,7 @@ class Jet():
                  *,
                  initialize:bool=True,
                  point:Optional[Point]=None,
-                 jacobian:Callable=functorch.jacfwd,
+                 jacobian:Callable=torch.func.jacfwd,
                  dtype:torch.dtype=torch.float64,
                  device:torch.device=torch.device('cpu')) -> None:
         """
@@ -1301,12 +1295,12 @@ class Jet():
         initialize : bool
             flag to initialize identity derivative table, optional, default=True
         point: Optional[Point]
-            evaluation point, optional, default=None
-        jacobian: Callable, optional, default=functorch.jacfwd
-            functorch.jacfwd or functorch.jacrev
-        dtype: torch.dtype, optional, default=torch.float64
+            evaluation point
+        jacobian: Callable, default=torch.func.jacfwd
+            torch.func.jacfwd or torch.func.jacrev
+        dtype: torch.dtype, default=torch.float64
             data type
-        device: torch.device, optional, default=torch.device('cpu')
+        device: torch.device, default=torch.device('cpu')
             data device
 
         Returns
@@ -1426,7 +1420,7 @@ class Jet():
                      point:Point,
                      function:Mapping,
                      *args,
-                     jacobian:Callable=functorch.jacfwd,
+                     jacobian:Callable=torch.func.jacfwd,
                      dtype:torch.dtype=torch.float64,
                      device:torch.device=torch.device('cpu')) -> Jet:
         """
@@ -1444,11 +1438,11 @@ class Jet():
             input function
         *args:
             additional function arguments
-        jacobian: Callable, optional, default=functorch.jacfwd
-            functorch.jacfwd or functorch.jacrev
-        dtype: torch.dtype, optional, default=torch.float64
+        jacobian: Callable, default=torch.func.jacfwd
+            torch.func.jacfwd or torch.func.jacrev
+        dtype: torch.dtype, default=torch.float64
             data type
-        device: torch.device, optional, default=torch.device('cpu')
+        device: torch.device, default=torch.device('cpu')
             data device
 
         Returns
@@ -1467,7 +1461,7 @@ class Jet():
                    order:tuple[int, ...],
                    point:Point,
                    table:Table,
-                   jacobian:Callable=functorch.jacfwd,
+                   jacobian:Callable=torch.func.jacfwd,
                    dtype:torch.dtype=torch.float64,
                    device:torch.device=torch.device('cpu')) -> Jet:
         """
@@ -1483,11 +1477,11 @@ class Jet():
             evaluation point
         table: Table
             input (derivative) table
-        jacobian: Callable, optional, default=functorch.jacfwd
-            functorch.jacfwd or functorch.jacrev
-        dtype: torch.dtype, optional, default=torch.float64
+        jacobian: Callable, default=torch.func.jacfwd
+            torch.func.jacfwd or torch.func.jacrev
+        dtype: torch.dtype, default=torch.float64
             data type
-        device: torch.device, optional, default=torch.device('cpu')
+        device: torch.device, default=torch.device('cpu')
             data device
 
         Returns
@@ -1506,7 +1500,7 @@ class Jet():
                     order:tuple[int, ...],
                     point:Point,
                     series:Series,
-                    jacobian:Callable=functorch.jacfwd,
+                    jacobian:Callable=torch.func.jacfwd,
                     dtype:torch.dtype=torch.float64,
                     device:torch.device=torch.device('cpu')) -> Jet:
         """
@@ -1522,11 +1516,11 @@ class Jet():
             evaluation point
         series: Series
             input series
-        jacobian: Callable, optional, default=functorch.jacfwd
-            functorch.jacfwd or functorch.jacrev
-        dtype: torch.dtype, optional, default=torch.float64
+        jacobian: Callable, default=torch.func.jacfwd
+            torch.func.jacfwd or torch.func.jacrev
+        dtype: torch.dtype, default=torch.float64
             data type
-        device: torch.device, optional, default=torch.device('cpu')
+        device: torch.device, default=torch.device('cpu')
             data device
 
         Returns
@@ -1754,48 +1748,52 @@ class Jet():
         """
         return f'Jet({self.dimension}, {self.order})'
 
-about = """
-# ndtorch is a collection of tools for computation of higher order derivatives (including all intermediate derivatives) with applications in nonlinear dynamics (accelerator physics)
 
-# Derivatives of f(x, y, ...) with respect to several tensor arguments x, y, ... and corresponding derivative orders n, m, ...
+__about__ = """
+# ndtorch is a collection of tools for computation of higher order derivatives (including all intermediate derivatives) with some applications in nonlinear dynamics (accelerator physics)
+
+# Compute derivatives of f(x, y, ...) with respect to several tensor arguments x, y, ... and corresponding derivative orders n, m, ...
 # Input function f(x, y, ...) is expected to return a tensor or a (nested) list of tensors
 
-# Derivatives and Taylor approximation of f(x, y, ...) with respect to scalar and/or vector tensor arguments x, y, ... and corresponding derivative orders n, m, ...
-# Evaluation of Taylor approximation at a given deviation point
-# Input function f(x, y, ...) is expected to return a scalar or vector tensor
+# Compute derivatives and Taylor approximation of f(x, y, ...) with respect to scalar and/or vector tensor arguments x, y, ... and corresponding derivative orders n, m, ...
+# Evaluation of Taylor approximation at a given deviation point dx, dy, ...
+# Input function f(x, y, ...) is expected to return a scalar or vector tensor (not a list)
 
-# Derivatives are computed by nesting functorch jacobian function
+# Derivatives are computed by nesting torch.func jacobian functions (forward or reverse jacobians can be used)
 # Higher order derivatives with respect to several arguments can be computed using different orders for each argument
 # Derivatives can be used as a surrogate model for a given function with a vector tensor output (Taylor series approximation and evaluation)
-# Tools for fixed point computation are avaliable for mappings, including (parametric) derivatives
-# Mapping is a function f(x, y, ...) that returns a tensor with the same shape as its first argument x (assumed to be a vector)
+
+# Tools for fixed point computation are avaliable for mappings, including (parametric) derivatives of a selected fixed point
+# Mapping is a function f(x, y, ...): R^n R^m ... -> R^n that returns a tensor with the same shape as its first argument x (assumed to be a vector)
 # The first argument is referred as state, other arguments used for computation of derivatives are collectively referred as knobs
 # State and each knob are assumed to be vector-like tensors
 
-# Given a function f(x) with a single tensor argument x that returns a tensor or a (nested) list of tensors f(x)
+# Given a function f(x) with a single tensor argument x that returns a tensor or a (nested) list of tensors
 # Derivatives with respect to x can be computed upto a given order
 # By default, all intermediate derivatives are returned, but it is possible to return only the highest order derivative
 
-# Derivatives are computed by nesting functorch jacobian function (forward or reverse jacobians can be used)
+# Derivatives are computed by nesting torch.func jacobian functions (forward or reverse jacobians can be used)
 # Nesting of jacobian generates redundant computations starting from the second order for functions with non-scalar arguments
 # Identical partial derivatives are recomputed several times
 # Hence, computation overhead is exponentially increasing for higher orders
 
 # Note, there is no redundant computations in the case of the first order derivatives
 # Redundancy can be avoided if function argument is treated as separate scalar tensors or vector tensors with one component
+# f(x, y, ...) -> f(x1, x2, ..., xn, y1, y2, ..., ym, ...)
 
 # If an input function returns a tensor, then its derivatives are f(x), Dx f(x), Dxx f(x), ... (value, jacobian, hessian, ...)
-# Note, function value is treated as zeros order derivative
+# Note, function value itself is treated as zeros order derivative
 # If returned value is a scalar tensor, jacobian is a vector (gradient) and hessian is a matrix
 # Given the derivatives, the input function Taylor approximation at evaluation point can be constructed
 # f(x + dx) = 1/0! * f(x) + 1/1! * Dx f(x) @ dx + 1/2! * Dxx f(x) @ dx @ dx + ...
-# A list t(f, x) = [f(x), Dx f(x), Dxx f(x), ...] is called a derivative table, x is an evaluation point, dx is a deviation from x
-# Derivative order can be deduced for table structure, table length in the case of a single tensor argument
-# Note, function to evaluate derivative table is avaliable for input functions with scalar or vector tensor output
+# A list t(f, x) = [f(x), Dx f(x), Dxx f(x), ...] is called a derivative table, x is an evaluation point, dx is a deviation from evaluation point x
+# Derivative order can be deduced from table structure and is equal to table length in the case of a single tensor argument
+# Note, function to evaluate derivative table is avaliable only for input functions with scalar or vector tensor output
+# This fuction is also arbitrary differentiable
 
 # Table representation is redundant in general, instead the result can be represented by series, collection of monomial coefficients
-# c(n1, n2, ...) * x1^n1 * x2^n2 * ... ~ (n1, n2, ...): c(n1, n2, ...), tuple (n1, n2, ...) is called a monomial index
-# Series representaion can be computed from a given table representation, table can be also computed from given series
+# c(n1, n2, ...) * dx1^n1 * dx2^n2 * ... ~ (n1, n2, ...): c(n1, n2, ...), tuple (n1, n2, ...) is called a monomial index
+# Series representaion can be computed from a given table representation, table can be also computed from a given series representation
 # Both table and series representations can be evaluated for a given deviation dx
 # Both table or series can be used to approximate original function (surrogate model)
 # Note, input function is assumed to return a vector tensor for series representation
@@ -1805,7 +1803,7 @@ about = """
 # Derivative table has a nested structure in the case with several tensor arguments
 # Combined monomial x1^n1 * x2^n2 * ... * y1^m1 * y2^m2 * ... * z1^k1 * z2^k2 * ... is used in series representation
 # Again, for series representation, input function is assumed to return a vector
-# Note, the order of derivatives is Dx...xy...yz...z = Dx...x Dy...y Dz...z f
+# Note, the ordering of derivatives is Dx...xy...yz...z = (Dx...x (Dy...y (Dz...z f)))
 # Derivatives are computed starting from the last argument
 # Derivative table structure for f(x), f(x, y) and f(x, y, z) is shown below
 # Similar structure holds for the case with more arguments
@@ -1847,8 +1845,8 @@ about = """
 #     ...
 # ]
 
-# Each tensor at the bottom level is associated with a signature, e.g. Dxxyzz f = Dxx Dy Dzz f ~ (2, 1, 2)
-# Signature is a tuple of corresponding orders
+# Each tensor at the bottom level of a derivative table is associated with a signature, e.g. Dxxyzz f = Dxx Dy Dzz f ~ (2, 1, 2)
+# Signature is a tuple of corresponding orders (not the same as monomial index)
 # Bottom table elements signatures can be computed with signature function
 # Given a bottom element signature, it can be extracted or assigned a new value
 # Note, subtables can also be extracted and modified
@@ -1867,12 +1865,12 @@ about = """
 # Note, for composition/propagation functions are expected to have identical signatures (state, *knobs, ...), fixed parameters can be different
 
 # Given a mapping h = g(f(x, y, z, ...), y, z, ...), table t(h, x, y, z, ...) is equivalent to composition of tables t(f, x, y, z, ...) and t(g, x, y, z, ...)
-# If mappings f and g have no constant terms
+# If mappings f and g have no constant terms (map zero to zero)
 # This is a homomorphism property of truncated polynomials composition without constant terms
 
 # Given a mapping f(x, y, z, ...), its (dynamical) fixed points of given period can be computed, x(n) := f^n(x(n), y, z, ...)
 # Note, such fixed points might not exist for a general mapping
-# Fixed points are computed with newton method as roots of F = x - f^n(x, y, z, ...) = 0
+# Fixed points are computed with newton method as roots of F = x(n) - f^n(x(n), y, z, ...) = 0
 
 # Fixed points can depend of parameters/knobs (y, z, ...)
 # Parametric fixed point can computed for given dynamical fixed point, i.e. derivatives of a fixed point with respect to parameters
@@ -1885,7 +1883,7 @@ about = """
 """
 
 def main():
-    print(about)
+    print(__about__)
 
 if __name__ == '__main__':
     main()
