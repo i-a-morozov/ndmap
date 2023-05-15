@@ -6,7 +6,8 @@ Ivan Morozov, 2022-2023
 """
 from __future__ import annotations
 
-import numpy
+from math import pi
+
 import torch
 
 from torch import Tensor
@@ -269,7 +270,7 @@ def twiss(m:Tensor,
         o = torch.clone(l[i].log()).imag.argsort()
         l[i], v[i] = l[i, o], v[i, o]
 
-    t = 1.0 - l.log().abs().mean(-1)/(2.0*numpy.pi)
+    t = 1.0 - l.log().abs().mean(-1)/(2.0*pi)
 
     n = torch.cat([*v]).H
     n = (n @ m_c).real
@@ -290,7 +291,7 @@ def twiss(m:Tensor,
     n = (n @ m_c).real
 
     i = torch.arange(d, dtype=torch.int64, device=device)
-    a = (n[2*i, 2*i + 1] + 1j*n[2*i, 2*i]).angle() - 0.5*numpy.pi
+    a = (n[2*i, 2*i + 1] + 1j*n[2*i, 2*i]).angle() - 0.5*pi
     n = n @ rotation(*a)
 
     w = n @ m_p @ n.T
@@ -345,7 +346,7 @@ def advance(normal:Tensor,
     """
     index = torch.arange(len(normal) // 2, dtype=torch.int64, device=normal.device)
     local = transport @ normal
-    alpha = mod(torch.arctan2(local[2*index, 2*index + 1], local[2*index, 2*index]), 2.0*numpy.pi)
+    alpha = mod(torch.arctan2(local[2*index, 2*index + 1], local[2*index, 2*index]), 2.0*pi)
     return alpha, local @ rotation(*(-alpha))
 
 
