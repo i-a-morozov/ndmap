@@ -1,34 +1,54 @@
 """
-Coupled twiss parameters computation.
+Twiss
+-----
+
+Compute coupled twiss parameters computation
 
 Ivan Morozov, 2022-2023
 
 """
 from __future__ import annotations
 
-from math import pi
-
 import torch
+
+from math import pi
 
 from torch import Tensor
 
-def mod(x:float | Tensor,
-        y:float | Tensor,
-        z:float | Tensor=0.0) -> float | Tensor:
-    """
-    Return the remainder on division of x by y with offset z.
+from typing import Union
 
-    Note, float value is returned
+def mod(x:Union[int, float, Tensor],
+        y:Union[int, float, Tensor],
+        z:Union[int, float, Tensor]=0.0) -> Union[float, Tensor]:
+    """
+    Return the remainder on division of x by y with offset z
+
+    Parameters
+    ----------
+    x: Union[int, float, Tensor]
+        numerator
+    y: Union[int, float, Tensor]
+        denominator
+    z: Union[int, float, Tensor], default=0.0
+        offset
+
+    Returns
+    -------
+        Union[float, Tensor]
+
+    Note
+    ----
+    ``float`` value is returned for ``int`` input
 
     """
     return x - ((x - z) - (x - z) % y)
 
 
-def block_symplectic(*,
-                     dtype:torch.dtype=torch.float64,
+def block_symplectic(*, 
+                     dtype:torch.dtype=torch.float64, 
                      device:torch.device=torch.device('cpu')) -> Tensor:
     """
-    Generate 2D symplectic block [[0, 1], [-1, 0]] matrix.
+    Generate 2D symplectic block [[0, 1], [-1, 0]] matrix
 
     Parameters
     ----------
@@ -39,42 +59,34 @@ def block_symplectic(*,
 
     Returns
     -------
-    symplectic block (Tensor)
+    Tensor
 
     """
     return torch.tensor([[0, 1], [-1, 0]], dtype=dtype, device=device)
 
 
-def block_rotation(alpha:Tensor) -> Tensor:
+def block_rotation(angle:Tensor) -> Tensor:
     """
-    Generate 2D rotation block [[cos(alpha), sin(alpha)], [-sin(alpha), cos(alpha)]] matrix.
+    Generate 2D rotation block [[cos(angle), sin(angle)], [-sin(angle), cos(angle)]] matrix
 
     Parameters
     ----------
-    alpha: Tensor
+    angle: Tensor
         rotation angle
 
     Returns
     -------
-    rotation block (Tensor)
+    Tensor
 
     """
-    return torch.stack(
-        [
-            torch.stack([+alpha.cos(), +alpha.sin()]),
-            torch.stack([-alpha.sin(), +alpha.cos()])
-        ]
-    )
+    return torch.stack([torch.stack([+angle.cos(), +angle.sin()]), torch.stack([-angle.sin(), +angle.cos()])])
 
 
-def id_symplectic(d:int,
-                  *,
+def id_symplectic(d:int, *,
                   dtype:torch.dtype=torch.float64,
                   device:torch.device=torch.device('cpu')) -> Tensor:
     """
-    Generate symplectic identity matrix for a given (configuration space) dimension.
-
-    Note, symplectic block is [[0, 1], [-1, 0]], i.e. canonical variables are grouped by pairs
+    Generate symplectic identity matrix for a given (configuration space) dimension
 
     Parameters
     ----------
@@ -87,21 +99,21 @@ def id_symplectic(d:int,
 
     Returns
     -------
-    symplectic identity matrix (torch.Tensor)
+    Tensor
+    
+    Note
+    ----
+    Symplectic block is [[0, 1], [-1, 0]], i.e. canonical variables are grouped by pairs
 
     """
     block = block_symplectic(dtype=dtype, device=device)
     return torch.block_diag(*[block for _ in range(d)])
 
 
-def is_symplectic(m:Tensor,
-                  *,
+def is_symplectic(m:Tensor, *,
                   epsilon:float=1.0E-12) -> Tensor:
     """
-    Test symplectic condition for a given input matrix elementwise.
-
-    Can be mapped over a batch of matrices
-    (k, 2*n, 2*n) -> (k)
+    Test symplectic condition for a given input matrix elementwise
 
     Parameters
     ----------
@@ -112,7 +124,7 @@ def is_symplectic(m:Tensor,
 
     Returns
     -------
-    test result (Tensor)
+    Tensor
 
     """
     d = len(m) // 2
@@ -122,10 +134,7 @@ def is_symplectic(m:Tensor,
 
 def to_symplectic(m:Tensor) -> Tensor:
     """
-    Perform symplectification of a given input matrix.
-
-    Can be mapped over a batch of matrices
-    (k, 2*n, 2*n) -> (k)
+    Perform symplectification of a given input matrix
 
     Parameters
     ----------
@@ -134,7 +143,7 @@ def to_symplectic(m:Tensor) -> Tensor:
 
     Returns
     -------
-    symplectified matrix (Tensor)
+    Tensor
 
     """
     d = len(m) // 2
@@ -147,10 +156,7 @@ def to_symplectic(m:Tensor) -> Tensor:
 
 def inverse_symplectic(m:Tensor) -> Tensor:
     """
-    Compute inverse of a given input symplectic matrix.
-
-    Can be mapped over a batch of matrices
-    (k, 2*n, 2*n) -> (k)
+    Compute inverse of a given input symplectic matrix
 
     Parameters
     ----------
@@ -159,7 +165,7 @@ def inverse_symplectic(m:Tensor) -> Tensor:
 
     Returns
     -------
-    inverse matrix (Tensor)
+    Tensor
 
     """
     d = len(m) // 2
@@ -167,36 +173,31 @@ def inverse_symplectic(m:Tensor) -> Tensor:
     return -s @ m.T @ s
 
 
-def rotation(*angle:tuple[Tensor, ...]) -> Tensor:
+def rotation(*angles:tuple[Tensor, ...]) -> Tensor:
     """
     Generate rotation matrix using given angles.
 
-    Note, block rotation is [[cos(alpha), sin(alpha)], [-sin(alpha), cos(alpha)]]
-
-    Can be mapped over a batch of angles
-    (k, n, ...) -> (k, 2*n, 2*n)
-
     Parameters
     ----------
-    angle: tuple[Tensor, ...]
+    angles: tuple[Tensor, ...]
         rotation angles
 
     Returns
     -------
-    rotation matrix (Tensor)
+    Tensor
+
+    Note
+    ----
+    Block rotation is [[cos(angle), sin(angle)], [-sin(angle), cos(angle)]]
 
     """
-    return torch.block_diag(*torch.func.vmap(block_rotation)(torch.stack(angle)))
+    return torch.block_diag(*torch.func.vmap(block_rotation)(torch.stack(angles)))
 
 
-def check(m:Tensor,
-          *,
-          epsilon:float=1.0E-12) -> Tensor:
+def check(m:Tensor, *,
+          epsilon:float=1.0E-12) -> bool:
     """
-    Check one-turn matrix stability.
-
-    Can be mapped over a batch of matrices
-    (k, 2*n, 2*n) -> (k)
+    Check one-turn matrix stability
 
     Parameters
     ----------
@@ -207,20 +208,17 @@ def check(m:Tensor,
 
     Returns
     -------
-    check result (Tensor)
+    bool
 
     """
     l = torch.linalg.eigvals(m).log()
-    return ((l.real.abs() < epsilon)*(l.imag.abs() > epsilon)).sum() == len(l)
+    return bool(((l.real.abs() < epsilon)*(l.imag.abs() > epsilon)).sum() == len(l))
 
 
-def twiss(m:Tensor,
-          *,
+def twiss(m:Tensor, *,
           epsilon:float=1.0E-12) -> tuple[Tensor, Tensor, Tensor]:
     """
-    Compute fractional tunes, normalization matrix and Wolski twiss matrices for a given one-turn input matrix.
-
-    Note, matrix stability is not checked
+    Compute fractional tunes, normalization matrix and Wolski coupled twiss matrices for a given one-turn input matrix
 
     Input matrix can have arbitrary even dimension
     In-plane 'beta' values are used for ordering
@@ -228,21 +226,20 @@ def twiss(m:Tensor,
     Symplectic block is [[0, 1], [-1, 0]], i.e. canonical variables are grouped by pairs
     Rotation block is [[cos(alpha), sin(alpha)], [-sin(alpha), cos(alpha)]]
     Complex block is 1/sqrt(2)*[[1, 1j], [1, -1j]]
-
-    Can be mapped over a batch of matrices
-    (k, 2*n, 2*n) -> ((k, n), (k, 2*n, 2*n), (k, n, 2*n, 2*n))
+    Input matrix stability is not checked
 
     Parameters
     ----------
     m: Tensor, even-dimension, symplectic, stable
-        input (stable) one-turn matrix
+        input one-turn matrix
     epsilon: float, default=1.0E-12
         tolerance epsilon
 
     Returns
     -------
-    fractional tunes [T_1, ..., T_K], normalization matrix N and Wolski twiss matrices W = [W_1, ..., W_K] (tuple[Tensor, Tensor, Tensor])
-    M = N R N^-1 = ... + W_I S sin(2*pi*T_I) - (W_I S)**2 cos(2*pi*T_I) + ... for I = 1, ..., K
+    tuple[Tensor, Tensor, Tensor]
+        fractional tunes [T_1, ..., T_K], normalization matrix N and Wolski twiss matrices W = [W_1, ..., W_K]
+        M = N R N^-1 = ... + W_I S sin(2*pi*T_I) - (W_I S)**2 cos(2*pi*T_I) + ... for I = 1, ..., K
 
     """
     dtype = m.dtype
@@ -302,10 +299,7 @@ def twiss(m:Tensor,
 def propagate(twiss:Tensor,
               transport:Tensor) -> Tensor:
     """
-    Propagate Wolski twiss matrices throught a given transport matrix.
-
-    Can be mapped over a batch of twiss matrices and transport matrices
-    ((k, n, 2*n, 2*n), (k, 2*n, 2*n)) -> (k, n, 2*n, 2*n)
+    Propagate Wolski twiss matrices throught a given transport matrix
 
     Parameters
     ----------
@@ -316,7 +310,7 @@ def propagate(twiss:Tensor,
 
     Returns
     -------
-    propagated Wolski twiss matrices (Tensor)
+    Tensor
 
     """
     return transport @ twiss @ transport.T
@@ -325,12 +319,7 @@ def propagate(twiss:Tensor,
 def advance(normal:Tensor,
             transport:Tensor) -> tuple[Tensor, Tensor]:
     """
-    Compute phase advance and final normalization matrix for a given normalization matrix and a given transport matrix.
-
-    Note, output phase advance is mod 2 pi
-
-    Can be mapped over a batch of normalization matrices and transport matrices
-    ((k, 2*n, 2*n), (k, 2*n, 2*n)) -> ((k, n), (k, 2*n, 2*n))
+    Compute phase advance and final normalization matrix for a given normalization matrix and a given transport matrix
 
     Parameters
     ----------
@@ -341,7 +330,12 @@ def advance(normal:Tensor,
 
     Returns
     -------
-    phase advance and final normalization matrix (tuple[Tensor, Tensor])
+    tuple[Tensor, Tensor]
+        phase advance and final normalization matrix
+    
+    Note
+    ----
+    Output phase advance is mod 2 pi
 
     """
     index = torch.arange(len(normal) // 2, dtype=torch.int64, device=normal.device)
@@ -352,10 +346,7 @@ def advance(normal:Tensor,
 
 def normal_to_wolski(normal:Tensor) -> Tensor:
     """
-    Compute Wolski twiss matrices for a given normalization matrix.
-
-    Can be mapped over a batch of normalization matrices
-    (k, 2*n, 2*n) -> (k, n, 2*n, 2*n)
+    Compute Wolski twiss matrices for a given normalization matrix
 
     Parameters
     ----------
@@ -364,7 +355,7 @@ def normal_to_wolski(normal:Tensor) -> Tensor:
 
     Returns
     -------
-    Wolski twiss matrices (Tensor)
+    Tensor
 
     """
     d = len(normal) // 2
@@ -373,16 +364,10 @@ def normal_to_wolski(normal:Tensor) -> Tensor:
     return normal @ p @ normal.T
 
 
-def wolski_to_normal(wolski:Tensor,
-                     *,
+def wolski_to_normal(wolski:Tensor, *,
                      epsilon:float=1.0E-12) -> Tensor:
     """
-    Compute normalization matrix for given Wolski twiss matrices.
-
-    Note, normalization matrix is computed using fake one-turn matrix with fixed tunes
-
-    Can be mapped over a batch of Wolski twiss matrices
-    (k, n, 2*n, 2*n) -> (k, 2*n, 2*n)
+    Compute normalization matrix for given Wolski twiss matrices
 
     Parameters
     ----------
@@ -393,7 +378,11 @@ def wolski_to_normal(wolski:Tensor,
 
     Returns
     -------
-    normalization matrix (Tensor)
+    Tensor
+    
+    Note
+    ----
+    Normalization matrix is computed using fake one-turn matrix with fixed tunes
 
     """
     d = len(wolski)
@@ -415,18 +404,7 @@ def wolski_to_normal(wolski:Tensor,
 
 def parametric_normal(twiss:Tensor) -> Tensor:
     """
-    Generate 'parametric' 4x4 normalization matrix for given free elements.
-
-    Note, elements denoted with X are computed for given free elements using symplectic condition constraints
-    For n11 > 0 & n33 > 0, all matrix elements are not singular in uncoupled limit
-
-        n11   0 n13 n14
-        n21   X   X   X
-        n31   X n33   0
-        n41   X n43   X
-
-    Can be mapped over a batch of input free elements
-    (k, m) -> (k, 2*n, 2*n)
+    Generate 'parametric' 4x4 normalization matrix for given free elements
 
     Parameters
     ----------
@@ -436,8 +414,19 @@ def parametric_normal(twiss:Tensor) -> Tensor:
 
     Returns
     -------
-    normalization matrix (Tensor)
-    M = N R N^-1
+    Tensor
+        normalization matrix N, M = N R N^-1
+
+    Note
+    ----
+    
+    Elements denoted with X are computed for given free elements using symplectic condition constraints
+    For n11 > 0 & n33 > 0, all matrix elements are not singular in uncoupled limit
+
+        n11   0 n13 n14
+        n21   X   X   X
+        n31   X n33   0
+        n41   X n43   X
 
     """
     n11, n33, n21, n43, n13, n31, n14, n41 = twiss
@@ -453,17 +442,10 @@ def parametric_normal(twiss:Tensor) -> Tensor:
     ])
 
 
-def lb_normal(twiss:Tensor,
-              *,
+def lb_normal(twiss:Tensor, *,
               epsilon:float=1.0E-12) -> Tensor:
     """
-    Generate Lebedev-Bogacz normalization matrix.
-
-    [a1x, b1x, a2x, b2x, a1y, b1y, a2y, b2y, u, v1, v2]
-    [a1x, b1x, a2y, b2y] are 'in-plane' twiss parameters
-
-    Can be mapped over a batch of input twiss parameters
-    (k, m) -> (k, 2*n, 2*n)
+    Generate Lebedev-Bogacz normalization matrix
 
     Parameters
     ----------
@@ -475,8 +457,13 @@ def lb_normal(twiss:Tensor,
 
     Returns
     -------
-    normalization matrix (Tensor)
-    M = N R N^-1
+    Tensor
+        normalization matrix N, M = N R N^-1
+        
+    Note
+    ----
+    [a1x, b1x, a2x, b2x, a1y, b1y, a2y, b2y, u, v1, v2] are LB twiss parameters
+    [a1x, b1x, a2y, b2y] are 'in-plane' twiss parameters
 
     """
     a1x, b1x, a2x, b2x, a1y, b1y, a2y, b2y, u, v1, v2 = twiss
@@ -500,16 +487,10 @@ def lb_normal(twiss:Tensor,
     ]).nan_to_num(posinf=0.0, neginf=0.0)
 
 
-def cs_normal(twiss:Tensor,
-              *,
+def cs_normal(twiss:Tensor, *,
               epsilon:float=1.0E-12) -> Tensor:
     """
-    Generate Courant-Snyder normalization matrix.
-
-    [ax, bx, ay, by]
-
-    Can be mapped over a batch of input twiss parameters
-    (k, m) -> (k, 2*n, 2*n)
+    Generate Courant-Snyder normalization matrix
 
     Parameters
     ----------
@@ -521,8 +502,12 @@ def cs_normal(twiss:Tensor,
 
     Returns
     -------
-    normalization matrix (Tensor)
-    M = N R N^-1
+    Tensor
+        normalization matrix N, M = N R N^-1
+
+    Note
+    -----
+    [ax, bx, ay, by] are CS twiss parameters
 
     """
     ax, bx, ay, by = twiss
@@ -543,13 +528,7 @@ def cs_normal(twiss:Tensor,
 
 def wolski_to_lb(twiss:Tensor) -> Tensor:
     """
-    Convert Wolski twiss matrices to Lebedev-Bogacz twiss parameters.
-
-    [a1x, b1x, a2x, b2x, a1y, b1y, a2y, b2y, u, v1, v2]
-    [a1x, b1x, a2y, b2y] are 'in-plane' twiss parameters
-
-    Can be mapped over a batch of input twiss parameters
-    (k, n, 2*n, 2*n) -> (k, m)
+    Convert Wolski twiss matrices to Lebedev-Bogacz twiss parameters
 
     Parameters
     ----------
@@ -558,7 +537,12 @@ def wolski_to_lb(twiss:Tensor) -> Tensor:
 
     Returns
     -------
-    Lebedev-Bogacz twiss (Tensor)
+    Tensor
+
+    Note
+    ----
+    [a1x, b1x, a2x, b2x, a1y, b1y, a2y, b2y, u, v1, v2] are LB twiss parameters
+    [a1x, b1x, a2y, b2y] are 'in-plane' twiss parameters
 
     """
     a1x = -twiss[0, 0, 1]
@@ -585,14 +569,10 @@ def wolski_to_lb(twiss:Tensor) -> Tensor:
     return torch.stack([a1x, b1x, a2x, b2x, a1y, b1y, a2y, b2y, u, v1, v2])
 
 
-def lb_to_wolski(twiss:Tensor,
-                 *,
+def lb_to_wolski(twiss:Tensor, *,
                  epsilon:float=1.0E-12) -> Tensor:
     """
     Convert Lebedev-Bogacz twiss parameters to Wolski twiss matrices.
-
-    Can be mapped over a batch of input twiss parameters
-    (k, m) -> (k, n, 2*n, 2*n)
 
     Parameters
     ----------
@@ -604,7 +584,12 @@ def lb_to_wolski(twiss:Tensor,
 
     Returns
     -------
-    Wolski twiss matrices (Tensor)
+    Tensor
+
+    Note
+    ----
+    [a1x, b1x, a2x, b2x, a1y, b1y, a2y, b2y, u, v1, v2] are LB twiss parameters
+    [a1x, b1x, a2y, b2y] are 'in-plane' twiss parameters
 
     """
     normal = lb_normal(twiss, epsilon=epsilon)
@@ -620,12 +605,7 @@ def lb_to_wolski(twiss:Tensor,
 
 def wolski_to_cs(twiss:Tensor) -> Tensor:
     """
-    Convert Wolski twiss matrices to Courant-Snyder twiss parameters.
-
-    [ax, bx, ay, by]
-
-    Can be mapped over a batch of input twiss parameters
-    (k, n, 2*n, 2*n) -> (k, m)
+    Convert Wolski twiss matrices to Courant-Snyder twiss parameters
 
     Parameters
     ----------
@@ -634,7 +614,11 @@ def wolski_to_cs(twiss:Tensor) -> Tensor:
 
     Returns
     -------
-    Courant-Snyder twiss (Tensor)
+    Tensor
+
+    Note
+    -----
+    [ax, bx, ay, by] are CS twiss parameters
 
     """
     ax = -twiss[0, 0, 1]
@@ -646,14 +630,10 @@ def wolski_to_cs(twiss:Tensor) -> Tensor:
     return torch.stack([ax, bx, ay, by])
 
 
-def cs_to_wolski(twiss:Tensor,
-                 *,
+def cs_to_wolski(twiss:Tensor, *,
                  epsilon:float=1.0E-12) -> Tensor:
     """
-    Convert Courant-Snyder twiss parameters to Wolski twiss matrices.
-
-    Can be mapped over a batch of input twiss parameters
-    (k, m) -> (k, n, 2*n, 2*n)
+    Convert Courant-Snyder twiss parameters to Wolski twiss matrices
 
     Parameters
     ----------
@@ -665,7 +645,11 @@ def cs_to_wolski(twiss:Tensor,
 
     Returns
     -------
-    Wolski twiss matrices (Tensor)
+    Tensor
+
+    Note
+    -----
+    [ax, bx, ay, by] are CS twiss parameters
 
     """
     normal = cs_normal(twiss, epsilon=epsilon)
@@ -683,10 +667,7 @@ def transport(n1:Tensor,
               n2:Tensor,
               *mu12:tuple[Tensor, ...]) -> Tensor:
     """
-    Generate transport matrix using normalization matrices and phase advances between given locations.
-
-    Can be mapped over a batch of input parameters
-    ((k, 2*n, 2*n), (k, 2*n, 2*n), k, k, ...) -> (k, 2*n, 2*n)
+    Generate transport matrix using normalization matrices and phase advances between given locations
 
     Parameters
     ----------
@@ -699,7 +680,7 @@ def transport(n1:Tensor,
 
     Returns
     -------
-    transport matrix (Tensor)
+    Tensor
 
     """
     return n2 @ rotation(*mu12) @ n1.inverse()
@@ -710,9 +691,7 @@ def lb_transport(twiss1:Tensor,
                  *mu12:tuple[Tensor, ...],
                  epsilon:float=1.0E-12) -> Tensor:
     """
-    Generate transport matrix using LB twiss data between given locations.
-
-    Can be mapped over a batch of input parameters
+    Generate transport matrix using LB twiss data between given locations
 
     Parameters
     ----------
@@ -727,7 +706,7 @@ def lb_transport(twiss1:Tensor,
 
     Returns
     -------
-    transport matrix (Tensor)
+    Tensor
 
     """
     n1 = lb_normal(twiss1)
@@ -740,9 +719,7 @@ def cs_transport(twiss1:Tensor,
                  *mu12:tuple[Tensor, ...],
                  epsilon:float=1.0E-12) -> Tensor:
     """
-    Generate transport matrix using CS twiss data between given locations.
-
-    Can be mapped over a batch of input parameters
+    Generate transport matrix using CS twiss data between given locations
 
     Parameters
     ----------
@@ -757,7 +734,7 @@ def cs_transport(twiss1:Tensor,
 
     Returns
     -------
-    transport matrix (Tensor)
+    Tensor
 
     """
     n1 = cs_normal(twiss1)
@@ -768,11 +745,7 @@ def cs_transport(twiss1:Tensor,
 def invariant(normal:Tensor,
               orbit:Tensor) -> Tensor:
     """
-    Compute linear invariants for a given normalization matrix and orbit.
-
-    Note, orbit is assumed to have the form [..., [qx_i, px_i, qy_i, py_i], ...]
-
-    Can be mapped over a batch of input parameters
+    Compute linear invariants for a given normalization matrix and orbit
 
     Parameters
     ----------
@@ -783,7 +756,12 @@ def invariant(normal:Tensor,
 
     Returns
     -------
-    [jx, jy] for each turn (Tensor)
+    Tensor
+        [jx, jy] for each turn
+    
+    Note
+    ----
+    Orbit is assumed to have the form [..., [qx_i, px_i, qy_i, py_i], ...]
 
     """
     qx, px, qy, py = torch.inner(inverse_symplectic(normal), orbit)
@@ -795,15 +773,10 @@ def invariant(normal:Tensor,
 
 
 def lb_invariant(twiss:Tensor,
-                 orbit:Tensor,
-                 *,
+                 orbit:Tensor, *,
                  epsilon:float=1.0E-12) -> Tensor:
     """
-    Compute linear invariants for a given LB twiss and orbit.
-
-    Note, orbit is assumed to have the form [..., [qx_i, px_i, qy_i, py_i], ...]
-
-    Can be mapped over a batch of input parameters
+    Compute linear invariants for a given LB twiss and orbit
 
     Parameters
     ----------
@@ -817,7 +790,12 @@ def lb_invariant(twiss:Tensor,
 
     Returns
     -------
-    [jx, jy] for each turn (torch.Tensor)
+    Tensor
+        [jx, jy] for each turn
+    
+    Note
+    ----
+    Orbit is assumed to have the form [..., [qx_i, px_i, qy_i, py_i], ...]
 
     """
     normal = lb_normal(twiss, epsilon=epsilon)
@@ -825,15 +803,10 @@ def lb_invariant(twiss:Tensor,
 
 
 def cs_invariant(twiss:Tensor,
-                 orbit:Tensor,
-                 *,
+                 orbit:Tensor, *,
                  epsilon:float=1.0E-12) -> Tensor:
     """
-    Compute linear invariants for a given CS twiss and orbit.
-
-    Note, orbit is assumed to have the form [..., [qx_i, px_i, qy_i, py_i], ...]
-
-    Can be mapped over a batch of input parameters
+    Compute linear invariants for a given CS twiss and orbit
 
     Parameters
     ----------
@@ -847,7 +820,12 @@ def cs_invariant(twiss:Tensor,
 
     Returns
     -------
-    [jx, jy] for each turn (Tensor)
+    Tensor
+        [jx, jy] for each turn
+    
+    Note
+    ----
+    Orbit is assumed to have the form [..., [qx_i, px_i, qy_i, py_i], ...]
 
     """
     normal = cs_normal(twiss, epsilon=epsilon)
@@ -860,9 +838,7 @@ def momenta(matrix:Tensor,
             qy1:Tensor,
             qy2:Tensor) -> tuple[Tensor, Tensor]:
     """
-    Compute momenta at positions 1 & 2 for given transport matrix and coordinates at 1 & 2.
-
-    Can be mapped over a batch of input parameters
+    Compute momenta at positions 1 & 2 for given transport matrix and coordinates at 1 & 2
 
     Parameters
     ----------
@@ -873,7 +849,8 @@ def momenta(matrix:Tensor,
 
     Returns
     -------
-    px and py at 1 & 2 (Tensor)
+    Tensor
+        px and py at 1 & 2
 
     """
     forward = matrix
