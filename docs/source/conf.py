@@ -1,9 +1,7 @@
 
-import pathlib
 import sys
-TOP = pathlib.Path(__file__).parent.parent.absolute()
-if str(TOP) not in sys.path:
-    sys.path.insert(0, str(TOP))
+sys.path.append('.')
+sys.path.append('..')
 
 # Configuration file for the Sphinx documentation builder.
 #
