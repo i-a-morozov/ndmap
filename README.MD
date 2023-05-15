@@ -5,6 +5,15 @@ Higher order partial derivatives computation with respect to one or several tens
 Taylor series function approximation (derivative table and series function representation).
 Parametric fixed point computation.
 
+# Install & build
+
+```
+$ git clone https://github.com/i-a-morozov/ndtorch.git
+$ cd ndtorch
+$ python -m pip install .
+
+```
+
 # Derivative
 
 Compute higher order function (partial) derivatives.
