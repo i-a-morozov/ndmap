@@ -56,3 +56,10 @@ tensor([[2., 1.],
         [0., 2.]]), tensor([[ 2.,  0.],
         [ 0., -2.]])]]
 ```
+
+# Desription
+
+```python
+>>> import ndtorch
+>>> ndtorch.ndtorch.__about__
+```

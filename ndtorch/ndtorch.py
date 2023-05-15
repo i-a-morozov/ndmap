@@ -1,4 +1,7 @@
 """
+NDtorch
+-------
+
 Higher order partial derivatives computation with respect to one or several tensor-like variables.
 Taylor series function approximation (derivative table and series function representation).
 Parametric fixed point computation.
@@ -18,7 +21,12 @@ from math import prod
 from functools import partial
 
 from torch import Tensor
-from typing import TypeAlias, Callable, Iterator, Optional
+
+from typing import TypeAlias
+from typing import Callable
+from typing import Iterator
+from typing import Optional
+from typing import Union
 
 Mapping: TypeAlias = Callable
 Point  : TypeAlias = list[Tensor]
@@ -29,20 +37,19 @@ Table  : TypeAlias = list
 Series : TypeAlias = dict[tuple[int, ...], Tensor]
 
 
-def multinomial(*sequence:int) -> float:
+def multinomial(*sequence:tuple[int, ...]) -> float:
     """
-    Compute multinomial coefficient for a given sequence (n, m, ...) of non-negative integers.
-
+    Compute multinomial coefficient for a given sequence (n, m, ...) of non-negative integers
     (n + m + ...)! / (n! * m! * ... )
 
     Parameters
     ----------
-    *sequence: int, non-negative
+    *sequence: tuple[int, ...], non-negative
         input sequence of integers
 
     Returns
     ------
-    multinomial coefficient (float)
+    float
 
     """
     return factorial(sum(sequence)) / prod(map(factorial, sequence))
@@ -50,9 +57,7 @@ def multinomial(*sequence:int) -> float:
 
 def flatten(array:tuple, *, target:type=tuple) -> Iterator:
     """
-    Flatten a nested tuple (or other selected target type container).
-
-    Note, default target type is tuple
+    Flatten a nested tuple (or other selected target type container)
 
     Parameters
     ----------
@@ -73,9 +78,10 @@ def flatten(array:tuple, *, target:type=tuple) -> Iterator:
         yield array
 
 
-def curry_apply(function:Callable, table:tuple[int, ...], *pars) -> Callable:
+def curry_apply(function:Callable, table:tuple[int, ...], *pars:tuple) -> Callable:
     """
-    Curry apply.
+    Curry apply
+    
     Given f(x, y, ...) and table = map(len, (x, y, ...)) return g(*x, *y, ...) = f(x, y, ...)
 
     Parameters
@@ -84,19 +90,19 @@ def curry_apply(function:Callable, table:tuple[int, ...], *pars) -> Callable:
         input function
     table: tuple[int, ...]
         map(len, (x, y, ...))
-    *pars:
+    *pars: tuple
         passed to input function
 
     Returns
     ------
-    curried function
+    Callable
 
     """
-    def clouser(*args):
+    def clouser(*args:tuple):
         start = 0
         vecs = []
         for length in table:
-            vecs.append(args[start:start+length])
+            vecs.append(args[start:start + length])
             start += length
         return function(*vecs, *pars)
     return partial(clouser)
@@ -105,13 +111,13 @@ def curry_apply(function:Callable, table:tuple[int, ...], *pars) -> Callable:
 @multimethod
 def derivative(order:int,
                function:Callable,
-               *args,
+               *args:tuple,
                intermediate:bool=True,
-               jacobian:Callable=torch.func.jacfwd) -> Table | Tensor:
+               jacobian:Callable=torch.func.jacfwd) -> Union[Table, Tensor]:
     """
-    Compute input function derivatives with respet to the first function argument upto a given order.
+    Compute input function derivatives with respet to the first function argument upto a given order
 
-    Note, if intermediate flag is False, only the highest order derivative is returned
+    Note, if intermediate flag is ``False``, only the highest order derivative is returned
 
     Input function is expected to return a tensor or a (nested) list of tensors
     The first function argument is expected to be a tensor
@@ -125,7 +131,7 @@ def derivative(order:int,
         maximum derivative order
     function: Callable
         input function
-    *args:
+    *args: tuple
         input function arguments
     intermediate: bool, default=True
         flag to return intermediate derivatives
@@ -134,7 +140,8 @@ def derivative(order:int,
 
     Returns
     -------
-    function derivatives / derivative table representation (Table | Tensor)
+    Union[Table, Tensor]
+        function derivatives / derivative table representation
 
     """
     def local(x, *xs):
@@ -159,19 +166,19 @@ def derivative(order:int,
 @multimethod
 def derivative(order:tuple[int, ...],
                function:Callable,
-               *args,
+               *args:tuple,
                intermediate:bool=True,
-               jacobian:Callable=torch.func.jacfwd) -> Table | Tensor:
+               jacobian:Callable=torch.func.jacfwd) -> Union[Table, Tensor]:
     """
-    Compute input function derivatives with respet to several first function arguments upto corresponding given orders.
+    Compute input function derivatives with respet to several first function arguments upto corresponding given orders
 
-    Note, if intermediate flag is False, only the highest (total) order derivative is returned
+    Note, if intermediate flag is ``False``, only the highest (total) order derivative is returned
 
     Input function is expected to return a tensor or a (nested) list of tensors
     The first several function arguments are expected to be tensors
 
     If the input function returns a tensor, output is called derivative table representation
-    List of several first arguments is called an evaluation point (Point)
+    List of several first arguments is called an evaluation point (``Point``)
 
     Parameters
     ----------
@@ -188,7 +195,8 @@ def derivative(order:tuple[int, ...],
 
     Returns
     -------
-    function derivatives / derivative table representation (Table | Tensor)
+    Union[Table, Tensor]
+    function derivatives / derivative table representation
 
     """
     pars = [*args][len(order):]
@@ -212,33 +220,33 @@ def derivative(order:tuple[int, ...],
 
 
 @multimethod
-def derivative(order:int, function:Callable, point:Point, *pars, **kwargs) -> Table:
-    """ (auxiliary) Compute input function derivatives at a given evaluation point upto a given order. """
+def derivative(order:int, function:Callable, point:Point, *pars:tuple, **kwargs:dict) -> Table:
+    """ Compute input function derivatives at a given evaluation point upto a given order """
     return derivative(order, function, *point, *pars, **kwargs)
 
 
 @multimethod
-def derivative(order:tuple[int, ...], function:Callable, point:Point, *pars, **kwargs) -> Table:
-    """ (auxiliary) Compute input function derivatives at a given evaluation point upto corresponding given orders. """
+def derivative(order:tuple[int, ...], function:Callable, point:Point, *pars:tuple, **kwargs:dict) -> Table:
+    """ Compute input function derivatives at a given evaluation point upto corresponding given orders """
     return derivative(order, function, *point, *pars, **kwargs)
 
 
 @multimethod
-def derivative(order:int, function:Callable, state:State, knobs:Knobs, *pars, **kwargs) -> Table:
-    """ (auxiliary) Compute input function derivatives for given state and knobs upto a given order with respect to state. """
+def derivative(order:int, function:Callable, state:State, knobs:Knobs, *pars:tuple, **kwargs:dict) -> Table:
+    """ Compute input function derivatives for given state and knobs upto a given order with respect to state """
     return derivative(order, function, state, *knobs, *pars, **kwargs)
 
 
 @multimethod
-def derivative(order:tuple[int, ...], function:Callable, state:State, knobs:Knobs, *pars, **kwargs) -> Table:
-    """ (auxiliary) Compute input function derivatives for given state and knobs upto corresponding given orders with respect to state and knobs. """
+def derivative(order:tuple[int, ...], function:Callable, state:State, knobs:Knobs, *pars:tuple, **kwargs:dict) -> Table:
+    """ Compute input function derivatives for given state and knobs upto corresponding given orders with respect to state and knobs """
     return derivative(order, function, state, *knobs, *pars, **kwargs)
 
 
 @multimethod
-def signature(table:Table, *, factor:bool=False) -> list[tuple[int, ...]] | list[tuple[tuple[int, ...], float]]:
+def signature(table:Table, *, factor:bool=False) -> Union[list[tuple[int, ...]], list[tuple[tuple[int, ...], float]]]:
     """
-    Compute derivative table bottom elements signatures.
+    Compute derivative table bottom elements signatures
 
     Note, signature elements corresponds to the bottom elements of a flattened input derivative table
     Bottom element signature is a tuple integers, derivative orders with respect to each tensor variable
@@ -254,7 +262,9 @@ def signature(table:Table, *, factor:bool=False) -> list[tuple[int, ...]] | list
 
     Returns
     ----------
-    bottom table elements signatures (list[tuple[int, ...]] | list[tuple[tuple[int, ...], float]])
+    Union[list[tuple[int, ...]], list[tuple[tuple[int, ...], float]]]
+        bottom table elements signatures
+    
     """
     return [*flatten([signature([i], subtable, factor=factor) for i, subtable in enumerate(table)], target=list)]
 
@@ -272,9 +282,9 @@ def signature(index:list[int], table:Tensor, *, factor:bool=False):
     return tuple(index) if not factor else (tuple(index), value)
 
 
-def get(table:Table, index:tuple[int, ...]) -> Tensor | Table:
+def get(table:Table, index:tuple[int, ...]) -> Union[Tensor, Table]:
     """
-    Get derivative table element at a given (bottom) element signature.
+    Get derivative table element at a given (bottom) element signature
 
     Note, index can correspond to a bottom element or a subtable
 
@@ -287,7 +297,8 @@ def get(table:Table, index:tuple[int, ...]) -> Tensor | Table:
 
     Returns
     ----------
-    element value (Tensor | Table)
+    Union[Tensor, Table]
+        element value
 
     """
     if isinstance(index, int):
@@ -299,7 +310,7 @@ def get(table:Table, index:tuple[int, ...]) -> Tensor | Table:
     return table[n]
 
 
-def set(table:Table, index:tuple[int, ...], value:Tensor | Table) -> None:
+def set(table:Table, index:tuple[int, ...], value:Union[Tensor, Table]) -> None:
     """
     Set derivative table element at a given (bottom) element signature.
 
@@ -311,7 +322,7 @@ def set(table:Table, index:tuple[int, ...], value:Tensor | Table) -> None:
         input derivative table representation
     index: tuple[int, ...]
         element signature
-    value: Tensor | Table
+    value: Union[Tensor, Table]
         element value
 
     Returns
@@ -355,12 +366,11 @@ def apply(table:Table, index:tuple[int, ...], function:Callable) -> None:
 
 @multimethod
 def index(dimension:int,
-          order:int,
-          *,
+          order:int, *,
           dtype:torch.dtype=torch.int64,
           device:torch.device=torch.device('cpu')) -> Tensor:
     """
-    Generate monomial index table with repetitions for a given dimension and order (total monomial degree).
+    Generate monomial index table with repetitions for a given dimension and order (total monomial degree)
 
     Note, output length is dimension**degree
 
@@ -377,7 +387,8 @@ def index(dimension:int,
 
     Returns
     ----------
-    monomial index table with repetitions (Tensor)
+    Tensor
+        monomial index table with repetitions
 
     """
     if order == 0:
@@ -394,12 +405,11 @@ def index(dimension:int,
 
 @multimethod
 def index(dimension:tuple[int, ...],
-          order:tuple[int, ...],
-          *,
+          order:tuple[int, ...], *,
           dtype:torch.dtype=torch.int64,
           device:torch.device=torch.device('cpu')) -> Tensor:
     """
-    Generate monomial index table with repetitions for given dimensions and corresponding orders (total monomial degrees).
+    Generate monomial index table with repetitions for given dimensions and corresponding orders (total monomial degrees)
 
     Note, output length is product(dimension**degree)
 
@@ -416,7 +426,8 @@ def index(dimension:tuple[int, ...],
 
     Returns
     ----------
-    monomial index table with repetitions (Tensor)
+    Tensor
+        monomial index table with repetitions
 
     """
     def merge(total:tuple, *table:tuple) -> tuple:
@@ -433,7 +444,7 @@ def series(dimension:tuple[int, ...],
            order:tuple[int, ...],
            table:Table) -> Series:
     """
-    Generate series representation from a given derivative table representation.
+    Generate series representation from a given derivative table representation
 
     Note, table is expected to represent a vector valued function
 
@@ -448,7 +459,7 @@ def series(dimension:tuple[int, ...],
 
     Returns
     ----------
-    series representation (Series)
+    Series
 
     """
     series = {}
@@ -471,10 +482,10 @@ def series(dimension:tuple[int, ...],
 @multimethod
 def series(index:tuple[int, ...],
            function:Callable,
-           *args,
+           *args:tuple,
            jacobian:Callable=torch.func.jacfwd) -> Series:
     """
-    Generate series representation of a given input function upto a given monomial index.
+    Generate series representation of a given input function upto a given monomial index
 
     c(i, j, k, ...) * x**i * y**j * z**k * ... => {..., (i, j, k, ...) : c(i, j, k, ...), ...}
 
@@ -487,14 +498,14 @@ def series(index:tuple[int, ...],
         monomial index, (i, j, k, ...)
     function: Callable,
         input function
-    *args:
+    *args: tuple
         input function arguments
     jacobian: Callable, default=torch.func.jacfwd
         torch.func.jacfwd or torch.func.jacrev
 
     Returns
     -------
-    series coeficients upto given index (Series)
+    Series
 
     """
     return series((1, ) * len(args), index, derivative(index, function, *args, intermediate=True, jacobian=jacobian))
@@ -503,10 +514,10 @@ def series(index:tuple[int, ...],
 @multimethod
 def series(index:list[tuple[int, ...]],
            function:Callable,
-           *args,
+           *args:tuple,
            jacobian:Callable=torch.func.jacfwd) -> Series:
     """
-    Generate series representation of a given input function for a given set of monomial indices.
+    Generate series representation of a given input function for a given set of monomial indices
 
     c(i, j, k, ...) * x**i * y**j * z**k * ... => {..., (i, j, k, ...) : c(i, j, k, ...), ...}
 
@@ -519,14 +530,14 @@ def series(index:list[tuple[int, ...]],
         list of monomial indices, [..., (i, j, k, ...), ...]
     function: Callable,
         input function
-    *args:
+    *args: tuple
         input function arguments
     jacobian: Callable, default=torch.func.jacfwd
         torch.func.jacfwd or torch.func.jacrev
 
     Returns
     -------
-    series coeficients for given indices (Series)
+    Series
 
     """
     def factor(*index:int) -> float:
@@ -536,20 +547,20 @@ def series(index:list[tuple[int, ...]],
 
 
 @multimethod
-def series(index:list[tuple[int, ...]], function:Callable, point:Point, *pars, jacobian:Callable=torch.func.jacfwd) -> Series:
-    """ (auxiliary) Generate series representation of a given input function for a given set of monomial indices. """        
+def series(index:list[tuple[int, ...]], function:Callable, point:Point, *pars:tuple, jacobian:Callable=torch.func.jacfwd) -> Series:
+    """ Generate series representation of a given input function for a given set of monomial indices """
     return series(index, function, *torch.cat(point), *pars, jacobian=jacobian)
 
 
 @multimethod
-def series(index:list[tuple[int, ...]], function:Callable, state:State, knobs:Knobs, *pars, jacobian:Callable=torch.func.jacfwd) -> Series:
-    """ (auxiliary) Generate series representation of a given input function for a given set of monomial indices. """
+def series(index:list[tuple[int, ...]], function:Callable, state:State, knobs:Knobs, *pars:tuple, jacobian:Callable=torch.func.jacfwd) -> Series:
+    """ Generate series representation of a given input function for a given set of monomial indices """
     return series(index, function, *state, *torch.cat(knobs), *pars, jacobian=jacobian)
 
 
 def merge(probe:Series, other:Series) -> Series:
     """
-    Merge (sum) series.
+    Merge (sum) series
 
     Parameters
     ----------
@@ -558,7 +569,7 @@ def merge(probe:Series, other:Series) -> Series:
 
     Returns
     -------
-    merged series (Series)
+    Series
 
     """
     total = {key: value.clone() for key, value in probe.items()}
@@ -572,7 +583,7 @@ def merge(probe:Series, other:Series) -> Series:
 
 def clean(probe:Series, *, epsilon:float=1.0E-16) -> Series:
     """
-    Clean series.
+    Clean series
 
     Parameters
     ----------
@@ -583,7 +594,7 @@ def clean(probe:Series, *, epsilon:float=1.0E-16) -> Series:
 
     Returns
     -------
-    cleaned series (Series)
+    Series
 
     """
     return {key: value for key, value in probe.items() if torch.any(value > epsilon)}
@@ -591,7 +602,7 @@ def clean(probe:Series, *, epsilon:float=1.0E-16) -> Series:
 
 def fetch(probe:Series, index:list[tuple[int, ...]]) -> Series:
     """
-    Fetch series.
+    Fetch series
 
     Parameters
     ----------
@@ -602,7 +613,7 @@ def fetch(probe:Series, index:list[tuple[int, ...]]) -> Series:
 
     Returns
     -------
-    fetched series (Series)
+    Series
 
     """
     return {key: value for key, value in probe.items() if key in index}
@@ -610,9 +621,9 @@ def fetch(probe:Series, index:list[tuple[int, ...]]) -> Series:
 
 def split(probe:Series) -> list[Series]:
     """
-    (series operation) Split series.
+    (series operation) Split series
 
-    Note, coefficient values are assumed to be vector tensors.
+    Note, coefficient values are assumed to be vector tensors
 
     Parameters
     ----------
@@ -621,7 +632,7 @@ def split(probe:Series) -> list[Series]:
 
     Returns
     -------
-    splitted series (list[Series])
+    list[Series]
 
     """
     return [dict(zip(probe.keys(), value)) for value in torch.stack([*probe.values()]).T]
@@ -631,7 +642,7 @@ def split(probe:Series) -> list[Series]:
 def evaluate(table:Table,
              delta:Delta) -> Tensor:
     """
-    Evaluate input derivative table representation at a given delta deviation.
+    Evaluate input derivative table representation at a given delta deviation
 
     Note, input table is expected to represent a vector or scalar valued function
 
@@ -644,7 +655,7 @@ def evaluate(table:Table,
 
     Returns
     ----------
-    value (Tensor)
+    Tensor
 
     """
     return sum(evaluate([i], subtable, delta) for i, subtable in enumerate(table))
@@ -673,7 +684,7 @@ def evaluate(series:Series,
              delta:Delta,
              epsilon:Optional[float]=None) -> Tensor:
     """
-    Evaluate series representation at a given deviation delta.
+    Evaluate series representation at a given deviation delta
 
     Note, input series is expected to represent a vector valued function
     For epsilon != None, fast evaluation is performed
@@ -689,7 +700,7 @@ def evaluate(series:Series,
 
     Returns
     ----------
-    value (Tensor)
+    Tensor
 
     """
     state = torch.cat(delta)
@@ -712,12 +723,11 @@ def evaluate(series:Series,
 
 def table(dimension:tuple[int, ...],
           order:tuple[int, ...],
-          series:Series,
-          *,
+          series:Series, *,
           epsilon:Optional[float]=None,
           jacobian:Callable=torch.func.jacfwd) -> Table:
     """
-    Generate derivative table representation from a given series representation.
+    Generate derivative table representation from a given series representation
 
     Note, table is generated by taking derivatives of evaluated series at zero deviation delta.
     For epsilon != None can be used for fast series evaluation, but can generate incorrect table
@@ -737,7 +747,7 @@ def table(dimension:tuple[int, ...],
 
     Returns
     ----------
-    derivative table representation (Table)
+    Table
 
     """
     def function(*args):
@@ -750,12 +760,11 @@ def table(dimension:tuple[int, ...],
 
 
 def identity(order:tuple[int, ...],
-             point:Point,
-             *,
+             point:Point, *,
              flag:bool=False,
-             jacobian:Callable=torch.func.jacfwd) -> Table | Series:
+             jacobian:Callable=torch.func.jacfwd) -> Union[Table, Series]:
     """
-    Generate identity derivative table or identity series.
+    Generate identity derivative table or identity series
 
     Note, identity table or series represent an identity mapping
 
@@ -772,7 +781,8 @@ def identity(order:tuple[int, ...],
 
     Returns
     ----------
-    identity derivative table or series (Table | Series)
+    Union[Table, Series]
+        identity derivative table or series
 
     """
     table = derivative(order, lambda x, *xs: x, point, intermediate=True, jacobian=jacobian)
@@ -789,11 +799,11 @@ def propagate(dimension:tuple[int, ...],
               data:Table,
               knobs:Knobs,
               mapping:Mapping,
-              *pars,
+              *pars:tuple,
               intermediate:bool=True,
-              jacobian:Callable=torch.func.jacfwd) -> Table | Tensor:
+              jacobian:Callable=torch.func.jacfwd) -> Union[Table, Tensor]:
     """
-    Propagate derivative table representation through a given mapping.
+    Propagate derivative table representation through a given mapping
 
     Parameters
     ----------
@@ -807,7 +817,7 @@ def propagate(dimension:tuple[int, ...],
         input parametric variables
     mapping: Mapping
         input mapping
-    *pars:
+    *pars: tuple
         additional mapping fixed arguments
     intermediate: bool, default=True
         flag to return intermediate derivatives
@@ -816,7 +826,7 @@ def propagate(dimension:tuple[int, ...],
 
     Returns
     ----------
-    propagated derivative table (Table | Tensor)
+    Union[Table, Tensor]
 
     """
     def auxiliary(*args) -> Tensor:
@@ -837,11 +847,11 @@ def propagate(dimension:tuple[int, ...],
               data:Series,
               knobs:Knobs,
               mapping:Mapping,
-              *pars,
+              *pars:tuple,
               epsilon:Optional[float]=None,
               jacobian:Callable=torch.func.jacfwd) -> Series:
     """
-    Propagate series representation through a given mapping.
+    Propagate series representation through a given mapping
 
     Note, input series are expected to contain all indices
 
@@ -857,7 +867,7 @@ def propagate(dimension:tuple[int, ...],
         input parametric variables
     mapping: Mapping
         input mapping
-    *pars:
+    *pars: tuple
         additional mapping fixed arguments
     epsilon: Optional[float], non-negative, default=None
         fast series evaluation / tolerance epsilon
@@ -868,7 +878,7 @@ def propagate(dimension:tuple[int, ...],
 
     Returns
     ----------
-    propagated series (Series)
+    Series
 
     """
     def auxiliary(*args) -> Tensor:
@@ -885,12 +895,12 @@ def propagate(dimension:tuple[int, ...],
 
 def newton(function:Mapping,
            guess:Tensor,
-           *pars,
+           *pars:tuple,
            solve:Callable=lambda jacobian, value: torch.linalg.pinv(jacobian) @ value,
            roots:Optional[Tensor]=None,
            jacobian:Callable=torch.func.jacfwd) -> Tensor:
     """
-    Perform one Newton root search step.
+    Perform one Newton root search step
 
     Parameters
     ----------
@@ -909,7 +919,7 @@ def newton(function:Mapping,
 
     Returns
     ----------
-    updated guess (Tensor)
+    Tensor
 
     """
     def auxiliary(x:Tensor, *xs) -> Tensor:
@@ -923,14 +933,14 @@ def newton(function:Mapping,
 def fixed_point(limit:int,
                 function:Mapping,
                 guess:Tensor,
-                *pars,
+                *pars:tuple,
                 power:int=1,
                 epsilon:Optional[float]=None,
                 solve:Callable=lambda jacobian, value: torch.linalg.pinv(jacobian) @ value,
                 roots:Optional[Tensor]=None,
                 jacobian:Callable=torch.func.jacfwd) -> Tensor:
     """
-    Estimate (dynamical) fixed point.
+    Estimate (dynamical) fixed point
 
     Note, can be mapped over initial guess and/or other input function arguments if epsilon = None
 
@@ -942,7 +952,7 @@ def fixed_point(limit:int,
         input mapping
     guess: Tensor
         initial guess
-    *pars:
+    *pars: tuple
         additional function arguments
     power: int, positive, default=1
         function power / fixed point order
@@ -957,7 +967,7 @@ def fixed_point(limit:int,
 
     Returns
     ----------
-    estimated fixed point (Tensor)
+    Tensor
 
     """
     def auxiliary(state:Tensor) -> Tensor:
@@ -981,10 +991,10 @@ def fixed_point(limit:int,
 def check_point(power:int,
                 function:Mapping,
                 point:Tensor,
-                *pars,
+                *pars:tuple,
                 epsilon:float=1.0E-12) -> bool:
     """
-    Check fixed point candidate to have given prime period.
+    Check fixed point candidate to have given prime period
 
     Parameters
     ----------
@@ -994,14 +1004,14 @@ def check_point(power:int,
         input function
     point: Tensor
         fixed point candidate
-    *pars:
+    *pars:tuple
         additional function arguments
     epsilon: float, default=1.0E-12
         tolerance epsilon
 
     Returns
     ----------
-    check result (bool)
+    bool
 
     """
     def auxiliary(state:Tensor, power:int) -> Tensor:
@@ -1027,10 +1037,10 @@ def check_point(power:int,
 def clean_point(power:int,
                 function:Mapping,
                 point:Tensor,
-                *pars,
+                *pars:tuple,
                 epsilon:float=1.0E-12) -> bool:
     """
-    Clean fixed point candidates.
+    Clean fixed point candidates
 
     Parameters
     ----------
@@ -1040,14 +1050,14 @@ def clean_point(power:int,
         input function
     point: Tensor
         fixed point candidates
-    *pars:
+    *pars:tuple
         additional function arguments
     epsilon: float, optional, default=1.0E-12
         tolerance epsilon
 
     Returns
     ----------
-    cleaned result (bool)
+    bool
 
     """
     point = point[torch.all(point.isnan().logical_not(), dim=1)]
@@ -1077,7 +1087,7 @@ def clean_point(power:int,
 def chain_point(power:int,
                 function:Mapping,
                 point:Tensor,
-                *pars) -> Tensor:
+                *pars:tuple) -> Tensor:
     """
     Generate chain for a given fixed point.
 
@@ -1091,12 +1101,12 @@ def chain_point(power:int,
         input function
     point: Tensor
         fixed point
-    *pars:
+    *pars: tuple
         additional function arguments
 
     Returns
     ----------
-    chain (Tensor)
+    Tensor
 
     """
     def auxiliary(state:Tensor) -> Tensor:
@@ -1113,7 +1123,7 @@ def chain_point(power:int,
 def matrix(power:int,
            function:Mapping,
            point:Tensor,
-           *pars,
+           *pars:tuple,
            jacobian:Callable=torch.func.jacfwd) -> Tensor:
     """
     Compute (monodromy) matrix around given fixed point.
@@ -1126,14 +1136,14 @@ def matrix(power:int,
         input function
     point: Tensor
         fixed point candidate
-    *pars:
+    *pars: tuple
         additional function arguments
     jacobian: Callable, default=torch.func.jacfwd
         torch.func.jacfwd or torch.func.jacrev
 
     Returns
     ----------
-    matrix (Tensor)
+    Tensor
 
     """
     def auxiliary(state:Tensor) -> Tensor:
@@ -1149,7 +1159,7 @@ def parametric_fixed_point(order:tuple[int, ...],
                            state:State,
                            knobs:Knobs,
                            function:Mapping,
-                           *pars,
+                           *pars:tuple,
                            power:int=1,
                            solve:Callable=lambda jacobian, value: torch.linalg.pinv(jacobian) @ value,
                            jacobian:Callable=torch.func.jacfwd) -> Table:
@@ -1166,7 +1176,7 @@ def parametric_fixed_point(order:tuple[int, ...],
         knobs value
     function:Callable
         input function
-    *pars:
+    *pars: tuple
         additional function arguments
     power: int, positive, default=1
         function power
@@ -1177,7 +1187,7 @@ def parametric_fixed_point(order:tuple[int, ...],
 
     Returns
     ----------
-    parametric fixed point (Table)
+    Table
 
     """
     def auxiliary(*point) -> State:
@@ -1254,68 +1264,23 @@ class Jet():
     table: Table
         table representation
     series: Series
-        (property) series representation
+         series representation
     signature: list[tuple[int, ...]]
-        (property) derivative table elements bottom elements signatures
+        derivative table elements bottom elements signatures
     parametetric: Table
-        (property) parametric table
-
-
-    Methods
-    ----------
-    __init__(self, dimension:tuple[int, ...], order:tuple[int, ...], *, initialize:bool=True, point:Optional[Point]=None, jacobian:Callable=torch.func.jacfwd, dtype:torch.dtype=torch.float64, device:torch.device=torch.device('cpu')) -> None
-        Jet initialization.
-    evaluate(self, delta:Delta) -> Tensor
-        Evaluate jet derivative table at a given delta deviation.
-    signature(self) -> list[tuple[int, ...]]
-        Compute derivative table elements bottom elements signatures.
-    series(self) -> Series
-        Series representation.
-    parametetric(self) -> Table
-        Get parametric table (first subtable).
-    from_mapping(cls, dimension:tuple[int, ...], order:tuple[int, ...], point:Point, function:Mapping, *args, jacobian:Callable=torch.func.jacfwd, dtype:torch.dtype=torch.float64, device:torch.device=torch.device('cpu')) -> Jet
-        Jet initialization from mapping.
-    from_table(cls, dimension:tuple[int, ...], order:tuple[int, ...], point:Point, table:Table, jacobian:Callable=torch.func.jacfwd, dtype:torch.dtype=torch.float64, device:torch.device=torch.device('cpu')) -> Jet
-        Jet initialization from table.
-    from_series(cls, dimension:tuple[int, ...], order:tuple[int, ...], point:Point, series:Series, jacobian:Callable=torch.func.jacfwd, dtype:torch.dtype=torch.float64, device:torch.device=torch.device('cpu')) -> Jet
-        Jet initialization from series.
-    propagate(self, function:Mapping, *pars) -> Jet
-        Propagate jet.
-    compliant(self, other:Jet) -> bool
-        Check jets are compliant (can be composed).
-    compose(self, other:Jet) -> Jet
-        Compose jets (evaluate other jet at self jet).
-    __bool__(self) -> bool
-        Check if table is not None
-    __eq__(self, other:Jet) -> bool:
-        Compare jets.
-    __getitem__(self, index:tuple[int, ...]) -> Tensor | Table
-        Get item (derivative table bottom element or subtable).
-    __setitem__(self, index:tuple[int, ...], value:Tensor | Table) -> None
-        Set item (derivative table bottom element or subtable).
-    __iter__(self)
-        Jet iteration (use for unpacking).
-    __len__(self) -> int
-        Jet length (signature length / number of tensors).
-    __call__(self, delta:Delta) -> Tensor
-        Evaluate jet derivative table at a given delta deviation.
-    __matmul__(self, other:Jet) -> Jet
-        Compose jets (evaluate other jet at self jet).
-    __repr__(self) -> str
-        String representation.
+        parametric table
 
     """
     def __init__(self,
                  dimension:tuple[int, ...],
-                 order:tuple[int, ...],
-                 *,
+                 order:tuple[int, ...], *,
                  initialize:bool=True,
                  point:Optional[Point]=None,
                  jacobian:Callable=torch.func.jacfwd,
                  dtype:torch.dtype=torch.float64,
                  device:torch.device=torch.device('cpu')) -> None:
         """
-        Jet initialization.
+        Jet initialization
 
         Parameters
         ----------
@@ -1359,7 +1324,7 @@ class Jet():
 
     def evaluate(self, delta:Delta) -> Tensor:
         """
-        Evaluate jet derivative table at a given delta deviation.
+        Evaluate jet derivative table at a given delta deviation
 
         Parameters
         ----------
@@ -1368,7 +1333,7 @@ class Jet():
 
         Returns
         ----------
-        value (Tensor)
+        Tensor
 
         """
         return evaluate(self.table, delta)
@@ -1377,7 +1342,7 @@ class Jet():
     @property
     def signature(self) -> list[tuple[int, ...]]:
         """
-        Compute derivative table elements bottom elements signatures.
+        Compute derivative table elements bottom elements signatures
 
         Parameters
         ----------
@@ -1385,7 +1350,8 @@ class Jet():
 
         Returns
         ----------
-        bottom table elements signatures (list[tuple[int, ...]])
+        list[tuple[int, ...]]
+            bottom table elements signatures
 
         """
         return signature(self.table, factor=False)
@@ -1394,7 +1360,7 @@ class Jet():
     @property
     def series(self) -> Series:
         """
-        Series representation.
+        Series representation
 
         Parameters
         ----------
@@ -1402,7 +1368,7 @@ class Jet():
 
         Returns
         ----------
-        series representation (Series)
+        Series
 
         """
         return series(self.dimension, self.order, self.table)
@@ -1411,7 +1377,7 @@ class Jet():
     @property
     def parametetric(self) -> Table:
         """
-        Get parametric table (first subtable).
+        Get parametric table (first subtable)
 
         Parameters
         ----------
@@ -1419,7 +1385,7 @@ class Jet():
 
         Returns
         ----------
-        parametric table (Table)
+        Table
 
         """
         table, *_ = self.table
@@ -1429,7 +1395,7 @@ class Jet():
     @parametetric.setter
     def parametetric(self, value:Table) -> None:
         """
-        Set parametric table (first subtable).
+        Set parametric table (first subtable)
 
         Parameters
         ----------
@@ -1450,12 +1416,12 @@ class Jet():
                      order:tuple[int, ...],
                      point:Point,
                      function:Mapping,
-                     *args,
+                     *args:tuple,
                      jacobian:Callable=torch.func.jacfwd,
                      dtype:torch.dtype=torch.float64,
                      device:torch.device=torch.device('cpu')) -> Jet:
         """
-        Jet initialization from mapping.
+        Jet initialization from mapping
 
         Parameters
         ----------
@@ -1467,7 +1433,7 @@ class Jet():
             evaluation point
         function: Mapping
             input function
-        *args:
+        *args: tuple
             additional function arguments
         jacobian: Callable, default=torch.func.jacfwd
             torch.func.jacfwd or torch.func.jacrev
@@ -1478,7 +1444,7 @@ class Jet():
 
         Returns
         ----------
-        jet (Jet)
+        Jet
 
         """
         jet = cls(dimension, order, initialize=False, point=point, jacobian=jacobian, dtype=dtype, device=device)
@@ -1496,7 +1462,7 @@ class Jet():
                    dtype:torch.dtype=torch.float64,
                    device:torch.device=torch.device('cpu')) -> Jet:
         """
-        Jet initialization from table.
+        Jet initialization from table
 
         Parameters
         ----------
@@ -1517,7 +1483,7 @@ class Jet():
 
         Returns
         ----------
-        jet (Jet)
+        Jet
 
         """
         jet = cls(dimension, order, initialize=False, point=point, jacobian=jacobian, dtype=dtype, device=device)
@@ -1535,7 +1501,7 @@ class Jet():
                     dtype:torch.dtype=torch.float64,
                     device:torch.device=torch.device('cpu')) -> Jet:
         """
-        Jet initialization from series.
+        Jet initialization from series
 
         Parameters
         ----------
@@ -1556,7 +1522,7 @@ class Jet():
 
         Returns
         ----------
-        jet (Jet)
+        Jet
 
         """
         jet = cls(dimension, order, initialize=False, point=point, jacobian=jacobian, dtype=dtype, device=device)
@@ -1566,7 +1532,7 @@ class Jet():
 
     def propagate(self,
                   function:Mapping,
-                  *pars) -> Jet:
+                  *pars:tuple) -> Jet:
         """
         Propagate jet.
 
@@ -1576,12 +1542,12 @@ class Jet():
             input function
         knobs: Knobs
             input function knobs
-        *pars:
+        *pars: tuple
             additional function arguments
 
         Returns
         ----------
-        propagated jet (Jet)
+        Jet
 
         """
         table = propagate(self.dimension, self.order, self.table, self.knobs, function, *pars, intermediate=True, jacobian=self.jacobian)
@@ -1590,7 +1556,7 @@ class Jet():
 
     def compliant(self, other:Jet) -> bool:
         """
-        Check jets are compliant (can be composed).
+        Check jets are compliant (can be composed)
 
         Parameters
         ----------
@@ -1599,7 +1565,7 @@ class Jet():
 
         Returns
         ----------
-        check result (bool)
+        bool
 
         """
         if not all(i == j for i, j in zip(self.dimension, other.dimension)):
@@ -1613,7 +1579,7 @@ class Jet():
 
     def compose(self, other:Jet) -> Jet:
         """
-        Compose jets (evaluate other jet at self jet).
+        Compose jets (evaluate other jet at self jet)
 
         Parameters
         ----------
@@ -1622,7 +1588,7 @@ class Jet():
 
         Returns
         ----------
-        composed jet (Jet)
+        Jet
 
         """
         def auxiliary(*args) -> Tensor:
@@ -1641,7 +1607,7 @@ class Jet():
 
         Returns
         ----------
-        check result (bool)
+        bool
 
         """
         return self.table is not None
@@ -1649,7 +1615,7 @@ class Jet():
 
     def __eq__(self, other:Jet) -> bool:
         """
-        Compare jets.
+        Compare jets
 
         Parameters
         ----------
@@ -1658,7 +1624,7 @@ class Jet():
 
         Returns
         ----------
-        comparison result (bool)
+        bool
 
         """
         if not self.compliant(other):
@@ -1670,9 +1636,9 @@ class Jet():
         return False
 
 
-    def __getitem__(self, index:tuple[int, ...]) -> Tensor | Table:
+    def __getitem__(self, index:tuple[int, ...]) -> Union[Tensor, Table]:
         """
-        Get item (derivative table bottom element or subtable).
+        Get item (derivative table bottom element or subtable)
 
         Parameters
         ----------
@@ -1681,21 +1647,21 @@ class Jet():
 
         Returns
         ----------
-        value at index (Tensor|Table)
+        Union[Tensor, Table]
 
         """
         return get(self.table, index)
 
 
-    def __setitem__(self, index:tuple[int, ...], value:Tensor | Table) -> None:
+    def __setitem__(self, index:tuple[int, ...], value:Union[Tensor, Table]) -> None:
         """
-        Set item (derivative table bottom element or subtable).
+        Set item (derivative table bottom element or subtable)
 
         Parameters
         ----------
         index: tuple[int, ...]
             index
-        value: Tensor | Table
+        value: Union[Tensor, Table]
             value to set
 
         Returns
@@ -1708,7 +1674,7 @@ class Jet():
 
     def __iter__(self):
         """
-        Jet iteration (use for unpacking).
+        Jet iteration (use for unpacking)
 
         """
         return flatten(self.table, target=list)
@@ -1716,7 +1682,7 @@ class Jet():
 
     def __len__(self) -> int:
         """
-        Jet length (signature length / number of tensors).
+        Jet length (signature length / number of tensors)
 
         Parameters
         ----------
@@ -1724,7 +1690,7 @@ class Jet():
 
         Returns
         ----------
-        length (int)
+        int
 
         """
         return len(self.signature)
@@ -1732,7 +1698,7 @@ class Jet():
 
     def __call__(self, delta:Delta) -> torch.Tensor:
         """
-        Evaluate jet derivative table at a given delta deviation.
+        Evaluate jet derivative table at a given delta deviation
 
         Parameters
         ----------
@@ -1741,7 +1707,7 @@ class Jet():
 
         Returns
         ----------
-        value (Tensor)
+        Tensor
 
         """
         return self.evaluate(delta)
@@ -1749,7 +1715,7 @@ class Jet():
 
     def __matmul__(self, other:Jet) -> Jet:
         """
-        Compose jets (evaluate other jet at self jet).
+        Compose jets (evaluate other jet at self jet)
 
         Parameters
         ----------
@@ -1758,7 +1724,7 @@ class Jet():
 
         Returns
         ----------
-        composed jet (Jet)
+        Jet
 
         """
         return self.compose(other)
@@ -1774,7 +1740,7 @@ class Jet():
 
         Returns
         ----------
-        string representation (str)
+        str
 
         """
         return f'Jet({self.dimension}, {self.order})'
