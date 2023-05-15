@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ndtorch"
+version = "0.1.0"
+authors = [{name = "Ivan Morozov", email = "i.a.morozov@inp.nsk.su"}]
+description = "Higher order partial derivatives computation with respect to one or several tensor-like variables"
+readme = "README.MD"
+requires-python = ">=3.9"
+keywords = ["torch", "derivative"]
+license = {text = "MIT"}
+classifiers = ["Programming Language :: Python :: 3"]
+dependencies = ["torch>=2.1.0", "multimethod>=1.9.1"]
+
+
