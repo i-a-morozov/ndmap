@@ -1,3 +1,10 @@
+
+import pathlib
+import sys
+TOP = pathlib.Path(__file__).parent.parent.absolute()
+if str(TOP) not in sys.path:
+    sys.path.insert(0, str(TOP))
+
 # Configuration file for the Sphinx documentation builder.
 #
 # For the full list of built-in configuration values, see the documentation:
