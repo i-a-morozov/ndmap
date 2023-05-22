@@ -21,7 +21,7 @@ $ python -m pip install .
 Compute higher order function (partial) derivatives.
 
 ```python
->>> from ndtorch.ndtorch import derivative
+>>> from ndtorch.derivative import derivative
 >>> def fn(x):
 ...     return 1 + x + x**2 + x**3 + x**4 + x**5
 ... 
@@ -32,7 +32,7 @@ Compute higher order function (partial) derivatives.
 ```
 
 ```python
->>> from ndtorch.ndtorch import derivative
+>>> from ndtorch.derivative import derivative
 >>> def fn(x):
 ...     x1, x2 = x
 ...     return x1**2 + x1*x2 + x2**2
@@ -45,7 +45,7 @@ tensor([[2., 1.],
 ```
 
 ```python
->>> from ndtorch.ndtorch import derivative
+>>> from ndtorch.derivative import derivative
 >>> def fn(x, y):
 ...     x1, x2 = x
 ...     return x1**2*(1 + y) + x2**2*(1 - y)
@@ -63,5 +63,5 @@ tensor([[2., 1.],
 
 ```python
 >>> import ndtorch
->>> ndtorch.ndtorch.__about__
+>>> ndtorch.__about__
 ```
