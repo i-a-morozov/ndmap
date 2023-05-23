@@ -34,6 +34,8 @@ Signature: TypeAlias = Union[list[tuple[int, ...]], list[tuple[tuple[int, ...], 
 def newton(function:Mapping,
            guess:Tensor,
            *pars:tuple,
+           factor:float=1.0,
+           alpha:float=0.0,
            solve:Optional[Callable]=None,
            roots:Optional[Tensor]=None,
            jacobian:Optional[Callable]=None) -> Tensor:
@@ -48,6 +50,10 @@ def newton(function:Mapping,
         initial guess
     *pars:
         additional function arguments
+    factor: float, default=1.0
+        step factor (learning rate)
+    alpha: float, positive, default=0.0
+        regularization alpha
     solve: Optional[Callable]
         linear solver(matrix, vector)
     roots: Optional[Tensor], default=None
@@ -94,7 +100,9 @@ def newton(function:Mapping,
                                 *pars,
                                 jacobian=jacobian)
 
-    return guess - solve(matrix, vector)
+    matrix = matrix.nan_to_num() + alpha*torch.eye(len(vector), dtype=vector.dtype, device=vector.device)
+
+    return guess - factor*solve(matrix, vector)
 
 
 def fixed_point(limit:int,
@@ -103,6 +111,8 @@ def fixed_point(limit:int,
                 *pars:tuple,
                 power:int=1,
                 epsilon:Optional[float]=None,
+                factor:float=1.0,
+                alpha:float=0.0,
                 solve:Optional[Callable]=None,
                 roots:Optional[Tensor]=None,
                 jacobian:Optional[Callable]=None) -> Tensor:
@@ -125,6 +135,10 @@ def fixed_point(limit:int,
         function power / fixed point order
     epsilon: Optional[float], default=None
         tolerance epsilon
+    factor: float, default=1.0
+        step factor (learning rate)
+    alpha: float, positive, default=0.0
+        regularization alpha
     solve: Optional[Callable]
         linear solver(matrix, vector)
     roots: Optional[Tensor], default=None
@@ -169,7 +183,13 @@ def fixed_point(limit:int,
     point = torch.clone(guess)
 
     for _ in range(limit):
-        point = newton(auxiliary, point, solve=solve, roots=roots, jacobian=jacobian)
+        point = newton(auxiliary,
+                       point,
+                       factor=factor,
+                       alpha=alpha,
+                       solve=solve,
+                       roots=roots,
+                       jacobian=jacobian)
         error = (point - guess).abs().max()
         guess = torch.clone(point)
         if epsilon is not None and error < epsilon:
