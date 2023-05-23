@@ -1,2 +1,0 @@
-.. automodule:: ndtorch.ndtorch
-    :members:

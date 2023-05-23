@@ -20,8 +20,15 @@ Parametric fixed point computation.
    :caption: API:
    :maxdepth: 1
 
-   modules/ndtorch.rst
-   modules/twiss.rst
+   modules/util.rst
+   modules/derivative.rst
+   modules/signature.rst
+   modules/index.rst
+   modules/series.rst
+   modules/evaluate.rst
+   modules/propagate.rst
+   modules/pfp.rst
+   modules/jet.rst
 
 Indices and tables
 ==================
