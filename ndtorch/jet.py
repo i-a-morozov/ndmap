@@ -5,6 +5,7 @@ Jet
 Convenience class to work with jets (evaluation point & derivative table)
 
 """
+
 from __future__ import annotations
 
 from typing import TypeAlias
@@ -123,6 +124,14 @@ class Jet:
         -------
         None
 
+        Examples
+        --------
+        >>> import torch
+        >>> x = torch.tensor([0.0, 0.0])
+        >>> k = torch.tensor([0.0, 0.0])
+        >>> Jet((2, 2), (2, 1), initialize=True, point=[x, k], dtype=torch.float64)
+        Jet((2, 2), (2, 1))
+
         """
         jacobian = torch.func.jacfwd if jacobian is None else jacobian
 
@@ -136,6 +145,8 @@ class Jet:
 
         if self.point is None:
             self.point = [torch.zeros(i, dtype=self.dtype, device=self.device) for i in self.dimension]
+        else:
+            self.point = [tensor.to(self.dtype).to(self.device) for tensor in point]
 
         state, *knobs = self.point
         self.state:State = state
@@ -159,12 +170,23 @@ class Jet:
         -------
         Tensor
 
+        Examples
+        --------
+        >>> import torch
+        >>> x = torch.tensor([0.0, 0.0])
+        >>> k = torch.tensor([0.0, 0.0])
+        >>> j = Jet((2, 2), (2, 1), initialize=True, point=[x, k], dtype=torch.float32)
+        >>> dx = torch.tensor([1.0, 1.0])
+        >>> dk = torch.tensor([1.0, 1.0])
+        >>> j.evaluate([dx, dk])
+        tensor([1., 1.])
+
         """
         return evaluate(self.table, delta)
 
 
     @property
-    def signature(self) -> list[tuple[int, ...]]:
+    def signature(self) -> Signature:
         """
         Compute derivative table elements bottom elements signatures
 
@@ -174,8 +196,17 @@ class Jet:
 
         Returns
         -------
-        list[tuple[int, ...]]
+        Signature
             bottom table elements signatures
+
+        Examples
+        --------
+        >>> import torch
+        >>> x = torch.tensor([0.0, 0.0])
+        >>> k = torch.tensor([0.0, 0.0])
+        >>> j = Jet((2, 2), (2, 1), initialize=True, point=[x, k], dtype=torch.float32)
+        >>> j.signature
+        [(0, 0), (0, 1), (1, 0), (1, 1), (2, 0), (2, 1)]
 
         """
         return signature(self.table, factor=False)
@@ -194,6 +225,32 @@ class Jet:
         -------
         Series
 
+        Examples
+        --------
+        >>> import torch
+        >>> x = torch.tensor([0.0, 0.0])
+        >>> k = torch.tensor([0.0, 0.0])
+        >>> j = Jet((2, 2), (2, 1), initialize=True, point=[x, k], dtype=torch.float32)
+        >>> j.series
+        {(0, 0, 0, 0): tensor([0., 0.]),
+        (0, 0, 1, 0): tensor([0., 0.]),
+        (0, 0, 0, 1): tensor([0., 0.]),
+        (1, 0, 0, 0): tensor([1., 0.]),
+        (0, 1, 0, 0): tensor([0., 1.]),
+        (1, 0, 1, 0): tensor([0., 0.]),
+        (1, 0, 0, 1): tensor([0., 0.]),
+        (0, 1, 1, 0): tensor([0., 0.]),
+        (0, 1, 0, 1): tensor([0., 0.]),
+        (2, 0, 0, 0): tensor([0., 0.]),
+        (1, 1, 0, 0): tensor([0., 0.]),
+        (0, 2, 0, 0): tensor([0., 0.]),
+        (2, 0, 1, 0): tensor([0., 0.]),
+        (2, 0, 0, 1): tensor([0., 0.]),
+        (1, 1, 1, 0): tensor([0., 0.]),
+        (1, 1, 0, 1): tensor([0., 0.]),
+        (0, 2, 1, 0): tensor([0., 0.]),
+        (0, 2, 0, 1): tensor([0., 0.])}
+
         """
         return series(self.dimension, self.order, self.table)
 
@@ -210,6 +267,17 @@ class Jet:
         Returns
         -------
         Table
+
+        Examples
+        --------
+        >>> import torch
+        >>> x = torch.tensor([0.0, 0.0])
+        >>> k = torch.tensor([0.0, 0.0])
+        >>> j = Jet((2, 2), (2, 1), initialize=True, point=[x, k], dtype=torch.float32)
+        >>> j.parametetric
+        [tensor([0., 0.]),
+        tensor([[0., 0.],
+                [0., 0.]])]
 
         """
         table, *_ = self.table
@@ -229,6 +297,16 @@ class Jet:
         Returns
         -------
         None
+
+        Examples
+        --------
+        >>> import torch
+        >>> x = torch.tensor([0.0, 0.0])
+        >>> k = torch.tensor([0.0, 0.0])
+        >>> j = Jet((2, 2), (2, 1), initialize=True, point=[x, k], dtype=torch.float32)
+        >>> j.parametetric = 1
+        >>> j.parametetric
+        1
 
         """
         set(self.table, (0, ), value)
@@ -267,8 +345,30 @@ class Jet:
             data device
 
         Returns
-        ----------
+        -------
         Jet
+
+        Examples
+        --------
+        >>> import torch
+        >>> x = torch.tensor([0.0, 0.0])
+        >>> k = torch.tensor([0.0, 0.0])
+        >>> def mapping(x, k):
+        ...     x1, x2 = x
+        ...     k1, k2 = k
+        ...     return torch.stack([x1*k1, x2*k2])
+        >>> j = Jet.from_mapping((2, 2), (1, 1), [x, k], mapping, dtype=torch.float32)
+        >>> j.table
+        [[tensor([0., 0.]),
+        tensor([[0., 0.],
+                [0., 0.]])],
+        [tensor([[0., 0.],
+                [0., 0.]]),
+        tensor([[[1., 0.],
+                [0., 0.]],
+        
+                [[0., 0.],
+                [0., 1.]]])]]
 
         """
         jacobian = torch.func.jacfwd if jacobian is None else jacobian
@@ -320,8 +420,32 @@ class Jet:
             data device
 
         Returns
-        ----------
+        -------
         Jet
+
+        Examples
+        --------
+        >>> import torch
+        >>> from ndtorch.derivative import derivative
+        >>> x = torch.tensor([0.0, 0.0])
+        >>> k = torch.tensor([0.0, 0.0])
+        >>> def mapping(x, k):
+        ...     x1, x2 = x
+        ...     k1, k2 = k
+        ...     return torch.stack([x1*k1, x2*k2])
+        >>> t = derivative((1, 1), mapping, [x, k])
+        >>> j = Jet.from_table((2, 2), (1, 1), [x, k], t, dtype=torch.float32)
+        >>> j.table
+        [[tensor([0., 0.]),
+        tensor([[0., 0.],
+                [0., 0.]])],
+        [tensor([[0., 0.],
+                [0., 0.]]),
+        tensor([[[1., 0.],
+                [0., 0.]],
+        
+                [[0., 0.],
+                [0., 1.]]])]]
 
         """
         jacobian = torch.func.jacfwd if jacobian is None else jacobian
@@ -369,8 +493,33 @@ class Jet:
             data device
 
         Returns
-        ----------
+        -------
         Jet
+
+        >>> import torch
+        >>> from ndtorch.util import curry_apply
+        >>> from ndtorch.series import series
+        >>> from ndtorch.propagate import identity
+        >>> x = torch.tensor([0.0, 0.0])
+        >>> k = torch.tensor([0.0, 0.0])
+        >>> def mapping(x, k):
+        ...     x1, x2 = x
+        ...     k1, k2 = k
+        ...     return torch.stack([x1*k1, x2*k2])
+        >>> s = [*identity((1, 1), [x, k], flag=True).keys()]
+        >>> s = series(s, curry_apply(mapping, (2, 2)), *x, *k)
+        >>> j = Jet.from_series((2, 2), (1, 1), [x, k], s)
+        >>> j.table
+        [[tensor([0., 0.]),
+        tensor([[0., 0.],
+                [0., 0.]])],
+        [tensor([[0., 0.],
+                [0., 0.]]),
+        tensor([[[1., 0.],
+                [0., 0.]],
+        
+                [[0., 0.],
+                [0., 1.]]])]]
 
         """
         jacobian = torch.func.jacfwd if jacobian is None else jacobian
@@ -406,8 +555,41 @@ class Jet:
             additional function arguments
 
         Returns
-        ----------
+        -------
         Jet
+
+        Examples
+        --------
+        >>> import torch
+        >>> x = torch.tensor([0.0, 0.0])
+        >>> k = torch.tensor([0.0, 0.0])
+        >>> def mapping(x, k):
+        ...     x1, x2 = x
+        ...     k1, k2 = k
+        ...     return torch.stack([x1*k1, x2*k2])
+        >>> j = Jet((2, 2), (1, 1), point=[x, k], dtype=torch.float32)
+        >>> j.table
+        [[tensor([0., 0.]),
+        tensor([[0., 0.],
+                [0., 0.]])],
+        [tensor([[1., 0.],
+                [0., 1.]]),
+        tensor([[[0., 0.],
+                [0., 0.]],
+        
+                [[0., 0.],
+                [0., 0.]]])]]
+        >>> j.propagate(mapping).table
+        [[tensor([0., 0.]),
+        tensor([[0., 0.],
+                [0., 0.]])],
+        [tensor([[0., 0.],
+                [0., 0.]]),
+        tensor([[[1., 0.],
+                [0., 0.]],
+        
+                [[0., 0.],
+                [0., 1.]]])]]
 
         """
         table = propagate(self.dimension,
@@ -438,8 +620,18 @@ class Jet:
             other jet
 
         Returns
-        ----------
+        -------
         bool
+
+        Examples
+        --------
+        >>> j1 = Jet((2, 2), (1, 1))
+        >>> j2 = Jet((2, 2), (2, 1))
+        >>> j3 = Jet((2, 2), (1, 1))
+        >>> j1.compliant(j2)
+        False
+        >>> j1.compliant(j3)
+        True
 
         """
         if not all(i == j for i, j in zip(self.dimension, other.dimension)):
@@ -461,8 +653,24 @@ class Jet:
             other jet
 
         Returns
-        ----------
+        -------
         Jet
+
+        Examples
+        --------
+        >>> j1 = Jet((2, 2), (1, 1), dtype=torch.float32)
+        >>> j2 = Jet((2, 2), (1, 1), dtype=torch.float32)
+        >>> j1.compose(j2).table
+        [[tensor([0., 0.]),
+        tensor([[0., 0.],
+                [0., 0.]])],
+        [tensor([[1., 0.],
+                [0., 1.]]),
+        tensor([[[0., 0.],
+                [0., 0.]],
+        
+                [[0., 0.],
+                [0., 0.]]])]]
 
         """
         def auxiliary(*args) -> Tensor:
@@ -480,8 +688,17 @@ class Jet:
         None
 
         Returns
-        ----------
+        -------
         bool
+
+        Examples
+        --------
+        >>> j = Jet((2, 2), (1, 1), initialize=False)
+        >>> bool(j)
+        False
+        >>> j = Jet((2, 2), (1, 1), initialize=True)
+        >>> bool(j)
+        True
 
         """
         return self.table is not None
@@ -497,8 +714,17 @@ class Jet:
             other jet
 
         Returns
-        ----------
+        -------
         bool
+
+        Examples
+        --------
+        >>> Jet((2, 2), (1, 1)) == Jet((2, 2), (1, 1))
+        True
+        >>> Jet((1, 2), (1, 1)) == Jet((2, 2), (1, 1))
+        False
+        >>> Jet((2, 2), (1, 1)) == Jet((2, 2), (2, 1))
+        False
 
         """
         if not self.compliant(other):
@@ -539,7 +765,7 @@ class Jet:
             value to set
 
         Returns
-        ----------
+        -------
         None
 
         """
@@ -563,7 +789,7 @@ class Jet:
         None
 
         Returns
-        ----------
+        -------
         int
 
         """
@@ -580,8 +806,19 @@ class Jet:
             delta deviation
 
         Returns
-        ----------
+        -------
         Tensor
+
+        Examples
+        --------
+        >>> import torch
+        >>> x = torch.tensor([0.0, 0.0])
+        >>> k = torch.tensor([0.0, 0.0])
+        >>> j = Jet((2, 2), (2, 1), initialize=True, point=[x, k], dtype=torch.float32)
+        >>> dx = torch.tensor([1.0, 1.0])
+        >>> dk = torch.tensor([1.0, 1.0])
+        >>> j.evaluate([dx, dk])
+        tensor([1., 1.])
 
         """
         return self.evaluate(delta)
@@ -597,8 +834,24 @@ class Jet:
             other jet
 
         Returns
-        ----------
+        -------
         Jet
+
+        Examples
+        --------
+        >>> j1 = Jet((2, 2), (1, 1), dtype=torch.float32)
+        >>> j2 = Jet((2, 2), (1, 1), dtype=torch.float32)
+        >>> j1.compose(j2).table
+        [[tensor([0., 0.]),
+        tensor([[0., 0.],
+                [0., 0.]])],
+        [tensor([[1., 0.],
+                [0., 1.]]),
+        tensor([[[0., 0.],
+                [0., 0.]],
+        
+                [[0., 0.],
+                [0., 0.]]])]]
 
         """
         return self.compose(other)
@@ -613,7 +866,7 @@ class Jet:
         None
 
         Returns
-        ----------
+        -------
         str
 
         """

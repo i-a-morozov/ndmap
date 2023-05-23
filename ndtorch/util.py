@@ -112,3 +112,33 @@ def curry_apply(function:Callable, table:tuple[int, ...], *pars:tuple) -> Callab
             start += length
         return function(*vecs, *pars)
     return partial(clouser)
+
+
+def nest(power:int, function:Callable, *pars:tuple) -> Callable:
+    """
+    Generate nested function
+
+    Parameters
+    ----------
+    power : int
+        nest power
+    function : Callable
+        function to nest
+    *pars: tuple
+        fixed parameters
+
+    Returns
+    -------
+    Callable
+
+    Examples
+    --------
+    >>> nest(5, lambda x: x**2)(2)
+    4294967296
+
+    """
+    def wrapper(x, *pars):
+        for _ in range(power):
+            x = function(x, *pars)
+        return x
+    return wrapper
