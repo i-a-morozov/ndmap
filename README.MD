@@ -65,3 +65,9 @@ tensor([[2., 1.],
 >>> import ndtorch
 >>> ndtorch.__about__
 ```
+
+# Animations
+
+Collision of fixed points
+
+![alt text](docs/pics/collision.gif)
