@@ -18,6 +18,8 @@ from torch import Tensor
 
 from .util import flatten
 from .derivative import derivative
+from .signature import set
+from .signature import get
 from .series import series
 from .evaluate import evaluate
 
@@ -34,6 +36,7 @@ Signature: TypeAlias = Union[list[tuple[int, ...]], list[tuple[tuple[int, ...], 
 def identity(order:tuple[int, ...],
              point:Point, *,
              flag:bool=False,
+             parametric:Optional[Table]=None,
              jacobian:Optional[Callable]=None) -> Union[Table, Series]:
     """
     Generate identity derivative table or identity series
@@ -48,6 +51,8 @@ def identity(order:tuple[int, ...],
         evaluation point
     flag: bool, default=False
         flag to return identity series instead of table
+    parametric: Optional[Table]
+        optional parametric table
     jacobian: Optional[Callable]
         torch.func.jacfwd (default) or torch.func.jacrev
 
@@ -88,6 +93,9 @@ def identity(order:tuple[int, ...],
     jacobian = torch.func.jacfwd if jacobian is None else jacobian
 
     table = derivative(order, lambda x, *xs: x, point, intermediate=True, jacobian=jacobian)
+
+    if parametric is not None:
+        set(table, (0, ),  get(parametric, (0, )))
 
     if not flag:
         return table
