@@ -18,6 +18,7 @@ from multimethod import multimethod
 import torch
 from torch import Tensor
 
+from .util import flatten
 from .derivative import derivative
 
 Mapping  : TypeAlias = Callable
@@ -196,6 +197,7 @@ def table(dimension:tuple[int, ...],
     >>> dx = 1.0E-3*torch.ones_like(x)
     >>> dy = 1.0E-3*torch.ones_like(x)
     >>> torch.allclose(fn(x + dx, y + dy), evaluate(t, [dx, dy]))
+    True
 
     """
     jacobian = torch.func.jacfwd if jacobian is None else jacobian
@@ -207,3 +209,75 @@ def table(dimension:tuple[int, ...],
     delta = [torch.zeros(i, dtype=value.dtype, device=value.device) for i in dimension]
 
     return derivative(order, function, delta, intermediate=True, jacobian=jacobian)
+
+
+@multimethod
+def compare(probe:Table, other:Table) -> bool:
+    """
+    Compare tables
+
+    Parameters
+    ----------
+    probe, other: Table
+        tables to compare
+
+    Returns
+    -------
+    bool
+
+    Examples
+    --------
+    >>> import torch
+    >>> from ndtorch.derivative import derivative
+    >>> def fn(x, y):
+    ...    x1, x2 = x
+    ...    y1, y2 = y
+    ...    return torch.stack([x1*(1 + y1), x2*(1 + y2)])
+    >>> x = torch.tensor([0.0, 0.0])
+    >>> y = torch.zeros_like(x)
+    >>> t = derivative((2, 1), fn, x, y)
+    >>> compare(t, t)
+    True
+
+    """
+    for x, y in zip(*map(lambda array: flatten(array, target=list), [probe, other])):
+        if not torch.allclose(x, y):
+            return False
+    return True
+
+
+@multimethod
+def compare(probe:Series, other:Series) -> bool:
+    """
+    Compare series
+
+    Parameters
+    ----------
+    probe, other: Table
+        series to compare
+
+    Returns
+    -------
+    bool
+
+    Examples
+    --------
+    >>> import torch
+    >>> from ndtorch.derivative import derivative
+    >>> from ndtorch.series import series
+    >>> def fn(x, y):
+    ...    x1, x2 = x
+    ...    y1, y2 = y
+    ...    return torch.stack([x1*(1 + y1), x2*(1 + y2)])
+    >>> x = torch.tensor([0.0, 0.0])
+    >>> y = torch.zeros_like(x)
+    >>> t = derivative((2, 1), fn, x, y)
+    >>> s = series((2, 2), (2, 1), t)
+    >>> compare(s, s)
+    True
+
+    """
+    for x, y in zip(probe.values(), other.values()):
+        if not torch.allclose(x, y):
+            return False
+    return True
