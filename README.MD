@@ -84,4 +84,10 @@ Collision of fixed points
   <img width="576" height="576" src="docs/pics/collision.gif">
 </p>
 
+Reduce real part of a hyperbolic fixed point
 
+Collision of fixed points
+
+<p align="center">
+  <img width="576" height="576" src="docs/pics/change.gif">
+</p>
