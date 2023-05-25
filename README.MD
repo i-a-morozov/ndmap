@@ -3,6 +3,10 @@
 # ndtorch, 2022-2023
 ## i.a.morozov@inp.nsk.su
 
+<p align="center">
+  <img width="100" height="100" src="docs/pics/logo.svg">
+</p>
+
 Higher order partial derivatives computation with respect to one or several tensor-like variables.
 Taylor series function approximation (derivative table and series function representation).
 Parametric fixed point computation.
@@ -68,6 +72,16 @@ tensor([[2., 1.],
 
 # Animations
 
+Stable and unstable invariant manifolds approximation
+
+<p align="center">
+  <img width="576" height="576" src="docs/pics/manifold.gif">
+</p>
+
 Collision of fixed points
 
-![alt text](docs/pics/collision.gif)
+<p align="center">
+  <img width="576" height="576" src="docs/pics/collision.gif">
+</p>
+
+
