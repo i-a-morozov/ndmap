@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ndtorch"
-version = "0.1.1"
+version = "0.1.2"
 authors = [{name = "Ivan Morozov", email = "i.a.morozov@inp.nsk.su"}]
 description = "Higher order partial derivatives computation with respect to one or several tensor-like variables, application to nonlinear dynamics"
 readme = "README.MD"
@@ -17,5 +17,5 @@ dependencies = ["torch>=2.0.1", "multimethod>=1.9.1"]
 [project.optional-dependencies]
 examples = ["jupyter-lab", "numpy", "matplotlib", "twiss"]
 test=["pytest", "pytest-cov"]
-all = ["ndtorch[examples]"]
+all = ["ndtorch[examples, test]"]
 
