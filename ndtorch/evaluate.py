@@ -253,7 +253,7 @@ def compare(probe:Series, other:Series) -> bool:
 
     Parameters
     ----------
-    probe, other: Table
+    probe, other: Series
         series to compare
 
     Returns
