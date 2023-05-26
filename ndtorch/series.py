@@ -86,7 +86,7 @@ def series(dimension:tuple[int, ...],
             continue
         count = index(dimension, count)
         array = factor*array.permute(*reversed(range(len(array.shape))))
-        array = array.flatten().reshape(-1, len(array))
+        array = array.flatten().reshape(len(count), -1)
         for key, value in zip(count, array):
             key = tuple(key.tolist())
             if key not in series:
