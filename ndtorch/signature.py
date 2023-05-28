@@ -140,7 +140,7 @@ def get(table:Table, index:tuple[int, ...]) -> Union[Tensor, Table]:
 
 def set(table:Table, index:tuple[int, ...], value:Union[Tensor, Table]) -> None:
     """
-    Set derivative table element at a given (bottom) element signature.
+    Set derivative table element at a given (bottom) element signature
 
     Note, index can correspond to a bottom element or a subtable
 
@@ -184,9 +184,10 @@ def set(table:Table, index:tuple[int, ...], value:Union[Tensor, Table]) -> None:
     table[n] = value
 
 
+@multimethod
 def apply(table:Table, index:tuple[int, ...], function:Callable) -> None:
     """
-    Apply function (modifies element at index).
+    Apply function (modifies element at index)
 
     Note, index can correspond to a bottom element or a subtable
 
@@ -216,7 +217,125 @@ def apply(table:Table, index:tuple[int, ...], function:Callable) -> None:
     >>> t = derivative((2, 1), fn, x, y)
     >>> apply(t, (1, 1), torch.log)
     >>> get(t, (1, 1))
+    tensor([[0., 0.],
+            [0., 0.]])
 
     """
     value = get(table, index)
     set(table, index, function(value))
+
+
+@multimethod
+def apply(table:Table, index:list[tuple[int, ...]], function:Callable) -> None:
+    """
+    Apply function (modifies element at list of indices)
+
+    Parameters
+    ----------
+    table: Table
+        input derivative table representation
+    index: int[tuple[int, ...]]
+        list of element signatures
+    function: Callable
+        function to apply
+
+    Returns
+    -------
+    None
+
+    Examples
+    --------
+    >>> import torch
+    >>> from ndtorch.derivative import derivative
+    >>> def fn(x, y):
+    ...    x1, x2 = x
+    ...    y1, y2 = y
+    ...    return (x1 + x2 + x1**2 + x1*x2 + x2**2)*(1 + y1 + y2)
+    >>> x = torch.tensor([0.0, 0.0])
+    >>> y = torch.zeros_like(x)
+    >>> t = derivative((2, 1), fn, x, y)
+    >>> apply(t, [(1, 0), (1, 1)], torch.log)
+    >>> get(t, [(1)])
+    [tensor([0., 0.]),
+    tensor([[0., 0.],
+            [0., 0.]])]
+
+    """
+    [*map(lambda index: apply(table, index, function), index)]
+
+
+@multimethod
+def apply(table:Table, function:Callable) -> None:
+    """
+    Apply function to all bottom elements
+
+    Parameters
+    ----------
+    table: Table
+        input derivative table representation
+    function: Callable
+        function to apply
+
+    Returns
+    -------
+    None
+
+    Examples
+    --------
+    >>> import torch
+    >>> from ndtorch.derivative import derivative
+    >>> def fn(x, y):
+    ...    x1, x2 = x
+    ...    y1, y2 = y
+    ...    return (x1 + x2 + x1**2 + x1*x2 + x2**2)*(1 + y1 + y2)
+    >>> x = torch.tensor([0.0, 0.0])
+    >>> y = torch.zeros_like(x)
+    >>> t = derivative((2, 1), fn, x, y)
+    >>> apply(t, torch.norm)
+    >>> t
+    [[tensor(0.), tensor(0.)],
+     [tensor(1.4142), tensor(2.)],
+     [tensor(3.1623), tensor(4.4721)]]
+
+    """
+    apply(table, signature(table), function)
+
+
+def chop(table:Table, threshold:float=1.0E-9, value:float=0.0) -> None:
+    """
+    Chop tensor elements in a table below a given threshold
+
+    Parameters
+    ----------
+    table: Table
+        input derivative table representation
+    threshold: float, default=1.0E-9
+        threshold value
+    value: float, default=0.0
+        set value
+
+    Returns
+    -------
+    None
+
+    Examples
+    --------
+    >>> import torch
+    >>> from ndtorch.derivative import derivative
+    >>> def fn(x, y):
+    ...    x1, x2 = x
+    ...    y1, y2 = y
+    ...    return (x1 + x2 + x1**2 + x1*x2 + x2**2)*(1 + y1 + y2)
+    >>> x = torch.tensor([0.0, 0.0])
+    >>> y = torch.zeros_like(x)
+    >>> t = derivative((0, 1), fn, x, y)
+    >>> apply(t, lambda x: x + 1.0E-10)
+    >>> chop(t)
+    >>> t
+    [[tensor(0.), tensor([0., 0.])]]
+
+    """
+    def inner(tensor):
+        tensor[tensor.abs() < threshold] = value
+        return tensor
+    apply(table, inner)
