@@ -320,7 +320,7 @@ def clean(probe:Series, *,
      (0, 1, 0, 1): tensor([0., 1.])}
 
     """
-    return {key: value for key, value in probe.items() if torch.any(value > epsilon)}
+    return {key: value for key, value in probe.items() if torch.any(value.abs() > epsilon)}
 
 
 def fetch(probe:Series,
