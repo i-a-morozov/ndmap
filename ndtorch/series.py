@@ -41,8 +41,6 @@ def series(dimension:tuple[int, ...],
     """
     Generate series representation from a given derivative table representation
 
-    Note, table is expected to represent a vector valued function
-
     Parameters
     ----------
     dimension: tuple[int, ...], positive
@@ -85,7 +83,8 @@ def series(dimension:tuple[int, ...],
         if not all(i <= j for i, j in zip(count, order)):
             continue
         count = index(dimension, count)
-        array = factor*array.permute(*reversed(range(len(array.shape))))
+        shape = tuple(reversed(range(len(array.shape))))
+        array = factor*(array.permute(shape) if shape else array)
         array = array.flatten().reshape(len(count), -1)
         for key, value in zip(count, array):
             key = tuple(key.tolist())
@@ -108,7 +107,6 @@ def series(index:tuple[int, ...],
     c(i, j, k, ...) * x**i * y**j * z**k * ... => {..., (i, j, k, ...) : c(i, j, k, ...), ...}
 
     Note, input function arguments are expected to be scalar tensors
-    Function is expected to return a vector tensor
 
     Parameters
     ----------
@@ -171,7 +169,6 @@ def series(index:list[tuple[int, ...]],
     c(i, j, k, ...) * x**i * y**j * z**k * ... => {..., (i, j, k, ...) : c(i, j, k, ...), ...}
 
     Note, input function arguments are expected to be scalar tensors
-    Function is expected to return a vector tensor
 
     Parameters
     ----------
