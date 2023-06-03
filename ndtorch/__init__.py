@@ -16,6 +16,7 @@ Tools for fixed point computation are avaliable for mappings, including (paramet
 Mapping is a function f(x, y, ...): R^n R^m ... -> R^n that returns a tensor with the same shape as its first argument x (assumed to be a vector)
 The first argument is referred as state, other arguments used for computation of derivatives are collectively referred as knobs
 State and each knob are assumed to be vector-like tensors
+Note, phase space observable is a function f(x, y, ...): R^n R^m ... -> R, e.g. a mapping component
 
 Given a function f(x) with a single tensor argument x that returns a tensor or a (nested) list of tensors
 Derivatives with respect to x can be computed upto a given order
