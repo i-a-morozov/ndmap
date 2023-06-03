@@ -115,6 +115,8 @@ def propagate(dimension:tuple[int, ...],
     """
     Propagate derivative table representation through a given mapping
 
+    Note, can propagate through a scalar observable
+
     Parameters
     ----------
     dimension: tuple[int, ...], positive
@@ -237,6 +239,20 @@ def propagate(dimension:tuple[int, ...],
     >>> v = propagate((2, 2), (2, 2), v, [knobs], gn)
     >>> all(torch.allclose(x, y) for x, y in zip(u.values(), v.values()))
     True
+
+    >>> import torch
+    >>> state = torch.tensor([0.0, 0.0])
+    >>> knobs = torch.tensor([1.0, 1.0])
+    def fn(state, knobs):
+    ...     x1, x2 = state
+    ...     y1, y2 = knobs
+    ...     return (x1**2 + x2**2)*(y1 + y2)
+    >>> t = identity((2, 0), [state, knobs])
+    >>> propagate((2, 2), (2, 0), t, [knobs], fn)
+    [[tensor(0.)],
+    [tensor([0., 0.])],
+    [tensor([[4., 0.],
+            [0., 4.]])]]
 
     """
     jacobian = torch.func.jacfwd if jacobian is None else jacobian
