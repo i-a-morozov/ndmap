@@ -23,14 +23,17 @@ from .signature import get
 from .series import series
 from .evaluate import evaluate
 
-Mapping  : TypeAlias = Callable
-Point    : TypeAlias = list[Tensor]
-Delta    : TypeAlias = list[Tensor]
-State    : TypeAlias = Tensor
-Knobs    : TypeAlias = list[Tensor]
-Table    : TypeAlias = list
-Series   : TypeAlias = dict[tuple[int, ...], Tensor]
-Signature: TypeAlias = Union[list[tuple[int, ...]], list[tuple[tuple[int, ...], float]]]
+
+State       : TypeAlias = Tensor
+Knobs       : TypeAlias = list[Tensor]
+Point       : TypeAlias = list[Tensor]
+Delta       : TypeAlias = list[Tensor]
+Table       : TypeAlias = list
+Series      : TypeAlias = dict[tuple[int, ...], Tensor]
+Signature   : TypeAlias = Union[list[tuple[int, ...]], list[tuple[tuple[int, ...], float]]]
+Mapping     : TypeAlias = Callable
+Observable  : TypeAlias = Callable
+Hamiltonian : TypeAlias = Callable
 
 
 def identity(order:tuple[int, ...],
