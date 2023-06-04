@@ -263,7 +263,8 @@ def propagate(dimension:tuple[int, ...],
     def auxiliary(*args) -> Tensor:
         state, *args = torch.stack([*args]).split(dimension)
         state = evaluate(data, [state, *args], epsilon=epsilon)
-        args = [arg + knob for arg, knob in zip(args, torch.cat(knobs))]
+        if args:
+            args = [arg + knob for arg, knob in zip(args, torch.cat(knobs))]
         return mapping(state, *args, *pars)
 
     value, *_ = data.values()
