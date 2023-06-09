@@ -2,6 +2,6 @@
 Taylor
 ------
 
-Taylor integrator
+Taylor integration step
 
 """

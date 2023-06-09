@@ -37,7 +37,7 @@ Hamiltonian : TypeAlias = Callable
 @multimethod
 def bracket(f:Union[Observable, Mapping],
             g:Union[Observable, Mapping], *,
-            jacobian:Optional[Callable]=None) -> Union[Observable, Mapping, Callable]:
+            jacobian:Optional[Callable]=None) -> Union[Observable, Mapping]:
     """
     Compute Poisson bracket
 
@@ -50,7 +50,7 @@ def bracket(f:Union[Observable, Mapping],
 
     Returns
     -------
-    Union[Observable, Mapping, Callable]
+    Union[Observable, Mapping]
 
     Examples
     --------
@@ -69,14 +69,11 @@ def bracket(f:Union[Observable, Mapping],
     tensor([-1.,  1.])
 
     >>> import torch
-    >>> def f(state): return state
-    >>> def g(state): return state
+    >>> def f(state): q1, p1, q2, p2 = state; return torch.stack([q1, p1, q2, p2])
+    >>> def g(state): q1, p1, q2, p2 = state; return torch.stack([p1, q1, p2, q2])
     >>> state = torch.tensor([0.0, 0.0, 0.0, 0.0])
     >>> bracket(f, g)(state)
-    tensor([[ 0.,  1.,  0.,  0.],
-            [-1.,  0.,  0.,  0.],
-            [ 0.,  0.,  0.,  1.],
-            [ 0.,  0., -1.,  0.]])
+    tensor([ 1., -1.,  1., -1.])
 
     >>> import torch
     >>> from ndtorch.derivative import derivative
@@ -89,25 +86,36 @@ def bracket(f:Union[Observable, Mapping],
 
     Note
     ----
-    (Observable, Observable)                       -> Observable
-    (Observable, Mapping) or (Mapping, Observable) -> Mapping
-    (Mapping, Mapping)                             -> Callable
+    [f, g]                   -> [f, g]
+    [[f1, f2], g]            -> [[f1, g], [f2, g]]
+    [f, [g1, g2]]            -> [[f, g1], [f, g2]]
+    [[f1, f2], [g1, g2]]     -> [[f1, g1], [f2, g2]]
+
+    (Observable, Observable) -> Observable
+    (Mapping, Observable)    -> Mapping
+    (Observable, Mapping)    -> Mapping
+    (Mapping, Mapping)       -> Mapping
 
     """
     jacobian = torch.func.jacfwd if jacobian is None else jacobian
 
-    def closure(state: State, *args:tuple) -> Union[Scalar, State, Tensor]:
+    def closure(state: State, *args:tuple) -> Union[Scalar, State]:
+        omega = symplectic(torch.zeros_like(state))
         df = derivative(1, f, state, *args, intermediate=False, jacobian=jacobian)
         dg = derivative(1, g, state, *args, intermediate=False, jacobian=jacobian)
-        return df @ symplectic(state) @ dg
-
+        df, dg = map(lambda x: x.reshape(-1, len(state)), (df, dg))
+        nf, ng = map(len, (df, dg))
+        df = torch.cat([df for _ in range(ng if nf < ng else 1)])
+        dg = torch.cat([dg for _ in range(nf if ng < nf else 1)])
+        return (torch.func.vmap(lambda df, dg: df @ omega @ dg)(df, dg)).squeeze()
+        
     return closure
 
 
 @multimethod
 def bracket(tf:Union[Table, Series],
             tg:Union[Table, Series], *,
-            jacobian:Optional[Callable]=None) -> Union[Observable, Mapping, Callable]:
+            jacobian:Optional[Callable]=None) -> Union[Observable, Mapping]:
     """
     Compute Poisson bracket
 
@@ -120,7 +128,7 @@ def bracket(tf:Union[Table, Series],
 
     Returns
     -------
-    Union[Observable, Mapping, Callable]
+    Union[Observable, Mapping]
 
     Examples
     --------
