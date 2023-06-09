@@ -108,7 +108,7 @@ def bracket(f:Union[Observable, Mapping],
         df = torch.cat([df for _ in range(ng if nf < ng else 1)])
         dg = torch.cat([dg for _ in range(nf if ng < nf else 1)])
         return (torch.func.vmap(lambda df, dg: df @ omega @ dg)(df, dg)).squeeze()
-        
+
     return closure
 
 
