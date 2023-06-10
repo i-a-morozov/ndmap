@@ -28,6 +28,8 @@ Parametric fixed point computation.
    modules/evaluate.rst
    modules/propagate.rst
    modules/pfp.rst
+   modules/bracket.rst
+   modules/taylor.rst
    modules/jet.rst
 
 Indices and tables
