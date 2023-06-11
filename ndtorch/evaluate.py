@@ -88,10 +88,10 @@ def evaluate(index:list[int], table:Tensor, delta:Delta):
         value  = delta[count]
         if value.ndim > 0:
             for _ in range(order):
-                table @= value
+                table = table @ value
         else:
             for _ in range(order):
-                table *= value
+                table = table * value
     return total*table
 
 
