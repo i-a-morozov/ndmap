@@ -14,6 +14,7 @@ from functools import partial
 from typing import Iterable
 from typing import Iterator
 from typing import Callable
+from typing import Any
 
 import torch
 from torch import Tensor
@@ -216,3 +217,95 @@ def symplectic(state:Tensor) -> Tensor:
     """
     block = torch.tensor([[0, 1], [-1, 0]], dtype=state.dtype, device=state.device)
     return torch.block_diag(*[block for _ in range(len(state) // 2)])
+
+
+def first(xs:Iterable[Any]) -> Any:
+    """
+    Return first element
+
+    Parameters
+    ----------
+    xs : Iterable[Any]
+        xs
+
+    Returns
+    -------
+    Any
+
+    Examples
+    --------
+    >>> first([1, 2, 3, 4])
+    1
+
+    """
+    x, *_ = xs
+    return x
+
+
+def last(xs:Iterable[Any]) -> Any:
+    """
+    Return last element
+
+    Parameters
+    ----------
+    xs : Iterable[Any]
+        xs
+
+    Returns
+    -------
+    Any
+
+    Examples
+    --------
+    >>> first([1, 2, 3, 4])
+    4
+
+    """
+    *_, x = xs
+    return x
+
+
+def rest(xs:Iterable[Any]) -> Any:
+    """
+    Return all but last element
+
+    Parameters
+    ----------
+    xs : Iterable[Any]
+        xs
+
+    Returns
+    -------
+    Any
+
+    Examples
+    --------
+    >>> first([1, 2, 3, 4])
+    [1, 2, 3]
+
+    """
+    *x, _ = xs
+    return x
+
+
+def most(xs:Iterable[Any]) -> Any:
+    """
+    Return all but first element
+
+    Parameters
+    ----------
+    xs : Iterable[Any]
+        xs
+
+    Returns
+    -------
+    Any
+
+    Examples
+    --------
+    >>> first([1, 2, 3, 4])
+    [2, 3, 4]
+
+    """
+    _, *x = xs
+    return x
