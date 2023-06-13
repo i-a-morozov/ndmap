@@ -1,0 +1,2 @@
+.. automodule:: ndtorch.yoshida
+    :members:
