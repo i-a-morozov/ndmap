@@ -88,7 +88,7 @@ def coefficients(n:int,
     Parameters
     ----------
     n: int, non-negative
-        next Yoshida order
+        start Yoshida order
     m: int, non-negative
         final Yoshida order
 
