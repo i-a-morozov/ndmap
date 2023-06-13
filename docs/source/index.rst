@@ -30,6 +30,7 @@ Parametric fixed point computation.
    modules/pfp.rst
    modules/bracket.rst
    modules/taylor.rst
+   modules/yoshida.rst
    modules/jet.rst
 
 Indices and tables
