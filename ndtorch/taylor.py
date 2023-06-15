@@ -78,18 +78,18 @@ def taylor(degree:int,
 
     >>> import torch
     >>> from ndtorch.derivative import derivative
-    >>> state = torch.tensor([1.0, 1.0])
+    >>> x = torch.tensor([1.0, 1.0])
     >>> l = torch.tensor(0.1)
-    >>> def h(state):
-    ...    q, p = state
+    >>> def h(x):
+    ...    q, p = x
     ...    return p**2/2
-    >>> derivative(1, lambda l: taylor(1, l, h, state), l)
+    >>> derivative(1, lambda l: taylor(1, l, h, x), l)
     [tensor([1.1000, 1.0000]), tensor([1., 0.])]
-    >>> derivative(1, lambda state: taylor(1, l, h, state), state)
+    >>> derivative(1, lambda x: taylor(1, l, h, x), x)
     [tensor([1.1000, 1.0000]),
      tensor([[1.0000, 0.1000],
              [0.0000, 1.0000]])]
-    derivative((1, 1), lambda l, state: taylor(1, l, h, state), l, state)
+    derivative((1, 1), lambda l, x: taylor(1, l, h, x), l, x)
     [[tensor([1.1000, 1.0000]),
       tensor([[1.0000, 0.1000],
               [0.0000, 1.0000]])],
