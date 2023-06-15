@@ -9,6 +9,7 @@ Yoshida integrator (coefficients and step)
 from typing import TypeAlias
 from typing import Callable
 from typing import Union
+from typing import Optional
 
 from functools import reduce
 from itertools import groupby
@@ -211,7 +212,8 @@ def coefficients(l:int,
 def yoshida(n:int,
             m:int,
             merge:bool,
-            mappings:list[Mapping]) -> Mapping:
+            mappings:list[Mapping],
+            parameters:Optional[list[list]]=None) -> Mapping:
     """
     Construct Yoshida integration multistep
 
@@ -225,6 +227,8 @@ def yoshida(n:int,
         flag to merge edge mappings (assume commuting)
     mappings: list[Mapping]
         list of (time-reversible) mappings
+    parameters: Optional[list[list]], default=None
+        list of optional fixed parameters for each mapping
 
     Returns
     -------
@@ -331,18 +335,23 @@ def yoshida(n:int,
 
     Note
     ----
-    Each signature mapping in mappings is (state, delta, *args, **kwargs)
-    Coefficients are attachet to the output (table attribute)
+    Each signature mapping in mappings is (state, delta, *args)
+    Fixed parameters are passed at the end
+    Coefficients are attached to the output (table attribute)
 
     """
     table = coefficients(len(mappings), n, m, merge)
 
-    def closure(state:State, delta:Tensor, *args:tuple, **kwargs:dict) -> State:
+    parameters = [[] for _ in range(len(mappings))] if parameters is None else parameters
+    parameters = [parameters[i] for i in first(table)]
+
+    def closure(state:State, delta:Tensor, *args:tuple) -> State:
         local = torch.clone(state)
         for index, value in zip(*table):
-            local = mappings[index](local, value*delta, *args, **kwargs)
+            local = mappings[index](local, value*delta, *args, *parameters[index])
         return local
 
     closure.table = table
+    closure.parameters = parameters
 
     return closure
