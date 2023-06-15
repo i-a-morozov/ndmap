@@ -339,6 +339,7 @@ def chop(table:Table, threshold:float=1.0E-9, value:float=0.0) -> None:
 
     """
     def inner(tensor):
+        tensor = tensor.clone()
         tensor[tensor.abs() < threshold] = value
         return tensor
     apply(table, inner)
