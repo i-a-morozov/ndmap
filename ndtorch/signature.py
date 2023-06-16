@@ -343,3 +343,37 @@ def chop(table:Table, threshold:float=1.0E-9, value:float=0.0) -> None:
         tensor[tensor.abs() < threshold] = value
         return tensor
     apply(table, inner)
+
+
+def to(table:Table,
+       *args:tuple,
+       **kwargs:dict) -> None:
+    """
+    Perform dtype and/or device conversion for all bottom table element elements (tensors)
+
+    Parameters
+    ----------
+    *args: tuple
+        passed to torch.to function
+    **kwargs: dict
+        passed to torch.to function
+
+    Returns
+    -------
+    None
+
+    Examples
+    --------
+    >>> import torch
+    >>> from ndtorch.derivative import derivative
+    >>> x = torch.tensor(0.0)
+    >>> y = torch.tensor(0.0)
+    >>> t = derivative((1, 1), lambda x, y: x + y, x, y)
+    >>> to(t, torch.float64)
+    >>> t
+    [[tensor(0., dtype=torch.float64), tensor(1., dtype=torch.float64)],
+    [tensor(1., dtype=torch.float64), tensor(0., dtype=torch.float64)]]
+        [[tensor(0.), tensor([0., 0.])]]
+
+    """
+    apply(table, lambda tensor: tensor.to(*args, **kwargs))
