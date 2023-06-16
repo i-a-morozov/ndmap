@@ -122,7 +122,7 @@ def invariant(order:tuple[int, ...],
     """
     if solve is None:
         def solve(matrix, vector):
-            return torch.linalg.lstsq(matrix, vector).solution
+            return torch.linalg.lstsq(matrix, vector.unsqueeze(1)).solution.squeeze()
 
     jacobian = torch.func.jacfwd if jacobian is None else jacobian
 

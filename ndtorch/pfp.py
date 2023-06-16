@@ -92,7 +92,7 @@ def newton(function:Mapping,
 
     if solve is None:
         def solve(matrix, vector):
-            return torch.linalg.lstsq(matrix, vector).solution
+            return torch.linalg.lstsq(matrix, vector.unsqueeze(1)).solution.squeeze()
 
     def auxiliary(x:Tensor, *xs) -> Tensor:
         return function(x, *xs)/(roots - x).prod(-1)
@@ -173,7 +173,7 @@ def fixed_point(limit:int,
     """
     if solve is None:
         def solve(matrix, vector):
-            return torch.linalg.lstsq(matrix, vector).solution
+            return torch.linalg.lstsq(matrix, vector.unsqueeze(1)).solution.squeeze()
 
     jacobian = torch.func.jacfwd if jacobian is None else jacobian
 
@@ -520,7 +520,7 @@ def parametric_fixed_point(order:tuple[int, ...],
     """
     if solve is None:
         def solve(matrix, vector):
-            return torch.linalg.lstsq(matrix, vector).solution
+            return torch.linalg.lstsq(matrix, vector.unsqueeze(1)).solution.squeeze()
 
     jacobian = torch.func.jacfwd if jacobian is None else jacobian
 
