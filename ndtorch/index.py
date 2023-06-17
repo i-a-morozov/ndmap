@@ -139,6 +139,58 @@ def index(dimension:tuple[int, ...],
     return torch.tensor([*flatten(tuple(merge(i, *xs) for i in x))], dtype=dtype, device=device)
 
 
+@multimethod
+def reduce(dimension:tuple[int, ...],
+           signature:tuple[int, ...],
+           tensor:Tensor) -> tuple[tuple[tuple[int, ...], ...], tuple[int, ...], Tensor]:
+    """
+    Generate reduced representation of a given bottom element tensor
+
+    Parameters
+    ----------
+    dimension: tuple[int]
+        table derivative dimension
+    signature: tuple[int]
+        bottom element signature
+    table: Table
+        input derivative table
+
+    Returns
+    -------
+    tuple[
+        tuple[tuple[int, ...], ...],
+        tuple[int, ...],
+        Tensor]
+        (sequence, shape, unique)
+
+    Examples
+    --------
+    >>> import torch
+    >>> from ndtorch.derivative import derivative
+    >>> from ndtorch.signature import get
+    >>> x = torch.tensor([0.0, 0.0])
+    >>> y = torch.tensor([0.0])
+    >>> def fn(x, y): x1, x2 = x; y1, = y; return x1 + x2 + (x1 + x2)*y1**2
+    >>> t = derivative((1, 2), fn, x, y)
+    >>> sequence, shape, unique = reduce((2, 1), (1, 2), get(t, (1, 2)))
+    >>> sequence
+    ((1, 0, 2), (0, 1, 2))
+    >>> shape
+    torch.Size([1, 1, 2])
+    >>> unique
+    {(1, 0, 2): tensor(2.), (0, 1, 2): tensor(2.)}
+
+    """
+    sequence = tuple(map(tuple, index(dimension, signature).tolist()))
+    shape = tensor.shape
+    unique = {}
+    for key, value in zip(sequence, tensor.flatten()):
+        if not key in unique:
+            unique[key] = value
+    return sequence, shape, unique
+
+
+@multimethod
 def reduce(dimension:tuple[int, ...],
            table:Table) -> tuple[
     dict[tuple[int, ...], tuple[tuple[int, ...], ...]],
