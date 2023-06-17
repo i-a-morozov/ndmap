@@ -147,6 +147,8 @@ def reduce(dimension:tuple[int, ...],
     """
     Generate reduced representation of a given bottom element tensor
 
+    Note, bottom element table is assumed to represent a scalar valued function
+
     Parameters
     ----------
     dimension: tuple[int]
@@ -199,6 +201,8 @@ def reduce(dimension:tuple[int, ...],
     dict[tuple[int, ...], Tensor]]:
     """
     Generate reduced representation of a given derivative table
+
+    Note, table is assumed to represent a scalar valued function
 
     Parameters
     ----------
@@ -273,6 +277,8 @@ def bottom(sequence:tuple[tuple[int, ...], ...],
     """
     Generate bottom derivative table element from reduced data
 
+    Note, bottom element table is assumed to represent a scalar valued function
+
     Parameters
     ----------
     sequence: tuple[tuple[int, ...], ...]
@@ -312,6 +318,7 @@ def build(table:Table,
     """
     Build derivative table representation from a given reduced representation
 
+    Note, table is assumed to represent a scalar valued function
     Note, modify input container
 
     Parameters

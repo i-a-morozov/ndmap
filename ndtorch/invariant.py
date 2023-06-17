@@ -21,6 +21,8 @@ from .signature import signature
 from .signature import set
 from .signature import get
 from .signature import chop
+from .index import reduce
+from .index import bottom
 from .evaluate import evaluate
 from .pfp import newton
 from .pfp import propagate
@@ -83,6 +85,7 @@ def invariant(order:tuple[int, ...],
     >>> from ndtorch.derivative import derivative
     >>> from ndtorch.series import series
     >>> from ndtorch.series import clean
+    >>> from ndtorch.evaluate import evaluate
     >>> from ndtorch.yoshida import yoshida
     >>> def fn(x, t): q, p = x ; return torch.stack([q, p - t*q - t*q**2])
     >>> def gn(x, t): q, p = x ; return torch.stack([q + t*p, p])
@@ -96,10 +99,12 @@ def invariant(order:tuple[int, ...],
     (0, 2): tensor([0.5000], dtype=torch.float64),
     (3, 0): tensor([0.3333], dtype=torch.float64)}
 
+    >>> import torch
     >>> from ndtorch.util import nest
     >>> from ndtorch.derivative import derivative
     >>> from ndtorch.series import series
     >>> from ndtorch.series import clean
+    >>> from ndtorch.evaluate import evaluate
     >>> from ndtorch.yoshida import yoshida
     >>> def fn(x, t, k): q, p = x ; k, = k ; return torch.stack([q, p - t*q - t*(1 + k)*q**2])
     >>> def gn(x, t, k): q, p = x ; k, = k ; return torch.stack([q + t*p, p])
@@ -137,15 +142,24 @@ def invariant(order:tuple[int, ...],
         state = mapping(state, *knobs)
         return evaluate(table, [state, *knobs])
 
-    def objective(value:Tensor, shape, index:tuple[int, ...]) -> Tensor:
-        value = value.reshape(*shape)
+    def objective(values, index, sequence, shape, unique):
+        for key, value in zip(unique, values):
+            unique[key] = value
+        value = bottom(sequence, shape, unique)
         set(table, index, value)
         local = derivative(index,
                            auxiliary,
                            *point,
                            intermediate=False,
                            jacobian=jacobian)
-        return (value - local).flatten()
+        unique = {}
+        for key, value in zip(sequence, local.flatten()):
+            if not key in unique:
+                unique[key] = value
+        local = torch.stack([*unique.values()])
+        return values - local
+
+    dimension = (len(state), *(len(knob) for knob in knobs))
 
     _, *array = signature(table)
 
@@ -153,14 +167,19 @@ def invariant(order:tuple[int, ...],
 
         for i in array:
             guess = get(table, i)
-            value = newton(objective,
-                           guess.flatten(),
-                           guess.shape,
-                           i,
-                           solve=solve,
-                           jacobian=jacobian)
-            value = value.reshape(*guess.shape)
-            set(table, i, value.reshape(*guess.shape))
+            sequence, shape, unique = reduce(dimension, i, guess)
+            guess = torch.stack([*unique.values()])
+            values = newton(objective,
+                            guess,
+                            i,
+                            sequence,
+                            shape,
+                            unique,
+                            solve=solve,
+                            jacobian=jacobian)
+            for key, value in zip(unique, values):
+                unique[key] = value
+            set(table, i, bottom(sequence, shape, unique))
 
         final = derivative(order,
                            auxiliary,
@@ -270,8 +289,10 @@ def invariant(order:tuple[int, ...],
     table = derivative(order, observable, state, *knobs)
     chop(table, threshold=threshold)
 
-    def objective(value:Tensor, shape, index:tuple[int, ...]) -> Tensor:
-        value = value.reshape(*shape)
+    def objective(values, index, sequence, shape, unique):
+        for key, value in zip(unique, values):
+            unique[key] = value
+        value = bottom(sequence, shape, unique)
         set(table, index, value)
         local = propagate(dimension,
                           index,
@@ -280,7 +301,12 @@ def invariant(order:tuple[int, ...],
                           lambda state: evaluate(table, [state, *knobs]),
                           intermediate=False,
                           jacobian=jacobian)
-        return (value - local).flatten()
+        unique = {}
+        for key, value in zip(sequence, local.flatten()):
+            if not key in unique:
+                unique[key] = value
+        local = torch.stack([*unique.values()])
+        return values - local
 
     dimension = (len(state), *(len(knob) for knob in knobs))
 
@@ -290,14 +316,19 @@ def invariant(order:tuple[int, ...],
 
         for i in array:
             guess = get(table, i)
-            value = newton(objective,
-                           guess.flatten(),
-                           guess.shape,
-                           i,
-                           solve=solve,
-                           jacobian=jacobian)
-            value = value.reshape(*guess.shape)
-            set(table, i, value.reshape(*guess.shape))
+            sequence, shape, unique = reduce(dimension, i, guess)
+            guess = torch.stack([*unique.values()])
+            values = newton(objective,
+                            guess,
+                            i,
+                            sequence,
+                            shape,
+                            unique,
+                            solve=solve,
+                            jacobian=jacobian)
+            for key, value in zip(unique, values):
+                unique[key] = value
+            set(table, i, bottom(sequence, shape, unique))
 
         final = propagate(dimension,
                         order,
