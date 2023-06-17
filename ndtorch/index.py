@@ -16,6 +16,8 @@ import torch
 from torch import Tensor
 
 from .util import flatten
+from .signature import signature
+from .signature import get
 
 
 State       : TypeAlias = Tensor
@@ -135,3 +137,166 @@ def index(dimension:tuple[int, ...],
     x, *xs = [tuple(index(*pair).tolist()) for pair in zip(dimension + (0, ), order + (0, ))]
 
     return torch.tensor([*flatten(tuple(merge(i, *xs) for i in x))], dtype=dtype, device=device)
+
+
+def reduce(dimension:tuple[int, ...],
+           table:Table) -> tuple[
+    dict[tuple[int, ...], tuple[tuple[int, ...], ...]],
+    dict[tuple[int, ...], tuple[int, ...]],
+    dict[tuple[int, ...], Tensor]]:
+    """
+    Generate reduced representation of a given derivative table
+
+    Parameters
+    ----------
+    dimension: tuple[int]
+        table derivative dimension
+    table: Table
+        input derivative table
+
+    Returns
+    -------
+        tuple[
+            dict[tuple[int, ...], tuple[tuple[int, ...], ...]],
+            dict[tuple[int, ...], tuple[int, ...]],
+            dict[tuple[int, ...], Tensor]
+        ]
+        (sequence, shape, unique)
+
+    Examples
+    --------
+    >>> import torch
+    >>> from ndtorch.derivative import derivative
+    >>> x = torch.tensor([0.0, 0.0])
+    >>> y = torch.tensor([0.0])
+    >>> def fn(x, y): x1, x2 = x; y1, = y; return x1 + x2 + (x1 + x2)*y1**2
+    >>> t = derivative((1, 2), fn, x, y)
+    >>> t
+    [[tensor(0.), tensor([0.]), tensor([[0.]])],
+     [tensor([1.000000e+00, 1.000000e+00]),
+      tensor([[0., 0.]]),
+      tensor([[[2.000000e+00, 2.000000e+00]]])]]
+    >>> sequence, shape, unique = reduce((2, 1), t)
+    >>> sequence
+    {(0, 0): ((0, 0, 0),),
+     (0, 1): ((0, 0, 1),),
+     (0, 2): ((0, 0, 2),),
+     (1, 0): ((1, 0, 0), (0, 1, 0)),
+     (1, 1): ((1, 0, 1), (0, 1, 1)),
+     (1, 2): ((1, 0, 2), (0, 1, 2))}
+    >>> shape
+    {(0, 0): torch.Size([]),
+     (0, 1): torch.Size([1]),
+     (0, 2): torch.Size([1, 1]),
+     (1, 0): torch.Size([2]),
+     (1, 1): torch.Size([1, 2]),
+     (1, 2): torch.Size([1, 1, 2])}
+    >>> unique
+    {(0, 0, 0): tensor(0.),
+     (0, 0, 1): tensor(0.),
+     (0, 0, 2): tensor(0.),
+     (1, 0, 0): tensor(1.000000e+00),
+     (0, 1, 0): tensor(1.000000e+00),
+     (1, 0, 1): tensor(0.),
+     (0, 1, 1): tensor(0.),
+     (1, 0, 2): tensor(2.000000e+00),
+     (0, 1, 2): tensor(2.000000e+00)}
+
+    """
+    sequence, shape, unique = {}, {}, {}
+    for i in signature(table):
+        sequence[i] = tuple(map(tuple, index(dimension, i).tolist()))
+        tensor = get(table, i)
+        shape[i] = tensor.shape
+        for key, value in zip(sequence[i], tensor.flatten()):
+            if not key in unique:
+                unique[key] = value
+    return sequence, shape, unique
+
+
+def bottom(sequence:tuple[tuple[int, ...], ...],
+           shape:tuple[int],
+           unique:dict[tuple[int, ...], Tensor]) -> Tensor:
+    """
+    Generate bottom derivative table element from reduced data
+
+    Parameters
+    ----------
+    sequence: tuple[tuple[int, ...], ...]
+        sequence of monomial indices with repetitions (see index function)
+    shape: tuple[int]
+        output tensor shape
+    unique: dict[tuple[int, ...], Tensor]
+        unique values
+
+    Returns
+    -------
+    Tensor
+
+    Examples
+    --------
+    >>> import torch
+    >>> from ndtorch.derivative import derivative
+    >>> from ndtorch.signature import get
+    >>> x = torch.tensor([0.0, 0.0])
+    >>> y = torch.tensor([0.0])
+    >>> def fn(x, y): x1, x2 = x; y1, = y; return x1 + x2 + (x1 + x2)*y1**2
+    >>> t = derivative((1, 2), fn, x, y)
+    >>> sequence, shape, unique = reduce((2, 1), t)
+    >>> get(t, (1, 2))
+    tensor([[[2.000000e+00, 2.000000e+00]]])
+    >>> bottom(sequence[(1, 2)], shape[(1, 2)], unique)
+    tensor([[[2.000000e+00, 2.000000e+00]]])
+    
+    """
+    return torch.stack([unique[index] for index in sequence]).reshape(shape)
+
+
+def build(table:Table,
+          sequence:dict[tuple[int, ...], tuple[tuple[int, ...], ...]],
+          shape:dict[tuple[int, ...], tuple[int, ...]],
+          unique:dict[tuple[int, ...], Tensor]) -> None:
+    """
+    Build derivative table representation from a given reduced representation
+
+    Note, modify input container
+
+    Parameters
+    ----------
+    table: Table
+        container
+    sequence: dict[tuple[int, ...], tuple[tuple[int, ...], ...]]
+        sequence of monomial indices with repetitions (see index function)
+    shape: dict[tuple[int, ...], tuple[int, ...]]
+        output tensor shape
+    unique: dict[tuple[int, ...], Tensor]
+        unique values
+
+    Returns
+    -------
+    None
+
+    Examples
+    --------
+    >>> import torch
+    >>> from ndtorch.derivative import derivative
+    >>> x = torch.tensor([0.0, 0.0])
+    >>> y = torch.tensor([0.0])
+    >>> def fn(x, y): x1, x2 = x; y1, = y; return x1 + x2 + (x1 + x2)*y1**2
+    >>> t = derivative((1, 2), fn, x, y)
+    >>> t
+    [[tensor(0.), tensor([0.]), tensor([[0.]])],
+     [tensor([1.000000e+00, 1.000000e+00]),
+      tensor([[0., 0.]]),
+      tensor([[[2.000000e+00, 2.000000e+00]]])]]
+    >>> s = derivative((1, 2), lambda x, y: torch.zeros_like(x).sum(), x, y)
+    >>> build(s, *reduce((2, 1), t))
+    >>> s
+    [[tensor(0.), tensor([0.]), tensor([[0.]])],
+     [tensor([1.000000e+00, 1.000000e+00]),
+      tensor([[0., 0.]]),
+      tensor([[[2.000000e+00, 2.000000e+00]]])]]
+
+    """
+    for i in signature(table):
+        set(table, i, bottom(sequence[i], shape[i], unique))
