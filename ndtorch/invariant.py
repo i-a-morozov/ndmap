@@ -167,7 +167,7 @@ def invariant(order:tuple[int, ...],
 
         for i in array:
             guess = get(table, i)
-            sequence, shape, unique = reduce(dimension, i, guess)
+            sequence, shape, unique = reduce(dimension, i, guess, scalar=True)
             guess = torch.stack([*unique.values()])
             values = newton(objective,
                             guess,
@@ -316,7 +316,7 @@ def invariant(order:tuple[int, ...],
 
         for i in array:
             guess = get(table, i)
-            sequence, shape, unique = reduce(dimension, i, guess)
+            sequence, shape, unique = reduce(dimension, i, guess, scalar=True)
             guess = torch.stack([*unique.values()])
             values = newton(objective,
                             guess,
