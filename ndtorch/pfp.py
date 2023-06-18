@@ -350,7 +350,7 @@ def chain_point(power:int,
                 point:Tensor,
                 *pars:tuple) -> Tensor:
     """
-    Generate chain for a given fixed point.
+    Generate chain for a given fixed point
 
     Note, can be mapped over point
 
@@ -405,7 +405,7 @@ def matrix(power:int,
            *pars:tuple,
            jacobian:Callable=torch.func.jacfwd) -> Tensor:
     """
-    Compute (monodromy) matrix around given fixed point.
+    Compute (monodromy) matrix around given fixed point
 
     Parameters
     ----------
@@ -461,7 +461,7 @@ def parametric_fixed_point(order:tuple[int, ...],
                            solve:Optional[Callable]=None,
                            jacobian:Optional[Callable]=None) -> Table:
     """
-    Compute parametric fixed point.
+    Compute parametric fixed point
 
     Parameters
     ----------
