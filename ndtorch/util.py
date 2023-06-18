@@ -11,6 +11,8 @@ from math import prod
 
 from functools import partial
 
+from typing import TypeAlias
+from typing import Union
 from typing import Iterable
 from typing import Iterator
 from typing import Callable
@@ -18,6 +20,18 @@ from typing import Any
 
 import torch
 from torch import Tensor
+
+
+State       : TypeAlias = Tensor
+Knobs       : TypeAlias = list[Tensor]
+Point       : TypeAlias = list[Tensor]
+Delta       : TypeAlias = list[Tensor]
+Table       : TypeAlias = list
+Series      : TypeAlias = dict[tuple[int, ...], Tensor]
+Signature   : TypeAlias = Union[list[tuple[int, ...]], list[tuple[tuple[int, ...], float]]]
+Mapping     : TypeAlias = Callable
+Observable  : TypeAlias = Callable
+Hamiltonian : TypeAlias = Callable
 
 
 def multinomial(*sequence:tuple[int, ...]) -> float:
@@ -309,3 +323,29 @@ def most(xs:Iterable[Any]) -> Any:
     """
     _, *x = xs
     return x
+
+
+def equal(probe:Table,
+          other:Table,
+          *args:tuple,
+          **kwargs:dict) -> bool:
+    """
+    Equality test
+
+    Parameters
+    ----------
+    probe, other: Table
+        probe, other
+    *args: tuple
+        passed to torch.allclose
+    **kwargs: dict
+        passed to torch.allclose
+
+    Returns
+    -------
+    bool
+
+    """
+    xs = flatten(probe, target=list)
+    ys = flatten(other, target=list)
+    return all(torch.allclose(x, y) for (x, y) in zip(xs, ys, strict=True))
