@@ -18,6 +18,8 @@ from .derivative import derivative
 from .signature import signature
 from .signature import get
 from .signature import set
+from .index import reduce
+from .index import bottom
 from .propagate import identity
 from .propagate import propagate
 
@@ -103,7 +105,8 @@ def newton(function:Mapping,
                                 *pars,
                                 jacobian=jacobian)
 
-    matrix = matrix.nan_to_num() + alpha*torch.eye(len(vector), dtype=vector.dtype, device=vector.device)
+    identity = alpha*torch.eye(len(vector), dtype=vector.dtype, device=vector.device)
+    matrix = matrix.nan_to_num() + identity
 
     return guess - factor*solve(matrix, vector)
 
@@ -508,7 +511,7 @@ def parametric_fixed_point(order:tuple[int, ...],
     tensor([1.3161+0.j, 0.7598+0.j], dtype=torch.complex128)
     >>> pfp = parametric_fixed_point((4, ), fp, [k], mapping, power=5)
     >>> out = propagate((2, 2), (0, 4), pfp, [k], lambda x, k: nest(5, mapping, k)(x, k))
-    >>> all(torch.allclose(x, y) for x, y in zip(*map(lambda x: flatten(x, target=list), (pfp, out))))
+    >>> all(torch.allclose(x, y) for x, y in zip(*map(lambda x: flatten(x,target=list),(pfp,out))))
     True
     >>> dk = torch.tensor([0.01, -0.01], dtype=torch.float64)
     >>> fp = fixed_point(32, mapping, xi, k + dk, power=5)
@@ -530,8 +533,10 @@ def parametric_fixed_point(order:tuple[int, ...],
             state = function(state, *knobs, *pars)
         return state
 
-    def objective(value:Tensor, shape, index:tuple[int, ...]) -> Tensor:
-        value = value.reshape(*shape)
+    def objective(values, index, sequence, shape, unique):
+        for key, value in zip(unique, values.reshape(-1, length)):
+            unique[key] = value
+        value = bottom(sequence, shape, unique)
         set(table, index, value)
         local = propagate(dimension,
                           index,
@@ -540,23 +545,35 @@ def parametric_fixed_point(order:tuple[int, ...],
                           auxiliary,
                           intermediate=False,
                           jacobian=jacobian)
-        return (value - local).flatten()
+        unique = {}
+        local = local.swapaxes(0, -1).reshape(-1, length)
+        for key, value in zip(sequence, local):
+            if not key in unique:
+                unique[key] = value
+        local = torch.stack([*unique.values()]).flatten()
+        return values - local
 
     dimension = (len(state), *(len(knob) for knob in knobs))
     order = (0, *order)
+    length, *_ = dimension
 
     table = identity(order, [state] + knobs, jacobian=jacobian)
     _, *array = signature(table)
 
-    for index in array:
-        guess = get(table, index)
-        value = newton(objective,
-                       guess.flatten(),
-                       guess.shape,
-                       index,
-                       solve=solve,
-                       jacobian=jacobian)
-        value = value.reshape(*guess.shape)
-        set(table, index, value.reshape(*guess.shape))
+    for i in array:
+        guess = get(table, i)
+        sequence, shape, unique = reduce(dimension, i, guess)
+        guess = torch.stack([*unique.values()]).flatten()
+        values = newton(objective,
+                        guess,
+                        i,
+                        sequence,
+                        shape,
+                        unique,
+                        solve=solve,
+                        jacobian=jacobian)
+        for key, value in zip(unique, values.reshape(-1, length)):
+            unique[key] = value
+        set(table, i, bottom(sequence, shape, unique))
 
     return table
