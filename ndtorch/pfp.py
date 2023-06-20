@@ -19,7 +19,7 @@ from .signature import signature
 from .signature import get
 from .signature import set
 from .index import reduce
-from .index import bottom
+from .index import build
 from .propagate import identity
 from .propagate import propagate
 
@@ -536,7 +536,7 @@ def parametric_fixed_point(order:tuple[int, ...],
     def objective(values, index, sequence, shape, unique):
         for key, value in zip(unique, values.reshape(-1, length)):
             unique[key] = value
-        value = bottom(sequence, shape, unique)
+        value = build(sequence, shape, unique)
         set(table, index, value)
         local = propagate(dimension,
                           index,
@@ -574,6 +574,6 @@ def parametric_fixed_point(order:tuple[int, ...],
                         jacobian=jacobian)
         for key, value in zip(unique, values.reshape(-1, length)):
             unique[key] = value
-        set(table, i, bottom(sequence, shape, unique))
+        set(table, i, build(sequence, shape, unique))
 
     return table

@@ -22,7 +22,7 @@ from .signature import set
 from .signature import get
 from .signature import chop
 from .index import reduce
-from .index import bottom
+from .index import build
 from .evaluate import evaluate
 from .pfp import newton
 from .pfp import propagate
@@ -145,7 +145,7 @@ def invariant(order:tuple[int, ...],
     def objective(values, index, sequence, shape, unique):
         for key, value in zip(unique, values):
             unique[key] = value
-        value = bottom(sequence, shape, unique)
+        value = build(sequence, shape, unique)
         set(table, index, value)
         local = derivative(index,
                            auxiliary,
@@ -167,7 +167,7 @@ def invariant(order:tuple[int, ...],
 
         for i in array:
             guess = get(table, i)
-            sequence, shape, unique = reduce(dimension, i, guess, scalar=True)
+            sequence, shape, unique = reduce(dimension, i, guess)
             guess = torch.stack([*unique.values()])
             values = newton(objective,
                             guess,
@@ -179,7 +179,7 @@ def invariant(order:tuple[int, ...],
                             jacobian=jacobian)
             for key, value in zip(unique, values):
                 unique[key] = value
-            set(table, i, bottom(sequence, shape, unique))
+            set(table, i, build(sequence, shape, unique))
 
         final = derivative(order,
                            auxiliary,
@@ -292,7 +292,7 @@ def invariant(order:tuple[int, ...],
     def objective(values, index, sequence, shape, unique):
         for key, value in zip(unique, values):
             unique[key] = value
-        value = bottom(sequence, shape, unique)
+        value = build(sequence, shape, unique)
         set(table, index, value)
         local = propagate(dimension,
                           index,
@@ -316,7 +316,7 @@ def invariant(order:tuple[int, ...],
 
         for i in array:
             guess = get(table, i)
-            sequence, shape, unique = reduce(dimension, i, guess, scalar=True)
+            sequence, shape, unique = reduce(dimension, i, guess)
             guess = torch.stack([*unique.values()])
             values = newton(objective,
                             guess,
@@ -328,7 +328,7 @@ def invariant(order:tuple[int, ...],
                             jacobian=jacobian)
             for key, value in zip(unique, values):
                 unique[key] = value
-            set(table, i, bottom(sequence, shape, unique))
+            set(table, i, build(sequence, shape, unique))
 
         final = propagate(dimension,
                         order,

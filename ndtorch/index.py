@@ -143,30 +143,24 @@ def index(dimension:tuple[int, ...],
 @multimethod
 def reduce(dimension:tuple[int, ...],
            signature:tuple[int, ...],
-           tensor:Tensor, *,
-           scalar:bool=False) -> tuple[tuple[tuple[int, ...], ...], tuple[int, ...], Tensor]:
+           tensor:Tensor) -> tuple[tuple, tuple, dict]:
     """
     Generate reduced representation of a given bottom element tensor
 
-    Note, bottom element table is assumed to represent a mapping or a scalar (set flag)
+    Note, bottom element table is assumed to represent a mapping or a scalar
 
     Parameters
     ----------
-    dimension: tuple[int]
+    dimension: tuple[int, ...]
         table derivative dimension
-    signature: tuple[int]
+    signature: tuple[int, ...]
         bottom element signature
     table: Table
         input derivative table
-    scalar: bool, default=False
-        scalar table flag
 
     Returns
     -------
-    tuple[
-        tuple[tuple[int, ...], ...],
-        tuple[int, ...],
-        Tensor]
+    tuple[tuple, tuple, dict]
         (sequence, shape, unique)
 
     Examples
@@ -185,7 +179,7 @@ def reduce(dimension:tuple[int, ...],
             [0., 2.]]),
     tensor([[[0., 0.],
             [0., 0.]]])]]
-    >>> sequence, shape, unique = reduce((2, 1), (2, 0), get(t, (2, 0)), scalar=True)
+    >>> sequence, shape, unique = reduce((2, 1), (2, 0), get(t, (2, 0)))
     >>> sequence
     ((2, 0, 0), (1, 1, 0), (1, 1, 0), (0, 2, 0))
     >>> shape
@@ -200,7 +194,7 @@ def reduce(dimension:tuple[int, ...],
     >>> x = torch.tensor([0.0, 0.0])
     >>> y = torch.tensor([0.0])
     >>> t = derivative((2, 1), fn, x, y)
-    >>> sequence, shape, unique = reduce((2, 1), (2, 0), get(t, (2, 0)), scalar=False)
+    >>> sequence, shape, unique = reduce((2, 1), (2, 0), get(t, (2, 0)))
     >>> sequence
     ((2, 0, 0), (1, 1, 0), (1, 1, 0), (0, 2, 0))
     >>> shape
@@ -212,48 +206,43 @@ def reduce(dimension:tuple[int, ...],
 
 
     """
-    sequence = tuple(map(tuple, index(dimension, signature).tolist()))
-    shape = tensor.shape
-    if scalar:
-        tensor = tensor.flatten()
-    else:
-        length, *_ = dimension
-        tensor = tensor.swapaxes(0, -1).reshape(-1, length)
+    sequence = index(dimension, signature)
+    shape = tuple(tensor.shape)
+    array = tuple(reversed(range(len(shape))))
+    if array:
+        tensor = tensor.permute(array)
+    tensor = tensor.flatten().reshape(len(sequence), -1).squeeze(-1)
     unique = {}
-    for key, value in zip(sequence, tensor):
-        if not key in unique:
+    for key, value in zip(tuple(map(tuple, sequence.tolist())), tensor):
+        if key not in unique:
             unique[key] = value
+    length, *size = tensor.shape
+    size = shape[len(size):] if size else shape
+    array = tuple(reversed(range(len(size))))
+    table = torch.arange(0, length)
+    table = table.reshape(tuple(reversed(tuple(size)))).permute(array).flatten()
+    sequence = tuple(map(tuple, sequence[table].tolist()))
     return sequence, shape, unique
 
 
 @multimethod
 def reduce(dimension:tuple[int, ...],
-           table:Table, *,
-           scalar:bool=False) -> tuple[
-    dict[tuple[int, ...], tuple[tuple[int, ...], ...]],
-    dict[tuple[int, ...], tuple[int, ...]],
-    dict[tuple[int, ...], Tensor]]:
+           table:Table) -> tuple[dict, dict, dict]:
     """
     Generate reduced representation of a given derivative table
 
-    Note, table is assumed to represent a mapping or a scalar (set flag)
+    Note, table is assumed to represent a mapping or a scalar
 
     Parameters
     ----------
-    dimension: tuple[int]
+    dimension: tuple[int, ...]
         table derivative dimension
     table: Table
         input derivative table
-    scalar: bool, default=False
-        scalar table flag
 
     Returns
     -------
-        tuple[
-            dict[tuple[int, ...], tuple[tuple[int, ...], ...]],
-            dict[tuple[int, ...], tuple[int, ...]],
-            dict[tuple[int, ...], Tensor]
-        ]
+    tuple[dict, dict, dict]
         (sequence, shape, unique)
 
     Examples
@@ -272,7 +261,7 @@ def reduce(dimension:tuple[int, ...],
             [0., 2.]]),
     tensor([[[0., 0.],
             [0., 0.]]])]]
-    >>> sequence, shape, unique = reduce((2, 1), t, scalar=True)
+    >>> sequence, shape, unique = reduce((2, 1), t)
     >>> sequence
     {(0, 0): ((0, 0, 0),),
     (0, 1): ((0, 0, 1),),
@@ -307,7 +296,7 @@ def reduce(dimension:tuple[int, ...],
     >>> x = torch.tensor([0.0, 0.0])
     >>> y = torch.tensor([0.0])
     >>> t = derivative((2, 1), fn, x, y)
-    >>> sequence, shape, unique = reduce((2, 1), t, scalar=False)
+    >>> sequence, shape, unique = reduce((2, 1), t)
     >>> sequence
     {(0, 0): ((0, 0, 0),),
      (0, 1): ((0, 0, 1),),
@@ -339,23 +328,15 @@ def reduce(dimension:tuple[int, ...],
     """
     sequence, shape, unique = {}, {}, {}
     for i in signature(table):
-        sequence[i] = tuple(map(tuple, index(dimension, i).tolist()))
-        tensor = get(table, i)
-        shape[i] = tensor.shape
-        if scalar:
-            tensor = tensor.flatten()
-        else:
-            length, *_ = dimension
-            tensor = tensor.swapaxes(0, -1).reshape(-1, length)
-        for key, value in zip(sequence[i], tensor):
-            if not key in unique:
-                unique[key] = value
+        sequence[i], shape[i], local = reduce(dimension, i, get(table, i))
+        unique.update(local)
     return sequence, shape, unique
 
 
-def bottom(sequence:tuple[tuple[int, ...], ...],
-           shape:tuple[int],
-           unique:dict[tuple[int, ...], Tensor]) -> Tensor:
+@multimethod
+def build(sequence:tuple,
+          shape:tuple,
+          unique:dict) -> Tensor:
     """
     Generate bottom derivative table element from reduced data
 
@@ -363,11 +344,11 @@ def bottom(sequence:tuple[tuple[int, ...], ...],
 
     Parameters
     ----------
-    sequence: tuple[tuple[int, ...], ...]
+    sequence: tuple
         sequence of monomial indices with repetitions (see index function)
-    shape: tuple[int]
+    shape: tuple
         output tensor shape
-    unique: dict[tuple[int, ...], Tensor]
+    unique: dict
         unique values
 
     Returns
@@ -383,7 +364,7 @@ def bottom(sequence:tuple[tuple[int, ...], ...],
     >>> x = torch.tensor([0.0, 0.0])
     >>> y = torch.tensor([0.0])
     >>> t = derivative((2, 1), fn, x, y)
-    >>> bottom(*reduce((2, 1), (2, 0), get(t, (2, 0)), scalar=True))
+    >>> build(*reduce((2, 1), (2, 0), get(t, (2, 0))))
     tensor([[0., 0.],
             [0., 2.]])
     >>> get(t, (2, 0))
@@ -397,7 +378,7 @@ def bottom(sequence:tuple[tuple[int, ...], ...],
     >>> x = torch.tensor([0.0, 0.0])
     >>> y = torch.tensor([0.0])
     >>> t = derivative((2, 1), fn, x, y)
-    >>> bottom(*reduce((2, 1), (2, 0), get(t, (2, 0)), scalar=False))
+    >>> build(*reduce((2, 1), (2, 0), get(t, (2, 0))))
     tensor([[[0., 0.],
              [0., 0.]],
 
@@ -414,10 +395,11 @@ def bottom(sequence:tuple[tuple[int, ...], ...],
     return torch.stack([unique[index] for index in sequence]).swapaxes(0, -1).reshape(shape)
 
 
+@multimethod
 def build(table:Table,
-          sequence:dict[tuple[int, ...], tuple[tuple[int, ...], ...]],
-          shape:dict[tuple[int, ...], tuple[int, ...]],
-          unique:dict[tuple[int, ...], Tensor]) -> None:
+          sequence:dict,
+          shape:dict,
+          unique:dict) -> None:
     """
     Build derivative table representation from a given reduced representation
 
@@ -448,7 +430,7 @@ def build(table:Table,
     >>> y = torch.tensor([0.0])
     >>> t = derivative((2, 2), fn, x, y)
     >>> s = derivative((2, 2), lambda x, y: x.sum(), x, y)
-    >>> build(s, *reduce((2, 1), t, scalar=True))
+    >>> build(s, *reduce((2, 1), t))
     >>> s
     [[tensor(0.), tensor([0.]), tensor([[0.]])],
      [tensor([0., 1.]), tensor([[1., 0.]]), tensor([[[0., 0.]]])],
@@ -474,4 +456,4 @@ def build(table:Table,
 
     """
     for i in signature(table):
-        set(table, i, bottom(sequence[i], shape[i], unique))
+        set(table, i, build(sequence[i], shape[i], unique))
