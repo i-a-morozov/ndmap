@@ -323,29 +323,3 @@ def most(xs:Iterable[Any]) -> Any:
     """
     _, *x = xs
     return x
-
-
-def equal(probe:Table,
-          other:Table,
-          *args:tuple,
-          **kwargs:dict) -> bool:
-    """
-    Equality test
-
-    Parameters
-    ----------
-    probe, other: Table
-        probe, other
-    *args: tuple
-        passed to torch.allclose
-    **kwargs: dict
-        passed to torch.allclose
-
-    Returns
-    -------
-    bool
-
-    """
-    xs = flatten(probe, target=list)
-    ys = flatten(other, target=list)
-    return all(torch.allclose(x, y) for (x, y) in zip(xs, ys, strict=True))
