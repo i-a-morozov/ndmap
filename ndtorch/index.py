@@ -9,13 +9,14 @@ Derivative table representation utilities
 from typing import TypeAlias
 from typing import Callable
 from typing import Union
+from typing import Optional
 
 from multimethod import multimethod
 
 import torch
 from torch import Tensor
 
-from .util import flatten
+from .util import tolist
 from .signature import signature
 from .signature import get
 from .signature import set
@@ -144,7 +145,8 @@ def index(dimension:tuple[int, ...],
 @multimethod
 def reduce(dimension:tuple[int, ...],
            signature:tuple[int, ...],
-           tensor:Tensor) -> tuple[tuple, tuple, dict]:
+           tensor:Tensor, *,
+           sequence:Optional[Tensor]=None) -> tuple[tuple, tuple, dict]:
     """
     Generate reduced representation of a given bottom element tensor
 
@@ -158,6 +160,8 @@ def reduce(dimension:tuple[int, ...],
         bottom element signature
     table: Table
         input derivative table
+    sequence: Optional[Tensor]
+        precomputed sequence
 
     Returns
     -------
@@ -207,14 +211,14 @@ def reduce(dimension:tuple[int, ...],
 
 
     """
-    sequence = index(dimension, signature)
+    sequence = index(dimension, signature) if sequence is None else sequence
     shape = tuple(tensor.shape)
     array = tuple(reversed(range(len(shape))))
     if array:
         tensor = tensor.permute(array)
     tensor = tensor.flatten().reshape(len(sequence), -1).squeeze(-1)
     unique = {}
-    for key, value in zip(tuple(map(tuple, sequence.tolist())), tensor):
+    for key, value in zip(tuple(map(tuple, tolist(sequence))), tensor):
         if key not in unique:
             unique[key] = value
     length, *size = tensor.shape
@@ -222,7 +226,7 @@ def reduce(dimension:tuple[int, ...],
     array = tuple(reversed(range(len(size))))
     table = torch.arange(0, length)
     table = table.reshape(tuple(reversed(tuple(size)))).permute(array).flatten()
-    sequence = tuple(map(tuple, sequence[table].tolist()))
+    sequence = tuple(map(tuple, tolist(sequence[table])))
     return sequence, shape, unique
 
 
