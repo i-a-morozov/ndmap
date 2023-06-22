@@ -131,13 +131,14 @@ def index(dimension:tuple[int, ...],
             [0, 3, 0, 1]])
 
     """
-    def merge(total:tuple, *table:tuple) -> tuple:
-        x, *xs = table
-        return tuple(merge(total + i, *xs) for i in x) if xs else tuple(list(total + i) for i in x)
-
-    x, *xs = [tuple(index(*pair).tolist()) for pair in zip(dimension + (0, ), order + (0, ))]
-
-    return torch.tensor([*flatten(tuple(merge(i, *xs) for i in x))], dtype=dtype, device=device)
+    def merge(head:Tensor, *tail:Tensor) -> Tensor:
+        x, *xs = tail
+        if not len(xs):
+            return torch.vstack([torch.cat([head, i]) for i in x])
+        return torch.cat([merge(torch.cat([head, i]), *xs)for i in x])
+    dimension, order = dimension + (0, ), order + (0, )
+    x, *xs = [index(*pair, dtype=dtype, device=device) for pair in zip(dimension, order)]
+    return torch.vstack([merge(i, *xs) for i in x])
 
 
 @multimethod
