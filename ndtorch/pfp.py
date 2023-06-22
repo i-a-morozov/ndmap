@@ -534,7 +534,8 @@ def parametric_fixed_point(order:tuple[int, ...],
         return state
 
     def objective(values, index, sequence, shape, unique):
-        for key, value in zip(unique, values.reshape(-1, length)):
+        values = values.reshape(-1, length)
+        for key, value in zip(unique, values):
             unique[key] = value
         value = build(sequence, shape, unique)
         set(table, index, value)
@@ -545,17 +546,12 @@ def parametric_fixed_point(order:tuple[int, ...],
                           auxiliary,
                           intermediate=False,
                           jacobian=jacobian)
-        unique = {}
-        local = local.swapaxes(0, -1).reshape(-1, length)
-        for key, value in zip(sequence, local):
-            if not key in unique:
-                unique[key] = value
-        local = torch.stack([*unique.values()]).flatten()
-        return values - local
+        *_, local = reduce(dimension, index, local)
+        return (values - torch.stack([*local.values()])).flatten()
 
     dimension = (len(state), *(len(knob) for knob in knobs))
-    order = (0, *order)
     length, *_ = dimension
+    order = (0, *order)
 
     table = identity(order, [state] + knobs, jacobian=jacobian)
     _, *array = signature(table)

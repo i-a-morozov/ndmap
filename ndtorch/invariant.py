@@ -152,12 +152,8 @@ def invariant(order:tuple[int, ...],
                            *point,
                            intermediate=False,
                            jacobian=jacobian)
-        unique = {}
-        for key, value in zip(sequence, local.flatten()):
-            if not key in unique:
-                unique[key] = value
-        local = torch.stack([*unique.values()])
-        return values - local
+        *_, local = reduce(dimension, index, local)
+        return values - torch.stack([*local.values()])
 
     dimension = (len(state), *(len(knob) for knob in knobs))
 
@@ -301,12 +297,8 @@ def invariant(order:tuple[int, ...],
                           lambda state: evaluate(table, [state, *knobs]),
                           intermediate=False,
                           jacobian=jacobian)
-        unique = {}
-        for key, value in zip(sequence, local.flatten()):
-            if not key in unique:
-                unique[key] = value
-        local = torch.stack([*unique.values()])
-        return values - local
+        *_, local = reduce(dimension, index, local)
+        return values - torch.stack([*local.values()])
 
     dimension = (len(state), *(len(knob) for knob in knobs))
 
