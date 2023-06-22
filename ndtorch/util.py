@@ -18,6 +18,7 @@ from typing import Iterator
 from typing import Callable
 from typing import Any
 
+import numpy
 import torch
 from torch import Tensor
 
@@ -323,3 +324,32 @@ def most(xs:Iterable[Any]) -> Any:
     """
     _, *x = xs
     return x
+
+
+def tolist(tensor:Tensor) -> list:
+    """
+    Convert input (gradtracking) tensor to list
+
+    Note, emmits storage deprication warning
+
+    Parameters
+    ----------
+    tensor : Tensor
+        input tensor
+
+    Returns
+    -------
+    Tensor
+
+    Examples
+    --------
+    >>> import torch
+    >>> tolist(torch.tensor([0.0, 0.0, 0.0, 0.0]))
+    [0.0, 0.0, 0.0, 0.0]
+
+    """
+    tensor = tensor.detach().cpu()
+    if torch._C._functorch.is_gradtrackingtensor(tensor):
+        tensor = torch._C._functorch.get_unwrapped(tensor)
+        return numpy.array(tensor.storage().tolist()).reshape(tensor.shape).tolist()
+    return tensor.tolist()
