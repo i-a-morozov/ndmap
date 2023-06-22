@@ -20,6 +20,7 @@ import torch
 from torch import Tensor
 
 from .util import flatten
+from .util import tolist
 from .derivative import derivative
 from .signature import signature
 from .index import index
@@ -85,16 +86,16 @@ def series(dimension:tuple[int, ...],
     for (count, factor), array in zip(signature(table, factor=True), flatten(table, target=list)):
         if not all(i <= j for i, j in zip(count, order)):
             continue
-        count = index(dimension, count)
+        count = tolist(index(dimension, count))
         shape = tuple(reversed(range(len(array.shape))))
         array = factor*(array.permute(shape) if shape else array)
-        array = array.flatten().reshape(len(count), -1)
+        array = array.flatten().reshape(len(count), -1).clone()
         for key, value in zip(count, array):
-            key = tuple(key.tolist())
+            key = tuple(key)
             if key not in series:
-                series[key]  = value
+                series[key] = value
             else:
-                series[key] += value
+                series[key] = series[key] + value
 
     return series
 
