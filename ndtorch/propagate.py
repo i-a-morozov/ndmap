@@ -271,3 +271,65 @@ def propagate(dimension:tuple[int, ...],
     delta = torch.cat([torch.zeros(i, dtype=value.dtype, device=value.device) for i in dimension])
 
     return series([*data.keys()], auxiliary, *delta, jacobian=jacobian)
+
+
+@multimethod
+def propagate(dimension:tuple[int, ...],
+              order:tuple[int, ...],
+              data:Table,
+              knobs:Knobs,
+              table:Table, *,
+              intermediate:bool=True,
+              jacobian:Optional[Callable]=None) -> Union[Table, Tensor]:
+    """
+    Propagate derivative table representation through a given table
+
+    Note, can be used for composition of deririvative tables
+    Composition should be performed for tables that map zero state to zero
+    Also, tables are expected to have identical knobs
+
+    Parameters
+    ----------
+    dimension: tuple[int, ...], positive
+        dimensions
+    order: tuple[int, ...], non-negative
+        maximum derivative orders
+    data: Table
+        input derivative table
+    knobs: Knobs
+        input parametric variables
+    table: Table
+        input table mapping approximation
+    intermediate: bool, default=True
+        flag to return intermediate derivatives
+    jacobian: Optional[Callable]
+        torch.func.jacfwd (default) or torch.func.jacrev
+
+    Returns
+    -------
+    Union[Table, Tensor]
+
+    Examples
+    --------
+    >>> import torch
+    >>> from ndtorch.derivative import derivative
+    >>> from ndtorch.evaluate import compare
+    >>> def fn(x, l): q, p = x; return torch.stack([q + l*p, p])
+    >>> x = torch.tensor([0.0, 0.0], dtype=torch.float64)
+    >>> t = derivative(1, fn, x, 0.5)
+    >>> compare(derivative(1, fn, x, 1.0), propagate((2, ), (1, ), t, [], t))
+    True
+
+    """
+    jacobian = torch.func.jacfwd if jacobian is None else jacobian
+
+    def auxiliary(state, *knobs) -> Tensor:
+        return evaluate(table, [state, *knobs])
+
+    return propagate(dimension,
+                     order,
+                     data,
+                     knobs,
+                     auxiliary,
+                     intermediate=intermediate,
+                     jacobian=jacobian)
