@@ -12,10 +12,10 @@ requires-python = ">=3.10"
 keywords = ["torch", "derivative"]
 license = {text = "MIT"}
 classifiers = ["Programming Language :: Python :: 3"]
-dependencies = ["torch>=2.0.1", "multimethod>=1.9.1"]
+dependencies = ["torch>=2.0.1", "multimethod>=1.9.1", "numpy>=1.23.5"]
 
 [project.optional-dependencies]
-examples = ["jupyter-lab", "numpy", "matplotlib", "twiss"]
+examples = ["jupyter-lab", "matplotlib", "twiss"]
 test=["pytest", "pytest-cov"]
 all = ["ndtorch[examples, test]"]
 
