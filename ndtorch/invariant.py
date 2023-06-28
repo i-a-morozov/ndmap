@@ -46,7 +46,6 @@ def invariant(order:tuple[int, ...],
               knobs:Knobs,
               observable:Observable,
               mapping:Mapping, *,
-              limit:int=10,
               threshold:float=1.0E-9,
               solve:Optional[Callable]=None,
               jacobian:Optional[Callable]=None) -> tuple[Table, list]:
@@ -65,8 +64,6 @@ def invariant(order:tuple[int, ...],
         invariant guess
     mapping: Mapping
         mapping
-    limit: int, positive, default=1
-        number of extra passes limit
     threshold: float, default=1.0E-9
         threshold value
     solve: Optional[Callable]
@@ -159,33 +156,29 @@ def invariant(order:tuple[int, ...],
 
     _, *array = signature(table)
 
-    for _ in range(limit):
+    for i in array:
+        guess = get(table, i)
+        sequence, shape, unique = reduce(dimension, i, guess)
+        guess = torch.stack([*unique.values()])
+        values = newton(objective,
+                        guess,
+                        i,
+                        sequence,
+                        shape,
+                        unique,
+                        solve=solve,
+                        jacobian=jacobian)
+        for key, value in zip(unique, values):
+            unique[key] = value
+        set(table, i, build(sequence, shape, unique))
 
-        for i in array:
-            guess = get(table, i)
-            sequence, shape, unique = reduce(dimension, i, guess)
-            guess = torch.stack([*unique.values()])
-            values = newton(objective,
-                            guess,
-                            i,
-                            sequence,
-                            shape,
-                            unique,
-                            solve=solve,
-                            jacobian=jacobian)
-            for key, value in zip(unique, values):
-                unique[key] = value
-            set(table, i, build(sequence, shape, unique))
+    final = derivative(order,
+                        auxiliary,
+                        *point,
+                        intermediate=True,
+                        jacobian=jacobian)
 
-        final = derivative(order,
-                           auxiliary,
-                           *point,
-                           intermediate=True,
-                           jacobian=jacobian)
-
-        array = [i for i in array if (get(table, i) - get(final, i)).abs().max() > threshold]
-        if not array:
-            break
+    array = [i for i in array if (get(table, i) - get(final, i)).abs().max() > threshold]
 
     chop(table, threshold=threshold)
 
@@ -198,7 +191,6 @@ def invariant(order:tuple[int, ...],
               knobs:Knobs,
               observable:Observable,
               data:Table, *,
-              limit:int=10,
               threshold:float=1.0E-9,
               solve:Optional[Callable]=None,
               jacobian:Optional[Callable]=None) -> tuple[Table, list]:
@@ -217,8 +209,6 @@ def invariant(order:tuple[int, ...],
         invariant guess
     data: Table
         table mapping representation
-    limit: int, positive, default=1
-        number of extra passes limit
     threshold: float, default=1.0E-9
         threshold value
     solve: Optional[Callable]
@@ -266,10 +256,7 @@ def invariant(order:tuple[int, ...],
     {(2, 0, 0): tensor([0.5000], dtype=torch.float64),
     (0, 2, 0): tensor([0.5000], dtype=torch.float64),
     (3, 0, 0): tensor([0.3333], dtype=torch.float64),
-    (3, 0, 1): tensor([0.2808], dtype=torch.float64),
-    (2, 1, 1): tensor([-0.2456], dtype=torch.float64),
-    (1, 2, 1): tensor([-0.3826], dtype=torch.float64),
-    (0, 3, 1): tensor([-0.1986], dtype=torch.float64)}
+    (3, 0, 1): tensor([0.3333], dtype=torch.float64)}
 
     Note
     ----
@@ -285,16 +272,21 @@ def invariant(order:tuple[int, ...],
     table = derivative(order, observable, state, *knobs)
     chop(table, threshold=threshold)
 
+    def auxiliary(*point) -> State:
+        state, *knobs = point
+        return evaluate(table, [state, *knobs])
+
     def objective(values, index, sequence, shape, unique):
         for key, value in zip(unique, values):
             unique[key] = value
         value = build(sequence, shape, unique)
         set(table, index, value)
+
         local = propagate(dimension,
                           index,
                           data,
-                          [],
-                          lambda state: evaluate(table, [state, *knobs]),
+                          knobs,
+                          auxiliary,
                           intermediate=False,
                           jacobian=jacobian)
         *_, local = reduce(dimension, index, local)
@@ -304,35 +296,31 @@ def invariant(order:tuple[int, ...],
 
     _, *array = signature(table)
 
-    for _ in range(limit):
+    for i in array:
+        guess = get(table, i)
+        sequence, shape, unique = reduce(dimension, i, guess)
+        guess = torch.stack([*unique.values()])
+        values = newton(objective,
+                        guess,
+                        i,
+                        sequence,
+                        shape,
+                        unique,
+                        solve=solve,
+                        jacobian=jacobian)
+        for key, value in zip(unique, values):
+            unique[key] = value
+        set(table, i, build(sequence, shape, unique))
 
-        for i in array:
-            guess = get(table, i)
-            sequence, shape, unique = reduce(dimension, i, guess)
-            guess = torch.stack([*unique.values()])
-            values = newton(objective,
-                            guess,
-                            i,
-                            sequence,
-                            shape,
-                            unique,
-                            solve=solve,
-                            jacobian=jacobian)
-            for key, value in zip(unique, values):
-                unique[key] = value
-            set(table, i, build(sequence, shape, unique))
-
-        final = propagate(dimension,
+    final = propagate(dimension,
                         order,
                         data,
-                        [],
-                        lambda state: evaluate(table, [state, *knobs]),
+                        knobs,
+                        auxiliary,
                         intermediate=True,
                         jacobian=jacobian)
 
-        array = [i for i in array if (get(table, i) - get(final, i)).abs().max() > threshold]
-        if not array:
-            break
+    array = [i for i in array if (get(table, i) - get(final, i)).abs().max() > threshold]
 
     chop(table, threshold=threshold)
 
