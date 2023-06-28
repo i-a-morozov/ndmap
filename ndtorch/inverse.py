@@ -83,7 +83,6 @@ def inverse(order:tuple[int, ...],
             [-1.,  1.]], dtype=torch.float64),
     tensor([[[ 0.,  0.],
             [ 0.,  0.]],
-    
             [[-2.,  0.],
             [ 0.,  0.]]], dtype=torch.float64)]
 
@@ -105,24 +104,18 @@ def inverse(order:tuple[int, ...],
             [-1.,  1.]], dtype=torch.float64),
     tensor([[[ 0.,  0.],
             [ 0.,  0.]],
-    
             [[-1.,  0.],
             [ 0.,  0.]]], dtype=torch.float64)],
     [tensor([[[ 0.,  0.],
             [ 0.,  0.]],
-    
             [[-2.,  0.],
             [ 0.,  0.]]], dtype=torch.float64),
     tensor([[[[ 0.,  0.],
                 [ 0.,  0.]],
-    
             [[ 0.,  0.],
                 [ 0.,  0.]]],
-    
-    
             [[[ 0.,  0.],
                 [ 0.,  0.]],
-    
             [[-2.,  0.],
                 [ 0.,  0.]]]], dtype=torch.float64)]]
 
