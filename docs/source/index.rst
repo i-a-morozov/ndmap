@@ -33,6 +33,7 @@ Parametric fixed point computation.
    modules/yoshida.rst
    modules/invariant.rst
    modules/inverse.rst
+   modules/momenta.rst
    modeles/matrix.rst
    modules/jet.rst
 
