@@ -2,6 +2,8 @@
 Factorization
 -------------
 
+Factorization related utilities
+
 """
 
 from typing import TypeAlias
@@ -40,7 +42,7 @@ def hamiltonian(order:tuple[int, ...],
                 knobs:Knobs,
                 table:Table, *,
                 solve:Optional[Callable]=None,
-                jacobian:Optional[Callable]=None) -> Hamiltonian:
+                jacobian:Optional[Callable]=None) -> Table:
     """
     Compute hamiltonian taylor representation of a given near identity table
 
@@ -61,7 +63,7 @@ def hamiltonian(order:tuple[int, ...],
 
     Returns
     -------
-    Hamiltonian
+    Table
 
     Examples
     --------
