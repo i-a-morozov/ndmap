@@ -34,6 +34,7 @@ Parametric fixed point computation.
    modules/invariant.rst
    modules/inverse.rst
    modules/momenta.rst
+   modules/factorization.rst
    modeles/matrix.rst
    modules/jet.rst
 
