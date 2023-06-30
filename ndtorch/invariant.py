@@ -281,7 +281,6 @@ def invariant(order:tuple[int, ...],
             unique[key] = value
         value = build(sequence, shape, unique)
         set(table, index, value)
-
         local = propagate(dimension,
                           index,
                           data,
