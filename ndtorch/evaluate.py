@@ -20,6 +20,8 @@ from torch import Tensor
 
 from .util import flatten
 from .derivative import derivative
+from .signature import signature
+from .signature import get
 
 
 State       : TypeAlias = Tensor
@@ -214,7 +216,6 @@ def table(dimension:tuple[int, ...],
     return derivative(order, function, delta, intermediate=True, jacobian=jacobian)
 
 
-@multimethod
 def compare(probe:Table, other:Table) -> bool:
     """
     Compare tables
@@ -243,44 +244,17 @@ def compare(probe:Table, other:Table) -> bool:
     True
 
     """
-    for x, y in zip(*map(lambda array: flatten(array, target=list), [probe, other])):
-        if not torch.allclose(x, y):
+    ns = signature(probe)
+    ms = signature(other)
+    if len(ns) != len(ms):
+        return False
+    for n, m in zip(ns, ms):
+        if n != m:
             return False
-    return True
-
-
-@multimethod
-def compare(probe:Series, other:Series) -> bool:
-    """
-    Compare series
-
-    Parameters
-    ----------
-    probe, other: Series
-        series to compare
-
-    Returns
-    -------
-    bool
-
-    Examples
-    --------
-    >>> import torch
-    >>> from ndtorch.derivative import derivative
-    >>> from ndtorch.series import series
-    >>> def fn(x, y):
-    ...    x1, x2 = x
-    ...    y1, y2 = y
-    ...    return torch.stack([x1*(1 + y1), x2*(1 + y2)])
-    >>> x = torch.tensor([0.0, 0.0])
-    >>> y = torch.zeros_like(x)
-    >>> t = derivative((2, 1), fn, x, y)
-    >>> s = series((2, 2), (2, 1), t)
-    >>> compare(s, s)
-    True
-
-    """
-    for x, y in zip(probe.values(), other.values()):
-        if not torch.allclose(x, y):
-            return False
+    for i in ns:
+        x = get(probe, i)
+        y = get(probe, i)
+        if isinstance(x, Tensor) and isinstance(y, Tensor):
+            if not torch.allclose(x, y):
+                return False
     return True
