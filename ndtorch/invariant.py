@@ -11,8 +11,6 @@ from typing import Callable
 from typing import Optional
 from typing import Union
 
-from multimethod import multimethod
-
 import torch
 from torch import Tensor
 
@@ -40,152 +38,6 @@ Observable  : TypeAlias = Callable
 Hamiltonian : TypeAlias = Callable
 
 
-@multimethod
-def invariant(order:tuple[int, ...],
-              state:State,
-              knobs:Knobs,
-              observable:Observable,
-              mapping:Mapping, *,
-              threshold:float=1.0E-9,
-              solve:Optional[Callable]=None,
-              jacobian:Optional[Callable]=None) -> tuple[Table, list]:
-    """
-    Compute Taylor invariant for a given mapping
-
-    Parameters
-    ----------
-    order: tuple[int, ...]
-        computation order
-    state: State
-        state fixed point
-    knobs: Knobs
-        knobs value
-    observable: Observable
-        invariant guess
-    mapping: Mapping
-        mapping
-    threshold: float, default=1.0E-9
-        threshold value
-    solve: Optional[Callable]
-        linear solver(matrix, vecor)
-    jacobian: Optional[Callable]
-        torch.func.jacfwd (default) or torch.func.jacrev
-
-    Returns
-    -------
-    tuple[Table, list]
-
-    Examples
-    --------
-    >>> import torch
-    >>> from ndtorch.util import nest
-    >>> from ndtorch.derivative import derivative
-    >>> from ndtorch.series import series
-    >>> from ndtorch.series import clean
-    >>> from ndtorch.evaluate import evaluate
-    >>> from ndtorch.yoshida import yoshida
-    >>> def fn(x, t): q, p = x ; return torch.stack([q, p - t*q - t*q**2])
-    >>> def gn(x, t): q, p = x ; return torch.stack([q + t*p, p])
-    >>> l = torch.tensor(1.0, dtype=torch.float64)
-    >>> x = torch.tensor([0.0, 0.0], dtype=torch.float64)
-    >>> t = derivative(2, nest(100, lambda x: yoshida(0, 1, True, [fn, gn])(x, l/100)), x)
-    >>> f = lambda x: evaluate(t, [x])
-    >>> i, _ = invariant((3, ), x, [], lambda x: 1/2*(x**2).sum(), f, threshold=1.0E-6)
-    >>> clean(series((2, ), (3, ), i))
-    {(2, 0): tensor([0.5000], dtype=torch.float64),
-    (0, 2): tensor([0.5000], dtype=torch.float64),
-    (3, 0): tensor([0.3333], dtype=torch.float64)}
-
-    >>> import torch
-    >>> from ndtorch.util import nest
-    >>> from ndtorch.derivative import derivative
-    >>> from ndtorch.series import series
-    >>> from ndtorch.series import clean
-    >>> from ndtorch.evaluate import evaluate
-    >>> from ndtorch.yoshida import yoshida
-    >>> def fn(x, t, k): q, p = x ; k, = k ; return torch.stack([q, p - t*q - t*(1 + k)*q**2])
-    >>> def gn(x, t, k): q, p = x ; k, = k ; return torch.stack([q + t*p, p])
-    >>> l = torch.tensor(1.0, dtype=torch.float64)
-    >>> x = torch.tensor([0.0, 0.0], dtype=torch.float64)
-    >>> k = torch.tensor([0.0], dtype=torch.float64)
-    >>> y = nest(100, lambda x, k: yoshida(0, 2, True, [fn, gn])(x, l/100, k))
-    >>> t = derivative((2, 1), y, x, k)
-    >>> f = lambda x, k: evaluate(t, [x, k])
-    >>> i, _ = invariant((3, 1), x, [k], lambda x, k: 1/2*(x**2).sum(), f, threshold=1.0E-6)
-    >>> clean(series((2, 1), (3, 1), i))
-    {(2, 0, 0): tensor([0.5000], dtype=torch.float64),
-    (0, 2, 0): tensor([0.5000], dtype=torch.float64),
-    (3, 0, 0): tensor([0.3333], dtype=torch.float64),
-    (3, 0, 1): tensor([0.3333], dtype=torch.float64)}
-
-    Note
-    ----
-    Initial guess is required to avoid trivial solution
-
-    """
-    if solve is None:
-        def solve(matrix, vector):
-            return torch.linalg.lstsq(matrix, vector.unsqueeze(1)).solution.squeeze()
-
-    jacobian = torch.func.jacfwd if jacobian is None else jacobian
-
-    point = [state, *knobs]
-
-    table = derivative(order, observable, state, *knobs)
-    chop(table, threshold=threshold)
-
-    def auxiliary(*point) -> State:
-        state, *knobs = point
-        state = mapping(state, *knobs)
-        return evaluate(table, [state, *knobs])
-
-    def objective(values, index, sequence, shape, unique):
-        for key, value in zip(unique, values):
-            unique[key] = value
-        value = build(sequence, shape, unique)
-        set(table, index, value)
-        local = derivative(index,
-                           auxiliary,
-                           *point,
-                           intermediate=False,
-                           jacobian=jacobian)
-        *_, local = reduce(dimension, index, local)
-        return values - torch.stack([*local.values()])
-
-    dimension = (len(state), *(len(knob) for knob in knobs))
-
-    _, *array = signature(table)
-
-    for i in array:
-        guess = get(table, i)
-        sequence, shape, unique = reduce(dimension, i, guess)
-        guess = torch.stack([*unique.values()])
-        values = newton(objective,
-                        guess,
-                        i,
-                        sequence,
-                        shape,
-                        unique,
-                        solve=solve,
-                        jacobian=jacobian)
-        for key, value in zip(unique, values):
-            unique[key] = value
-        set(table, i, build(sequence, shape, unique))
-
-    final = derivative(order,
-                        auxiliary,
-                        *point,
-                        intermediate=True,
-                        jacobian=jacobian)
-
-    array = [i for i in array if (get(table, i) - get(final, i)).abs().max() > threshold]
-
-    chop(table, threshold=threshold)
-
-    return table, array
-
-
-@multimethod
 def invariant(order:tuple[int, ...],
               state:State,
               knobs:Knobs,
@@ -260,6 +112,7 @@ def invariant(order:tuple[int, ...],
 
     Note
     ----
+    Input table is assumed to be origin preserving
     Initial guess is required to avoid trivial solution
 
     """
@@ -272,10 +125,6 @@ def invariant(order:tuple[int, ...],
     table = derivative(order, observable, state, *knobs)
     chop(table, threshold=threshold)
 
-    def auxiliary(*point) -> State:
-        state, *knobs = point
-        return evaluate(table, [state, *knobs])
-
     def objective(values, index, sequence, shape, unique):
         for key, value in zip(unique, values):
             unique[key] = value
@@ -285,7 +134,7 @@ def invariant(order:tuple[int, ...],
                           index,
                           data,
                           knobs,
-                          auxiliary,
+                          table,
                           intermediate=False,
                           jacobian=jacobian)
         *_, local = reduce(dimension, index, local)
@@ -312,12 +161,12 @@ def invariant(order:tuple[int, ...],
         set(table, i, build(sequence, shape, unique))
 
     final = propagate(dimension,
-                        order,
-                        data,
-                        knobs,
-                        auxiliary,
-                        intermediate=True,
-                        jacobian=jacobian)
+                      order,
+                      data,
+                      knobs,
+                      table,
+                      intermediate=True,
+                      jacobian=jacobian)
 
     array = [i for i in array if (get(table, i) - get(final, i)).abs().max() > threshold]
 
