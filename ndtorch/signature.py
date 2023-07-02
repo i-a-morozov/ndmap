@@ -13,6 +13,7 @@ from typing import Union
 
 from multimethod import multimethod
 
+import torch
 from torch import Tensor
 
 from .util import flatten
@@ -98,7 +99,8 @@ def signature(index:list[int],
     return tuple(index) if not factor else (tuple(index), value)
 
 
-def get(table:Table, index:tuple[int, ...]) -> Union[Tensor, Table]:
+def get(table:Table,
+        index:tuple[int, ...]) -> Union[Tensor, Table]:
     """
     Get derivative table element at a given (bottom) element signature
 
@@ -141,7 +143,9 @@ def get(table:Table, index:tuple[int, ...]) -> Union[Tensor, Table]:
     return table[n]
 
 
-def set(table:Table, index:tuple[int, ...], value:Union[Tensor, Table]) -> None:
+def set(table:Table,
+        index:tuple[int, ...],
+        value:Union[Tensor, Table]) -> None:
     """
     Set derivative table element at a given (bottom) element signature
 
@@ -188,7 +192,9 @@ def set(table:Table, index:tuple[int, ...], value:Union[Tensor, Table]) -> None:
 
 
 @multimethod
-def apply(table:Table, index:tuple[int, ...], function:Callable) -> None:
+def apply(table:Table,
+          index:tuple[int, ...],
+          function:Callable) -> None:
     """
     Apply function (modifies element at index)
 
@@ -229,7 +235,9 @@ def apply(table:Table, index:tuple[int, ...], function:Callable) -> None:
 
 
 @multimethod
-def apply(table:Table, index:list[tuple[int, ...]], function:Callable) -> None:
+def apply(table:Table,
+          index:list[tuple[int, ...]],
+          function:Callable) -> None:
     """
     Apply function (modifies element at list of indices)
 
@@ -268,7 +276,8 @@ def apply(table:Table, index:list[tuple[int, ...]], function:Callable) -> None:
 
 
 @multimethod
-def apply(table:Table, function:Callable) -> None:
+def apply(table:Table, 
+          function:Callable) -> None:
     """
     Apply function to all bottom elements
 
@@ -304,7 +313,10 @@ def apply(table:Table, function:Callable) -> None:
     apply(table, signature(table), function)
 
 
-def chop(table:Table, threshold:float=1.0E-9, value:float=0.0) -> None:
+def chop(table:Table, *,
+         threshold:float=1.0E-9,
+         value:float=0.0,
+         replace:bool=False) -> None:
     """
     Chop tensor elements in a table below a given threshold
 
@@ -316,6 +328,8 @@ def chop(table:Table, threshold:float=1.0E-9, value:float=0.0) -> None:
         threshold value
     value: float, default=0.0
         set value
+    replace: bool, default=False
+        flag to replace zero tensors
 
     Returns
     -------
@@ -341,6 +355,8 @@ def chop(table:Table, threshold:float=1.0E-9, value:float=0.0) -> None:
     def inner(tensor):
         tensor = tensor.clone()
         tensor[tensor.abs() < threshold] = value
+        if replace and torch.allclose(tensor, torch.zeros_like(tensor)):
+            tensor = []
         return tensor
     apply(table, inner)
 
