@@ -21,7 +21,6 @@ from .signature import get
 from .signature import chop
 from .index import reduce
 from .index import build
-from .evaluate import evaluate
 from .pfp import newton
 from .pfp import propagate
 
