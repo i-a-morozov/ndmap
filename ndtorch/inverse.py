@@ -71,18 +71,18 @@ def inverse(order:tuple[int, ...],
     >>> import torch
     >>> from ndtorch.derivative import derivative
     >>> from ndtorch.propagate import propagate
-    >>> def fn(x, k):
+    >>> def fn(x):
     ...     q, p = x
-    ...     a, b = k
-    ...     return torch.stack([q, p + (1 + a)*q + (1 + b)*q**2])
+    ...     return torch.stack([q, p + q + q**2])
     >>> x = torch.tensor([0.0, 0.0], dtype=torch.float64)
     >>> t = derivative((2, ), fn, x)
     >>> inverse((2, ), x, [], t)
-    [tensor([0., 0.], dtype=torch.float64),
+    [[],
     tensor([[ 1.,  0.],
             [-1.,  1.]], dtype=torch.float64),
     tensor([[[ 0.,  0.],
             [ 0.,  0.]],
+    
             [[-2.,  0.],
             [ 0.,  0.]]], dtype=torch.float64)]
 
@@ -97,25 +97,29 @@ def inverse(order:tuple[int, ...],
     >>> k = torch.tensor([0.0, 0.0], dtype=torch.float64)
     >>> t = derivative((2, 1), fn, x, k)
     >>> inverse((2, 1), x, [k], t)
-    [[tensor([0., 0.], dtype=torch.float64),
-    tensor([[0., 0.],
-            [0., 0.]], dtype=torch.float64)],
+    [[[], []],
     [tensor([[ 1.,  0.],
             [-1.,  1.]], dtype=torch.float64),
     tensor([[[ 0.,  0.],
             [ 0.,  0.]],
+    
             [[-1.,  0.],
             [ 0.,  0.]]], dtype=torch.float64)],
     [tensor([[[ 0.,  0.],
             [ 0.,  0.]],
+    
             [[-2.,  0.],
             [ 0.,  0.]]], dtype=torch.float64),
     tensor([[[[ 0.,  0.],
                 [ 0.,  0.]],
+    
             [[ 0.,  0.],
                 [ 0.,  0.]]],
+    
+    
             [[[ 0.,  0.],
                 [ 0.,  0.]],
+    
             [[-2.,  0.],
                 [ 0.,  0.]]]], dtype=torch.float64)]]
 
@@ -157,6 +161,7 @@ def inverse(order:tuple[int, ...],
 
     for i in array:
         if not first(i):
+            set(result, i, [])
             continue
         guess = get(result, i)
         sequence, shape, unique = reduce(dimension, i, guess)

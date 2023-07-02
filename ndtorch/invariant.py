@@ -14,6 +14,7 @@ from typing import Union
 import torch
 from torch import Tensor
 
+from .util import first
 from .derivative import derivative
 from .signature import signature
 from .signature import set
@@ -141,9 +142,13 @@ def invariant(order:tuple[int, ...],
 
     dimension = (len(state), *(len(knob) for knob in knobs))
 
-    _, *array = signature(table)
+    start = 2
+    array = signature(table)
 
     for i in array:
+        if first(i) < start:
+            set(table, i, [])
+            continue
         guess = get(table, i)
         sequence, shape, unique = reduce(dimension, i, guess)
         guess = torch.stack([*unique.values()])
@@ -167,7 +172,7 @@ def invariant(order:tuple[int, ...],
                       intermediate=True,
                       jacobian=jacobian)
 
-    array = [i for i in array if (get(table, i) - get(final, i)).abs().max() > threshold]
+    array = [i for i in array if first(i) > start and (get(table, i) - get(final, i)).abs().max() > threshold]
 
     chop(table, threshold=threshold)
 

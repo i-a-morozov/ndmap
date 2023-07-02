@@ -221,18 +221,17 @@ def hamiltonian(order:tuple[int, ...],
 
     dimension = (len(state), *(len(knob) for knob in knobs))
 
+    start = 3
     array = signature(ht)
 
     for i in array:
-
         n, *ns = i
-        if n < 3:
+        if n < start:
+            set(ht, i, [])
             continue
-
         guess = get(ht, i)
         sequence, shape, unique = reduce(dimension, i, guess)
         guess = torch.stack([*unique.values()])
-
         vector, matrix = derivative(1,
                                     objective,
                                     guess,
@@ -242,7 +241,6 @@ def hamiltonian(order:tuple[int, ...],
                                     unique,
                                     intermediate=True,
                                     jacobian=jacobian)
-
         values = solve(matrix, get(table, (n - 1, *ns)).flatten() - vector)
         for key, value in zip(unique, values):
             unique[key] = value
