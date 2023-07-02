@@ -246,7 +246,7 @@ def compare(probe:Table, other:Table) -> bool:
     """
     for i in signature(probe):
         x = get(probe, i)
-        y = get(probe, i)
+        y = get(other, i)
         if isinstance(x, Tensor) and isinstance(y, Tensor):
             if not torch.allclose(x, y):
                 return False
