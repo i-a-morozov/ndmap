@@ -244,14 +244,7 @@ def compare(probe:Table, other:Table) -> bool:
     True
 
     """
-    ns = signature(probe)
-    ms = signature(other)
-    if len(ns) != len(ms):
-        return False
-    for n, m in zip(ns, ms):
-        if n != m:
-            return False
-    for i in ns:
+    for i in signature(probe):
         x = get(probe, i)
         y = get(probe, i)
         if isinstance(x, Tensor) and isinstance(y, Tensor):
