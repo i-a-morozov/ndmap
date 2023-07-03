@@ -41,10 +41,19 @@ def hamiltonian(order:tuple[int, ...],
                 state:State,
                 knobs:Knobs,
                 table:Table, *,
+                start:Optional[int]=None,
+                count:Optional[int]=None,
                 solve:Optional[Callable]=None,
                 jacobian:Optional[Callable]=None) -> Table:
     """
     Compute hamiltonian taylor representation of a given near identity table
+
+    Note, taylor integrator is used to construct hamiltonian
+    Number of terms in the expansion is inferred from the input order
+    The input order is assumed to correspond to the input table
+    The input table represents a near identity mapping
+    Thus, the first term of the hamiltonian is a degree three polynomial
+    Starting order can be passed on input, e.g. when preceding orders are identically zero
 
     Parameters
     ----------
@@ -56,6 +65,10 @@ def hamiltonian(order:tuple[int, ...],
         knobs
     table: Table
         near identity mapping taylor representation
+    start: Optional[int]
+        starting order (degree)
+    count: Optional[int]
+        number of terms to use in expansion (derived from input order if None)
     solve: Optional[Callable]
         linear solver(matrix, vecor)
     jacobian: Optional[Callable]
@@ -204,8 +217,8 @@ def hamiltonian(order:tuple[int, ...],
     def hf(*point):
         return evaluate(ht, [*point])
 
-    def hs(*point, order=first(order)):
-        return taylor(order - 1, 1.0, hf, *point)
+    def hs(*point):
+        return taylor(count, 1.0, hf, *point)
 
     def objective(values, index, sequence, shape, unique):
         n, *ns = index
@@ -221,7 +234,9 @@ def hamiltonian(order:tuple[int, ...],
 
     dimension = (len(state), *(len(knob) for knob in knobs))
 
-    start = 3
+    start = start if start is not None else 3
+    alter = not count
+    count = count if count is not None else n - 1
     array = signature(ht)
 
     for i in array:
@@ -229,6 +244,8 @@ def hamiltonian(order:tuple[int, ...],
         if n < start:
             set(ht, i, [])
             continue
+        if alter:
+            count = n - 2
         guess = get(ht, i)
         sequence, shape, unique = reduce(dimension, i, guess)
         guess = torch.stack([*unique.values()])
@@ -241,9 +258,163 @@ def hamiltonian(order:tuple[int, ...],
                                     unique,
                                     intermediate=True,
                                     jacobian=jacobian)
-        values = solve(matrix, get(table, (n - 1, *ns)).flatten() - vector)
+        tensor = get(table, (n - 1, *ns))
+        tensor = tensor.flatten() if isinstance(tensor, Tensor) else torch.zeros_like(vector)
+        values = solve(matrix, tensor - vector)
         for key, value in zip(unique, values):
             unique[key] = value
         set(ht, i, build(sequence, shape, unique))
 
     return ht
+
+
+def solution(order:tuple[int],
+             state:State,
+             knobs:Knobs,
+             hamiltonian: Table, *,
+             count:Optional[int]=None,
+             inverse:bool=False,
+             jacobian:Optional[Callable]=None) -> Table:
+    """
+    Compute table solution for a given near identity hamiltonian table
+
+    Parameters
+    ----------
+    order: tuple[int, ...]
+        table order
+    state: State
+        state
+    knobs: Knobs
+        knobs
+    hamiltonian: Table
+        hamiltonian table representation
+    count: Optional[int]
+        number of terms to use in expansion (derived from input order if None)
+    inverse: bool, default=False
+        flag to inverse time direction
+    jacobian: Optional[Callable]
+        torch.func.jacfwd (default) or torch.func.jacrev
+
+    Returns
+    -------
+    Table
+
+    Examples
+    --------
+    >>> import torch
+    >>> from ndtorch.derivative import derivative
+    >>> from ndtorch.evaluate import evaluate
+    >>> from ndtorch.evaluate import compare
+    >>> from ndtorch.propagate import identity
+    >>> from ndtorch.propagate import propagate
+    >>> from ndtorch.inverse import inverse
+    >>> from ndtorch.factorization import hamiltonian
+    ... def mapping(x, k, l):
+    ...     (qx, px, qy, py), (k, ), l = x, k, l/2
+    ...     qx, qy = qx + l*px, qy + l*py
+    ...     px, py = px - 1.0*l*k*(qx**2 - qy**2), py + 2.0*l*k*qx*qy
+    ...     qx, qy = qx + l*px, qy + l*py
+    ...     return torch.stack([qx, px, qy, py])
+    >>> x = torch.tensor(4*[0.0], dtype=torch.float64)
+    >>> k = torch.tensor(1*[0.0], dtype=torch.float64)
+    >>> t = identity((2, 1), [x, k])
+    >>> t = propagate((4, 1), (2, 1), t, [k], mapping, 0.1)
+    >>> l = derivative(1, lambda x, k: evaluate(t, [x, k]), x, k)
+    >>> t = propagate((4, 1), (2, 1), inverse(1, x, [k], l), [k], t)
+    >>> h = hamiltonian((2, 1), x, [k], t)
+    >>> compare(t, solution((2, 1), x, [k], h))
+    True
+
+    """
+    jacobian = torch.func.jacfwd if jacobian is None else jacobian
+
+    n, *_ = order
+
+    point = [state, *knobs]
+
+    count = count if count is not None else (n - 1)
+
+    def hf(*point):
+        return evaluate(hamiltonian, [*point])
+
+    def hs(*point, order=first(order)):
+        return taylor(count, (-1.0)**inverse, hf, *point)
+
+    return derivative(order, hs, point, jacobian=jacobian)
+
+
+def inverse(order:tuple[int, ...],
+            state:State,
+            knobs:Knobs,
+            data:Table, *,
+            start:Optional[int]=None,
+            count:Optional[int]=None,
+            solve:Optional[Callable]=None,
+            jacobian:Optional[Callable]=None) -> Table:
+    """
+    Compute near identity table inverse using single exponent representation
+
+    Parameters
+    ----------
+    order: tuple[int, ...]
+        table order
+    state: State
+        state
+    knobs: Knobs
+        knobs
+    data: Table
+        input near identity table
+    start: Optional[int]
+        starting order (degree)
+    count: Optional[int]
+        number of terms to use in expansion (derived from input order if None)
+    solve: Optional[Callable]
+        linear solver(matrix, vecor)
+    jacobian: Optional[Callable]
+        torch.func.jacfwd (default) or torch.func.jacrev
+
+    Returns
+    -------
+    Table
+
+    Examples
+    --------
+    >>> import torch
+    >>> from ndtorch.derivative import derivative
+    >>> from ndtorch.evaluate import evaluate
+    >>> from ndtorch.evaluate import compare
+    >>> from ndtorch.propagate import identity
+    >>> from ndtorch.propagate import propagate
+    >>> from ndtorch.inverse import inverse
+    >>> def mapping(x, k, l):
+    ...     (qx, px, qy, py), (k, ), l = x, k, l/2
+    ...     qx, qy = qx + l*px, qy + l*py
+    ...     px, py = px - 1.0*l*k*(qx**2 - qy**2), py + 2.0*l*k*qx*qy
+    ...     qx, qy = qx + l*px, qy + l*py
+    ...     return torch.stack([qx, px, qy, py])
+    >>> x = torch.tensor(4*[0.0], dtype=torch.float64)
+    >>> k = torch.tensor(1*[0.0], dtype=torch.float64)
+    >>> t = identity((2, 1), [x, k])
+    >>> t = propagate((4, 1), (2, 1), t, [k], mapping, 0.1)
+    >>> l = derivative(1, lambda x, k: evaluate(t, [x, k]), x, k)
+    >>> t = propagate((4, 1), (2, 1), inverse(1, x, [k], l), [k], t)
+    >>> compare(inverse((2, 1), x, [k], t), i((2, 1), x, [k], t))
+    True
+
+    """
+    if solve is None:
+        def solve(matrix, vector):
+            return torch.linalg.lstsq(matrix, vector.unsqueeze(1)).solution.squeeze()
+
+    jacobian = torch.func.jacfwd if jacobian is None else jacobian
+
+    ht = hamiltonian((2, 1),
+                     state,
+                     [knobs],
+                     data,
+                     start=start,
+                     count=count,
+                     solve=solve,
+                     jacobian=jacobian)
+
+    return solution(order, state, knobs, ht, count=count, inverse=True, jacobian=jacobian)
