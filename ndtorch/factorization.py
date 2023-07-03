@@ -19,9 +19,12 @@ from .derivative import derivative
 from .signature import signature
 from .signature import get
 from .signature import set
+from .signature import chop
 from .index import reduce
 from .index import build
 from .evaluate import evaluate
+from .propagate import propagate
+from .inverse import inverse
 from .taylor import taylor
 
 
@@ -212,7 +215,7 @@ def hamiltonian(order:tuple[int, ...],
         state, *_ = point
         return torch.zeros_like(state).sum()
 
-    ht = derivative((n + 1, *ns), auxiliary, state, *knobs)
+    ht = derivative((n + 1, *ns), auxiliary, state, *knobs, jacobian=jacobian)
 
     def hf(*point):
         return evaluate(ht, [*point])
@@ -346,7 +349,7 @@ def solution(order:tuple[int],
 def hamiltonian_inverse(order:tuple[int, ...],
                         state:State,
                         knobs:Knobs,
-                        data:Table, *,
+                        table:Table, *,
                         start:Optional[int]=None,
                         count:Optional[int]=None,
                         solve:Optional[Callable]=None,
@@ -362,7 +365,7 @@ def hamiltonian_inverse(order:tuple[int, ...],
         state
     knobs: Knobs
         knobs
-    data: Table
+    table: Table
         input near identity table
     start: Optional[int]
         starting order (degree)
@@ -411,10 +414,261 @@ def hamiltonian_inverse(order:tuple[int, ...],
     ht = hamiltonian((2, 1),
                      state,
                      [knobs],
-                     data,
+                     table,
                      start=start,
                      count=count,
                      solve=solve,
                      jacobian=jacobian)
 
     return solution(order, state, knobs, ht, count=count, inverse=True, jacobian=jacobian)
+
+
+def factorize(order:tuple[int, ...],
+              state:State,
+              knobs:Knobs,
+              table:Table, *,
+              reverse:bool=False,
+              solve:Optional[Callable]=None,
+              jacobian:Optional[Callable]=None) -> list[Table]:
+    """
+    Compute Dragt-Finn factorization generators for a given near identity table
+
+    Parameters
+    ----------
+    order: tuple[int, ...]
+        table order
+    state: State
+        state
+    knobs: Knobs
+        knobs
+    table: Table
+        input near identity table
+    reverse: bool, default=False
+        flag to reverse factorization order
+    solve: Optional[Callable]
+        linear solver(matrix, vecor)
+    jacobian: Optional[Callable]
+        torch.func.jacfwd (default) or torch.func.jacrev
+
+    Returns
+    -------
+    list[Table]
+
+    Examples
+    --------
+    >>> import torch
+    >>> from ndtorch.derivative import derivative
+    >>> from ndtorch.signature import chop
+    >>> from ndtorch.evaluate import evaluate
+    >>> from ndtorch.evaluate import compare
+    >>> from ndtorch.series import series
+    >>> from ndtorch.series import clean
+    >>> from ndtorch.series import split
+    >>> from ndtorch.propagate import identity
+    >>> from ndtorch.propagate import propagate
+    >>> from ndtorch.bracket import bracket
+    >>> from ndtorch.factorization import hamiltonian
+    >>> from ndtorch.factorization import solution
+    >>> def h(x, k):
+    ...     q, p = x
+    ...     a, b = k
+    ...     return a*q**3 + (1 + b)*p**3 + q**4 + q**2*p**2 + q**5 + p**4*q
+    >>> x = torch.tensor([0.0, 0.0], dtype=torch.float64)
+    >>> k = torch.tensor([0.0, 0.0], dtype=torch.float64)
+    >>> h = derivative((5, 1), h, x, k)
+    >>> chop(h, replace=True)
+    >>> s, *_ = split(clean(series((2, 2), (5, 1), h)))
+    >>> s
+    {(0, 3, 0, 0): tensor(1., dtype=torch.float64),
+    (3, 0, 1, 0): tensor(1., dtype=torch.float64),
+    (0, 3, 0, 1): tensor(1., dtype=torch.float64),
+    (4, 0, 0, 0): tensor(1., dtype=torch.float64),
+    (2, 2, 0, 0): tensor(1., dtype=torch.float64),
+    (5, 0, 0, 0): tensor(1., dtype=torch.float64),
+    (1, 4, 0, 0): tensor(1., dtype=torch.float64)}
+    >>> t = solution((4, 1), x, [k], h)
+    >>> compare(h, hamiltonian((4, 1), x, [k], t))
+    True
+    >>> h1, h2, h3 = factorize((4, 1), x, [k], t)
+    >>> s, *_ = split(clean(series((2, 2), (5, 1), h1)))
+    >>> s
+    {(0, 3, 0, 0): tensor(1., dtype=torch.float64),
+    (3, 0, 1, 0): tensor(1., dtype=torch.float64),
+    (0, 3, 0, 1): tensor(1., dtype=torch.float64)}
+    >>> s, *_ = split(clean(series((2, 2), (5, 1), h2)))
+    >>> s
+    {(4, 0, 0, 0): tensor(1., dtype=torch.float64),
+    (2, 2, 0, 0): tensor(1., dtype=torch.float64)}
+    >>> s, *_ = split(clean(series((2, 2), (5, 1), h3)))
+    >>> s
+    {(5, 0, 0, 0): tensor(1., dtype=torch.float64),
+    (3, 2, 0, 0): tensor(-6., dtype=torch.float64),
+    (1, 4, 0, 0): tensor(-2., dtype=torch.float64),
+    (4, 1, 1, 0): tensor(3., dtype=torch.float64),
+    (3, 2, 0, 1): tensor(-6., dtype=torch.float64),
+    (1, 4, 0, 1): tensor(-3., dtype=torch.float64)}
+    >>> t1 = solution((4, 1), x, [k], h1)
+    >>> t2 = solution((4, 1), x, [k], h2)
+    >>> t3 = solution((4, 1), x, [k], h3)
+    >>> T = identity((4, 1), [x, k])
+    >>> T = propagate((2, 2), (4, 1), T, [k], t1)
+    >>> T = propagate((2, 2), (4, 1), T, [k], t2)
+    >>> T = propagate((2, 2), (4, 1), T, [k], t3)
+    >>> compare(t, T)
+    True
+    >>> compare(h, hamiltonian((4, 1), x, [k], T))
+    True
+    >>> def h(x, k):
+    ...    q, p = x
+    ...    a, b = k
+    ...    v1 = evaluate(h1, [x, k])
+    ...    v2 = evaluate(h2, [x, k])
+    ...    v3 = evaluate(h3, [x, k])
+    ...    v4 = bracket(h1, h2)(x, k)
+    ...    return v1 + v2 + v3 - 0.5*v4
+    >>> h = derivative((5, 1), h, x, k)
+    >>> chop(h, replace=True)
+    >>> s, *_ = split(clean(series((2, 2), (5, 1), h)))
+    >>> s
+    {(0, 3, 0, 0): tensor(1., dtype=torch.float64),
+    (3, 0, 1, 0): tensor(1., dtype=torch.float64),
+    (0, 3, 0, 1): tensor(1., dtype=torch.float64),
+    (4, 0, 0, 0): tensor(1., dtype=torch.float64),
+    (2, 2, 0, 0): tensor(1., dtype=torch.float64),
+    (5, 0, 0, 0): tensor(1., dtype=torch.float64),
+    (1, 4, 0, 0): tensor(1., dtype=torch.float64)}
+
+    >>> import torch
+    >>> from ndtorch.derivative import derivative
+    >>> from ndtorch.signature import chop
+    >>> from ndtorch.evaluate import evaluate
+    >>> from ndtorch.evaluate import compare
+    >>> from ndtorch.series import series
+    >>> from ndtorch.series import clean
+    >>> from ndtorch.series import split
+    >>> from ndtorch.propagate import identity
+    >>> from ndtorch.propagate import propagate
+    >>> from ndtorch.bracket import bracket
+    >>> from ndtorch.factorization import hamiltonian
+    >>> from ndtorch.factorization import solution
+    >>> def h(x, k):
+    ...     q, p = x
+    ...     a, b = k
+    ...     return a*q**3 + (1 + b)*p**3 + q**4 + q**2*p**2 + q**5 + p**4*q
+    >>> x = torch.tensor([0.0, 0.0], dtype=torch.float64)
+    >>> k = torch.tensor([0.0, 0.0], dtype=torch.float64)
+    >>> h = derivative((5, 1), h, x, k)
+    >>> chop(h, replace=True)
+    >>> s, *_ = split(clean(series((2, 2), (5, 1), h)))
+    >>> s
+    {(0, 3, 0, 0): tensor(1., dtype=torch.float64),
+    (3, 0, 1, 0): tensor(1., dtype=torch.float64),
+    (0, 3, 0, 1): tensor(1., dtype=torch.float64),
+    (4, 0, 0, 0): tensor(1., dtype=torch.float64),
+    (2, 2, 0, 0): tensor(1., dtype=torch.float64),
+    (5, 0, 0, 0): tensor(1., dtype=torch.float64),
+    (1, 4, 0, 0): tensor(1., dtype=torch.float64)}
+    >>> t = solution((4, 1), x, [k], h)
+    >>> compare(h, hamiltonian((4, 1), x, [k], t))
+    True
+    >>> h1, h2, h3 = factorize((4, 1), x, [k], t, reverse=True)
+    >>> s, *_ = split(clean(series((2, 2), (5, 1), h1)))
+    >>> s
+    {(0, 3, 0, 0): tensor(1., dtype=torch.float64),
+    (3, 0, 1, 0): tensor(1., dtype=torch.float64),
+    (0, 3, 0, 1): tensor(1., dtype=torch.float64)}
+    >>> s, *_ = split(clean(series((2, 2), (5, 1), h2)))
+    >>> s
+    {(4, 0, 0, 0): tensor(1., dtype=torch.float64),
+    (2, 2, 0, 0): tensor(1., dtype=torch.float64)}
+    >>> s, *_ = split(clean(series((2, 2), (5, 1), h3)))
+    >>> s
+    {(5, 0, 0, 0): tensor(1., dtype=torch.float64),
+    (3, 2, 0, 0): tensor(6., dtype=torch.float64),
+    (1, 4, 0, 0): tensor(4., dtype=torch.float64),
+    (4, 1, 1, 0): tensor(-3., dtype=torch.float64),
+    (3, 2, 0, 1): tensor(6., dtype=torch.float64),
+    (1, 4, 0, 1): tensor(3., dtype=torch.float64)}
+    >>> t1 = solution((4, 1), x, [k], h1)
+    >>> t2 = solution((4, 1), x, [k], h2)
+    >>> t3 = solution((4, 1), x, [k], h3)
+    >>> T = identity((4, 1), [x, k])
+    >>> T = propagate((2, 2), (4, 1), T, [k], t3)
+    >>> T = propagate((2, 2), (4, 1), T, [k], t2)
+    >>> T = propagate((2, 2), (4, 1), T, [k], t1)
+    >>> compare(t, T)
+    True
+    >>> compare(h, hamiltonian((4, 1), x, [k], T))
+    True
+    >>> def h(x, k):
+    ...    q, p = x
+    ...    a, b = k
+    ...    v1 = evaluate(h1, [x, k])
+    ...    v2 = evaluate(h2, [x, k])
+    ...    v3 = evaluate(h3, [x, k])
+    ...    v4 = bracket(h2, h1)(x, k)
+    ...    return v1 + v2 + v3 - 0.5*v4
+    >>> h = derivative((5, 1), h, x, k)
+    >>> chop(h, replace=True)
+    >>> s, *_ = split(clean(series((2, 2), (5, 1), h)))
+    >>> s
+    {(0, 3, 0, 0): tensor(1., dtype=torch.float64),
+    (3, 0, 1, 0): tensor(1., dtype=torch.float64),
+    (0, 3, 0, 1): tensor(1., dtype=torch.float64),
+    (4, 0, 0, 0): tensor(1., dtype=torch.float64),
+    (2, 2, 0, 0): tensor(1., dtype=torch.float64),
+    (5, 0, 0, 0): tensor(1., dtype=torch.float64),
+    (1, 4, 0, 0): tensor(1., dtype=torch.float64)}
+
+    """
+    if solve is None:
+        def solve(matrix, vector):
+            return torch.linalg.lstsq(matrix, vector.unsqueeze(1)).solution.squeeze()
+
+    jacobian = torch.func.jacfwd if jacobian is None else jacobian
+
+    def auxiliary(*point) -> State:
+        state, *_ = point
+        return torch.zeros_like(state)
+
+    limit, *_ = order
+
+    dimension = (len(state), *(len(knob) for knob in knobs))
+
+    start = 2
+    array = signature(table)
+
+    result = []
+
+    for degree in range(start, limit + 1):
+
+        for i in array:
+            if first(i) <= degree:
+                index = i
+                continue
+            break
+
+        t = derivative(index, auxiliary, state, *knobs, jacobian=jacobian)
+        for i in signature(t):
+            set(t, i, get(table, i))
+        chop(t, replace=True)
+
+        h = hamiltonian(index,
+                        state,
+                        knobs,
+                        t,
+                        start=(degree + 1),
+                        count=1,
+                        solve=solve,
+                        jacobian=jacobian)
+        chop(h, replace=True)
+        result.append(h)
+
+        if degree != limit:
+            s = solution(order, state, knobs, h, jacobian=jacobian)
+            s = inverse(order, state, knobs, s, solve=solve, jacobian=jacobian)
+            tx, ty = (s, table) if not reverse else (table, s)
+            table = propagate(dimension, order, tx, knobs, ty, jacobian=jacobian)
+            chop(table, replace=True)
+
+    return result
