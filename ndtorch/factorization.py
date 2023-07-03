@@ -343,14 +343,14 @@ def solution(order:tuple[int],
     return derivative(order, hs, point, jacobian=jacobian)
 
 
-def inverse(order:tuple[int, ...],
-            state:State,
-            knobs:Knobs,
-            data:Table, *,
-            start:Optional[int]=None,
-            count:Optional[int]=None,
-            solve:Optional[Callable]=None,
-            jacobian:Optional[Callable]=None) -> Table:
+def hamiltonian_inverse(order:tuple[int, ...],
+                        state:State,
+                        knobs:Knobs,
+                        data:Table, *,
+                        start:Optional[int]=None,
+                        count:Optional[int]=None,
+                        solve:Optional[Callable]=None,
+                        jacobian:Optional[Callable]=None) -> Table:
     """
     Compute near identity table inverse using single exponent representation
 
@@ -398,7 +398,7 @@ def inverse(order:tuple[int, ...],
     >>> t = propagate((4, 1), (2, 1), t, [k], mapping, 0.1)
     >>> l = derivative(1, lambda x, k: evaluate(t, [x, k]), x, k)
     >>> t = propagate((4, 1), (2, 1), inverse(1, x, [k], l), [k], t)
-    >>> compare(inverse((2, 1), x, [k], t), i((2, 1), x, [k], t))
+    >>> compare(inverse((2, 1), x, [k], t), hamiltonian_inverse((2, 1), x, [k], t))
     True
 
     """
