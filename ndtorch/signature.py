@@ -32,6 +32,69 @@ Hamiltonian : TypeAlias = Callable
 
 
 @multimethod
+def signature(order:tuple[int, ...], *,
+              factor:bool=False) -> Signature:
+    """
+    Compute derivative table bottom elements signatures from given orders
+
+    Parameters
+    ----------
+    order: tuple[int, ...]
+        table order
+    fator: bool, default=True
+        flag to return elements multipliation factors
+
+    Returns
+    -------
+    Signature
+        bottom table elements signatures
+
+    Examples
+    --------
+    >>> import torch
+    >>> from ndtorch.derivative import derivative
+    >>> def fn(x, y):
+    ...    x1, x2 = x
+    ...    y1, y2 = y
+    ...    return (x1 + x2 + x1**2 + x1*x2 + x2**2)*(1 + y1 + y2)
+    >>> x = torch.tensor([0.0, 0.0])
+    >>> y = torch.zeros_like(x)
+    >>> signature((2, 1))
+    [(0, 0), (0, 1), (1, 0), (1, 1), (2, 0), (2, 1)]
+    >>> signature((2, 1), factor=True)
+    [((0, 0), 1.0),
+     ((0, 1), 1.0),
+     ((1, 0), 1.0),
+     ((1, 1), 1.0),
+     ((2, 0), 0.5),
+     ((2, 1), 0.5)]
+    
+    """
+    length = len(order)
+
+    def generate(order, local, indices):
+        if length == len(local):
+            indices.append(tuple(local))
+        else:
+            for i in range(order[len(local)] + 1):
+                generate(order, local + [i], indices)
+
+    indices = []
+    generate(order, [], indices)
+
+    if not factor:
+        return indices
+
+    result = []
+    for index in indices:
+        value = 1.0
+        for count in index:
+            value *= 1.0/factorial(count)
+        result.append((index, value))
+
+    return result
+
+@multimethod
 def signature(table:Table, *,
               factor:bool=False) -> Signature:
     """
@@ -272,11 +335,12 @@ def apply(table:Table,
             [0., 0.]])]
 
     """
-    [*map(lambda index: apply(table, index, function), index)]
+    for i in index:
+        apply(table, i, function)
 
 
 @multimethod
-def apply(table:Table, 
+def apply(table:Table,
           function:Callable) -> None:
     """
     Apply function to all bottom elements
