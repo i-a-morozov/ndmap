@@ -3,6 +3,7 @@ Factorization
 -------------
 
 Factorization related utilities
+Single exponent representation and Dragt-Finn factorization of a near identity mapping
 
 """
 
@@ -49,29 +50,32 @@ def hamiltonian(order:tuple[int, ...],
                 solve:Optional[Callable]=None,
                 jacobian:Optional[Callable]=None) -> Table:
     """
-    Compute hamiltonian taylor representation of a given near identity table
+    Compute single exponent representation hamiltonian of a given near identity mapping
 
-    Note, taylor integrator is used to construct hamiltonian
-    Number of terms in the expansion is inferred from the input order
-    The input order is assumed to correspond to the input table
+    Note, table representation of a mapping is expected on entrance
+    And, taylor integrator is used to construct hamiltonian
+    Number of terms in the expansion is inferred from the input order or can be set
+    The input order is assumed to correspond to the input table order
     The input table represents a near identity mapping
     Thus, the first term of the hamiltonian is a degree three polynomial
-    Starting order can be passed on input, e.g. when preceding orders are identically zero
+    Other starting degree can be passed, e.g. when preceding degrees are identically zero
+
+    Note, both state and knobs are expected to be zero tensors, used to infere dimension
 
     Parameters
     ----------
     order: tuple[int, ...]
-        table order
+        input table order
     state: State
         state
     knobs: Knobs
         knobs
     table: Table
-        near identity mapping taylor representation
+        table representation of a near identity mapping
     start: Optional[int]
-        starting order (degree)
+        hamiltonian starting order (degree)
     count: Optional[int]
-        number of terms to use in expansion (derived from input order if None)
+        number of terms to use in taylor integrator
     solve: Optional[Callable]
         linear solver(matrix, vecor)
     jacobian: Optional[Callable]
@@ -180,15 +184,15 @@ def hamiltonian(order:tuple[int, ...],
     >>> chop(h)
     >>> clean(series((4, 1), (3, 1), h))
     {(3, 0, 0, 0, 1): tensor([0.0167], dtype=torch.float64),
-    (2, 1, 0, 0, 1): tensor([-0.0025], dtype=torch.float64),
-    (1, 2, 0, 0, 1): tensor([0.0001], dtype=torch.float64),
-    (1, 0, 2, 0, 1): tensor([-0.0500], dtype=torch.float64),
-    (1, 0, 1, 1, 1): tensor([0.0050], dtype=torch.float64),
-    (1, 0, 0, 2, 1): tensor([-0.0001], dtype=torch.float64),
-    (0, 3, 0, 0, 1): tensor([-2.0833e-06], dtype=torch.float64),
-    (0, 1, 2, 0, 1): tensor([0.0025], dtype=torch.float64),
-    (0, 1, 1, 1, 1): tensor([-0.0003], dtype=torch.float64),
-    (0, 1, 0, 2, 1): tensor([6.2500e-06], dtype=torch.float64)}
+     (2, 1, 0, 0, 1): tensor([-0.0025], dtype=torch.float64),
+     (1, 2, 0, 0, 1): tensor([0.0001], dtype=torch.float64),
+     (1, 0, 2, 0, 1): tensor([-0.0500], dtype=torch.float64),
+     (1, 0, 1, 1, 1): tensor([0.0050], dtype=torch.float64),
+     (1, 0, 0, 2, 1): tensor([-0.0001], dtype=torch.float64),
+     (0, 3, 0, 0, 1): tensor([-2.0833e-06], dtype=torch.float64),
+     (0, 1, 2, 0, 1): tensor([0.0025], dtype=torch.float64),
+     (0, 1, 1, 1, 1): tensor([-0.0003], dtype=torch.float64),
+     (0, 1, 0, 2, 1): tensor([6.2500e-06], dtype=torch.float64)}
     >>> dx = torch.tensor([0.1, 0.01, 0.05, 0.01], dtype=torch.float64)
     >>> dk = torch.tensor([1.0], dtype=torch.float64)
     >>> fn(x + dx, k + dk, 0.1)
@@ -198,7 +202,7 @@ def hamiltonian(order:tuple[int, ...],
 
     Note
     ----
-    Generator is equal to negative hamiltonian t = exp(-[h]) = exp([g])
+    Output is a hamiltonian h, and transformation is exp(-[h])
 
     """
     if solve is None:
@@ -235,12 +239,13 @@ def hamiltonian(order:tuple[int, ...],
                           intermediate=False,
                           jacobian=jacobian).flatten()
 
-    dimension = (len(state), *(len(knob) for knob in knobs))
+    dimension:tuple[int, ...] = (len(state), *(len(knob) for knob in knobs))
 
     start = start if start is not None else 3
     alter = not count
     count = count if count is not None else n - 1
-    array = signature(ht)
+
+    array: Signature = signature(ht)
 
     for i in array:
         n, *ns = i
@@ -284,7 +289,7 @@ def solution(order:tuple[int],
     Parameters
     ----------
     order: tuple[int, ...]
-        table order
+        output table order
     state: State
         state
     knobs: Knobs
@@ -292,7 +297,7 @@ def solution(order:tuple[int],
     hamiltonian: Table
         hamiltonian table representation
     count: Optional[int]
-        number of terms to use in expansion (derived from input order if None)
+        number of terms to use in taylor integrator
     inverse: bool, default=False
         flag to inverse time direction
     jacobian: Optional[Callable]
@@ -368,9 +373,9 @@ def hamiltonian_inverse(order:tuple[int, ...],
     table: Table
         input near identity table
     start: Optional[int]
-        starting order (degree)
+        hamiltonian starting order (degree)
     count: Optional[int]
-        number of terms to use in expansion (derived from input order if None)
+        number of terms to use in taylor integrator
     solve: Optional[Callable]
         linear solver(matrix, vecor)
     jacobian: Optional[Callable]
@@ -411,7 +416,7 @@ def hamiltonian_inverse(order:tuple[int, ...],
 
     jacobian = torch.func.jacfwd if jacobian is None else jacobian
 
-    ht = hamiltonian((2, 1),
+    ht = hamiltonian(order,
                      state,
                      [knobs],
                      table,
@@ -431,7 +436,7 @@ def factorize(order:tuple[int, ...],
               solve:Optional[Callable]=None,
               jacobian:Optional[Callable]=None) -> list[Table]:
     """
-    Compute Dragt-Finn factorization generators for a given near identity table
+    Compute Dragt-Finn factorization hamiltonians for a given near identity table
 
     Parameters
     ----------
@@ -480,12 +485,12 @@ def factorize(order:tuple[int, ...],
     >>> s, *_ = split(clean(series((2, 2), (5, 1), h)))
     >>> s
     {(0, 3, 0, 0): tensor(1., dtype=torch.float64),
-    (3, 0, 1, 0): tensor(1., dtype=torch.float64),
-    (0, 3, 0, 1): tensor(1., dtype=torch.float64),
-    (4, 0, 0, 0): tensor(1., dtype=torch.float64),
-    (2, 2, 0, 0): tensor(1., dtype=torch.float64),
-    (5, 0, 0, 0): tensor(1., dtype=torch.float64),
-    (1, 4, 0, 0): tensor(1., dtype=torch.float64)}
+     (3, 0, 1, 0): tensor(1., dtype=torch.float64),
+     (0, 3, 0, 1): tensor(1., dtype=torch.float64),
+     (4, 0, 0, 0): tensor(1., dtype=torch.float64),
+     (2, 2, 0, 0): tensor(1., dtype=torch.float64),
+     (5, 0, 0, 0): tensor(1., dtype=torch.float64),
+     (1, 4, 0, 0): tensor(1., dtype=torch.float64)}
     >>> t = solution((4, 1), x, [k], h)
     >>> compare(h, hamiltonian((4, 1), x, [k], t))
     True
@@ -493,20 +498,20 @@ def factorize(order:tuple[int, ...],
     >>> s, *_ = split(clean(series((2, 2), (5, 1), h1)))
     >>> s
     {(0, 3, 0, 0): tensor(1., dtype=torch.float64),
-    (3, 0, 1, 0): tensor(1., dtype=torch.float64),
-    (0, 3, 0, 1): tensor(1., dtype=torch.float64)}
+     (3, 0, 1, 0): tensor(1., dtype=torch.float64),
+     (0, 3, 0, 1): tensor(1., dtype=torch.float64)}
     >>> s, *_ = split(clean(series((2, 2), (5, 1), h2)))
     >>> s
     {(4, 0, 0, 0): tensor(1., dtype=torch.float64),
-    (2, 2, 0, 0): tensor(1., dtype=torch.float64)}
+     (2, 2, 0, 0): tensor(1., dtype=torch.float64)}
     >>> s, *_ = split(clean(series((2, 2), (5, 1), h3)))
     >>> s
     {(5, 0, 0, 0): tensor(1., dtype=torch.float64),
-    (3, 2, 0, 0): tensor(-6., dtype=torch.float64),
-    (1, 4, 0, 0): tensor(-2., dtype=torch.float64),
-    (4, 1, 1, 0): tensor(3., dtype=torch.float64),
-    (3, 2, 0, 1): tensor(-6., dtype=torch.float64),
-    (1, 4, 0, 1): tensor(-3., dtype=torch.float64)}
+     (3, 2, 0, 0): tensor(-6., dtype=torch.float64),
+     (1, 4, 0, 0): tensor(-2., dtype=torch.float64),
+     (4, 1, 1, 0): tensor(3., dtype=torch.float64),
+     (3, 2, 0, 1): tensor(-6., dtype=torch.float64),
+     (1, 4, 0, 1): tensor(-3., dtype=torch.float64)}
     >>> t1 = solution((4, 1), x, [k], h1)
     >>> t2 = solution((4, 1), x, [k], h2)
     >>> t3 = solution((4, 1), x, [k], h3)
@@ -531,12 +536,12 @@ def factorize(order:tuple[int, ...],
     >>> s, *_ = split(clean(series((2, 2), (5, 1), h)))
     >>> s
     {(0, 3, 0, 0): tensor(1., dtype=torch.float64),
-    (3, 0, 1, 0): tensor(1., dtype=torch.float64),
-    (0, 3, 0, 1): tensor(1., dtype=torch.float64),
-    (4, 0, 0, 0): tensor(1., dtype=torch.float64),
-    (2, 2, 0, 0): tensor(1., dtype=torch.float64),
-    (5, 0, 0, 0): tensor(1., dtype=torch.float64),
-    (1, 4, 0, 0): tensor(1., dtype=torch.float64)}
+     (3, 0, 1, 0): tensor(1., dtype=torch.float64),
+     (0, 3, 0, 1): tensor(1., dtype=torch.float64),
+     (4, 0, 0, 0): tensor(1., dtype=torch.float64),
+     (2, 2, 0, 0): tensor(1., dtype=torch.float64),
+     (5, 0, 0, 0): tensor(1., dtype=torch.float64),
+     (1, 4, 0, 0): tensor(1., dtype=torch.float64)}
 
     >>> import torch
     >>> from ndtorch.derivative import derivative
@@ -562,12 +567,12 @@ def factorize(order:tuple[int, ...],
     >>> s, *_ = split(clean(series((2, 2), (5, 1), h)))
     >>> s
     {(0, 3, 0, 0): tensor(1., dtype=torch.float64),
-    (3, 0, 1, 0): tensor(1., dtype=torch.float64),
-    (0, 3, 0, 1): tensor(1., dtype=torch.float64),
-    (4, 0, 0, 0): tensor(1., dtype=torch.float64),
-    (2, 2, 0, 0): tensor(1., dtype=torch.float64),
-    (5, 0, 0, 0): tensor(1., dtype=torch.float64),
-    (1, 4, 0, 0): tensor(1., dtype=torch.float64)}
+     (3, 0, 1, 0): tensor(1., dtype=torch.float64),
+     (0, 3, 0, 1): tensor(1., dtype=torch.float64),
+     (4, 0, 0, 0): tensor(1., dtype=torch.float64),
+     (2, 2, 0, 0): tensor(1., dtype=torch.float64),
+     (5, 0, 0, 0): tensor(1., dtype=torch.float64),
+     (1, 4, 0, 0): tensor(1., dtype=torch.float64)}
     >>> t = solution((4, 1), x, [k], h)
     >>> compare(h, hamiltonian((4, 1), x, [k], t))
     True
@@ -575,20 +580,20 @@ def factorize(order:tuple[int, ...],
     >>> s, *_ = split(clean(series((2, 2), (5, 1), h1)))
     >>> s
     {(0, 3, 0, 0): tensor(1., dtype=torch.float64),
-    (3, 0, 1, 0): tensor(1., dtype=torch.float64),
-    (0, 3, 0, 1): tensor(1., dtype=torch.float64)}
+     (3, 0, 1, 0): tensor(1., dtype=torch.float64),
+     (0, 3, 0, 1): tensor(1., dtype=torch.float64)}
     >>> s, *_ = split(clean(series((2, 2), (5, 1), h2)))
     >>> s
     {(4, 0, 0, 0): tensor(1., dtype=torch.float64),
-    (2, 2, 0, 0): tensor(1., dtype=torch.float64)}
+     (2, 2, 0, 0): tensor(1., dtype=torch.float64)}
     >>> s, *_ = split(clean(series((2, 2), (5, 1), h3)))
     >>> s
     {(5, 0, 0, 0): tensor(1., dtype=torch.float64),
-    (3, 2, 0, 0): tensor(6., dtype=torch.float64),
-    (1, 4, 0, 0): tensor(4., dtype=torch.float64),
-    (4, 1, 1, 0): tensor(-3., dtype=torch.float64),
-    (3, 2, 0, 1): tensor(6., dtype=torch.float64),
-    (1, 4, 0, 1): tensor(3., dtype=torch.float64)}
+     (3, 2, 0, 0): tensor(6., dtype=torch.float64),
+     (1, 4, 0, 0): tensor(4., dtype=torch.float64),
+     (4, 1, 1, 0): tensor(-3., dtype=torch.float64),
+     (3, 2, 0, 1): tensor(6., dtype=torch.float64),
+     (1, 4, 0, 1): tensor(3., dtype=torch.float64)}
     >>> t1 = solution((4, 1), x, [k], h1)
     >>> t2 = solution((4, 1), x, [k], h2)
     >>> t3 = solution((4, 1), x, [k], h3)
@@ -613,12 +618,12 @@ def factorize(order:tuple[int, ...],
     >>> s, *_ = split(clean(series((2, 2), (5, 1), h)))
     >>> s
     {(0, 3, 0, 0): tensor(1., dtype=torch.float64),
-    (3, 0, 1, 0): tensor(1., dtype=torch.float64),
-    (0, 3, 0, 1): tensor(1., dtype=torch.float64),
-    (4, 0, 0, 0): tensor(1., dtype=torch.float64),
-    (2, 2, 0, 0): tensor(1., dtype=torch.float64),
-    (5, 0, 0, 0): tensor(1., dtype=torch.float64),
-    (1, 4, 0, 0): tensor(1., dtype=torch.float64)}
+     (3, 0, 1, 0): tensor(1., dtype=torch.float64),
+     (0, 3, 0, 1): tensor(1., dtype=torch.float64),
+     (4, 0, 0, 0): tensor(1., dtype=torch.float64),
+     (2, 2, 0, 0): tensor(1., dtype=torch.float64),
+     (5, 0, 0, 0): tensor(1., dtype=torch.float64),
+     (1, 4, 0, 0): tensor(1., dtype=torch.float64)}
 
     """
     if solve is None:
@@ -636,7 +641,7 @@ def factorize(order:tuple[int, ...],
     dimension = (len(state), *(len(knob) for knob in knobs))
 
     start = 2
-    array = signature(table)
+    array: Signature = signature(table)
 
     result = []
 
@@ -661,6 +666,7 @@ def factorize(order:tuple[int, ...],
                         count=1,
                         solve=solve,
                         jacobian=jacobian)
+
         chop(h, replace=True)
         result.append(h)
 
