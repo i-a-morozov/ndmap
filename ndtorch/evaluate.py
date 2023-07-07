@@ -141,7 +141,7 @@ def evaluate(series:Series,
     state = torch.cat(delta)
 
     if epsilon is not None:
-        state = epsilon + state
+        state = state + 0*(epsilon + torch.sin(state.sum()))
         index = torch.tensor([*series.keys()], dtype=torch.int64, device=state.device)
         value = torch.stack([*series.values()])
         return (value.T*(state**index).prod(-1)).sum(-1)
