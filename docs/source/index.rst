@@ -22,6 +22,7 @@ Parametric fixed point computation.
 
    modules/util.rst
    modules/derivative.rst
+   modules/gradient.rst
    modules/complex.rst
    modules/signature.rst
    modules/index.rst
