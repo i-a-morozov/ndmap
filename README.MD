@@ -20,7 +20,7 @@ $ python -m pip install .
 
 ```
 
-# Derivative
+# Derivative (composable jacobian)
 
 Compute higher order function (partial) derivatives.
 
@@ -61,6 +61,64 @@ tensor([[2., 1.],
 [[tensor(0.), tensor(0.)], [tensor([0., 0.]), tensor([0., 0.])], [tensor([[2., 0.],
         [0., 2.]]), tensor([[ 2.,  0.],
         [ 0., -2.]])]]
+```
+
+# Derivative (gradient)
+
+Compute higher order function (partial) derivatives.
+
+```python
+>>> from ndtorch.gradient import series
+>>> def fn(x):
+...     return 1 + x + x**2 + x**3 + x**4 + x**5
+... 
+>>> import torch
+>>> x = torch.tensor([0.0])
+>>> series((5, ), fn, x, retain=False, series=False)
+{(0,): tensor([1.]),
+ (1,): tensor([1.]),
+ (2,): tensor([2.]),
+ (3,): tensor([6.]),
+ (4,): tensor([24.]),
+ (5,): tensor([120.])}
+```
+
+```python
+>>> from ndtorch.gradient import series
+>>> def fn(x):
+...     x1, x2 = x
+...     return x1**2 + x1*x2 + x2**2
+...
+>>> import torch
+>>> x = torch.tensor([0.0, 0.0])
+>>> series((2, ), fn, x, intermediate=False, retain=False, series=False)
+{(2, 0): tensor(2.), (1, 1): tensor(1.), (0, 2): tensor(2.)}
+
+```
+
+```python
+>>> from ndtorch.gradient import series
+>>> def fn(x, y):
+...     x1, x2 = x
+...     y1, = y
+...     return x1**2*(1 + y1) + x2**2*(1 - y1)
+...
+>>> import torch
+>>> x = torch.tensor([0.0, 0.0])
+>>> y = torch.tensor([0.0])
+>>> series((2, 1), fn, x, y, retain=False, series=False)
+{(0, 0, 0): tensor(0.),
+ (0, 0, 1): tensor(0.),
+ (1, 0, 0): tensor(0.),
+ (0, 1, 0): tensor(0.),
+ (1, 0, 1): tensor(0.),
+ (0, 1, 1): tensor(-0.),
+ (2, 0, 0): tensor(2.),
+ (1, 1, 0): tensor(0.),
+ (0, 2, 0): tensor(2.),
+ (2, 0, 1): tensor(2.),
+ (1, 1, 1): tensor(0.),
+ (0, 2, 1): tensor(-2.)}
 ```
 
 # Desription
