@@ -1,7 +1,6 @@
 [![Documentation Status](https://readthedocs.org/projects/ndtorch/badge/?version=latest)](https://ndtorch.readthedocs.io/en/latest/?badge=latest)
 
 # ndtorch, 2022-2023
-## i.a.morozov@inp.nsk.su
 
 <p align="center">
   <img width="100" height="100" src="docs/pics/logo.svg">
