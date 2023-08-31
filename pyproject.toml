@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "ndtorch"
 version = "0.1.6"
-authors = [{name = "Ivan Morozov", email = "i.a.morozov@inp.nsk.su"}]
+authors = [{name = "Ivan Morozov"}]
 description = "Higher order partial derivatives computation with respect to one or several tensor-like variables, application to nonlinear dynamics"
 readme = "README.MD"
 requires-python = ">=3.10"
