@@ -18,7 +18,11 @@ from typing import Iterator
 from typing import Callable
 from typing import Any
 
+from multimethod import multimethod
+
 import numpy
+from numpy import ndarray as Array
+
 import torch
 from torch import Tensor
 
@@ -325,7 +329,7 @@ def most(xs:Iterable[Any]) -> Any:
     _, *x = xs
     return x
 
-
+@multimethod
 def tolist(tensor:Tensor) -> list:
     """
     Convert input (gradtracking) tensor to list
@@ -339,7 +343,7 @@ def tolist(tensor:Tensor) -> list:
 
     Returns
     -------
-    Tensor
+    list
 
     Examples
     --------
@@ -352,4 +356,30 @@ def tolist(tensor:Tensor) -> list:
     if torch._C._functorch.is_gradtrackingtensor(tensor):
         tensor = torch._C._functorch.get_unwrapped(tensor)
         return numpy.array(tensor.storage().tolist()).reshape(tensor.shape).tolist()
+    return tensor.tolist()
+
+
+@multimethod
+def tolist(tensor:Array) -> list:
+    """
+    Convert input (gradtracking) tensor to list
+
+    Note, emmits storage deprication warning
+
+    Parameters
+    ----------
+    tensor : Array
+        input tensor
+
+    Returns
+    -------
+    list
+
+    Examples
+    --------
+    >>> import numpy
+    >>> tolist(numpy.array([0.0, 0.0, 0.0, 0.0]))
+    [0.0, 0.0, 0.0, 0.0]
+
+    """
     return tensor.tolist()
