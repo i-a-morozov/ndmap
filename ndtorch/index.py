@@ -13,6 +13,9 @@ from typing import Optional
 
 from multimethod import multimethod
 
+import numpy
+from numpy import ndarray as Array
+
 import torch
 from torch import Tensor
 
@@ -20,7 +23,6 @@ from .util import tolist
 from .signature import signature
 from .signature import get
 from .signature import set
-
 
 State       : TypeAlias = Tensor
 Knobs       : TypeAlias = list[Tensor]
@@ -36,9 +38,7 @@ Hamiltonian : TypeAlias = Callable
 
 @multimethod
 def index(dimension:int,
-          order:int, *,
-          dtype:torch.dtype=torch.int64,
-          device:torch.device=torch.device('cpu')) -> Tensor:
+          order:int) -> Array:
     """
     Generate monomial index table with repetitions for a given dimension and order
 
@@ -50,46 +50,40 @@ def index(dimension:int,
         monomial dimension (number of variables)
     order: int, non-negative
         derivative order (total monomial degree)
-    dtype: torch.dtype, default=torch.int64
-        data type
-    device: torch.device, default=torch.device('cpu')
-        data device
 
     Returns
     -------
-    Tensor
+    Array
         monomial index table with repetitions
 
     Examples
     --------
     >>> index(2, 3)
-    tensor([[3, 0],
-            [2, 1],
-            [2, 1],
-            [1, 2],
-            [2, 1],
-            [1, 2],
-            [1, 2],
-            [0, 3]])
+    array([[3, 0],
+           [2, 1],
+           [2, 1],
+           [1, 2],
+           [2, 1],
+           [1, 2],
+           [1, 2],
+           [0, 3]])
 
     """
     if order == 0:
-        return torch.zeros((1, dimension), dtype=dtype, device=device)
+        return numpy.zeros((1, dimension), dtype=numpy.int64)
 
     if order == 1:
-        return torch.eye(dimension, dtype=dtype, device=device)
+        return numpy.eye(dimension, dtype=numpy.int64)
 
-    unit = index(dimension, 1, dtype=dtype, device=device)
-    keys = index(dimension, order - 1, dtype=dtype, device=device)
+    unit = index(dimension, 1)
+    keys = index(dimension, order - 1)
 
-    return torch.cat([keys + i for i in unit])
+    return numpy.concatenate([keys + i for i in unit])
 
 
 @multimethod
 def index(dimension:tuple[int, ...],
-          order:tuple[int, ...], *,
-          dtype:torch.dtype=torch.int64,
-          device:torch.device=torch.device('cpu')) -> Tensor:
+          order:tuple[int, ...]) -> Array:
     """
     Generate monomial index table with repetitions for given dimensions and corresponding orders
 
@@ -101,45 +95,41 @@ def index(dimension:tuple[int, ...],
         monomial dimensions
     order: tuple[int, ...], non-negative
         derivative orders (total monomial degrees)
-    dtype: torch.dtype, default=torch.int64
-        data type
-    device: torch.device, default=torch.device('cpu')
-        data device
 
     Returns
     -------
-    Tensor
+    Array
         monomial index table with repetitions
 
     Example
     -------
     >>> index((2, 2), (3, 1))
-    tensor([[3, 0, 1, 0],
-            [3, 0, 0, 1],
-            [2, 1, 1, 0],
-            [2, 1, 0, 1],
-            [2, 1, 1, 0],
-            [2, 1, 0, 1],
-            [1, 2, 1, 0],
-            [1, 2, 0, 1],
-            [2, 1, 1, 0],
-            [2, 1, 0, 1],
-            [1, 2, 1, 0],
-            [1, 2, 0, 1],
-            [1, 2, 1, 0],
-            [1, 2, 0, 1],
-            [0, 3, 1, 0],
-            [0, 3, 0, 1]])
+    array([[3, 0, 1, 0],
+           [3, 0, 0, 1],
+           [2, 1, 1, 0],
+           [2, 1, 0, 1],
+           [2, 1, 1, 0],
+           [2, 1, 0, 1],
+           [1, 2, 1, 0],
+           [1, 2, 0, 1],
+           [2, 1, 1, 0],
+           [2, 1, 0, 1],
+           [1, 2, 1, 0],
+           [1, 2, 0, 1],
+           [1, 2, 1, 0],
+           [1, 2, 0, 1],
+           [0, 3, 1, 0],
+           [0, 3, 0, 1]])
 
     """
-    def merge(head:Tensor, *tail:Tensor) -> Tensor:
+    def merge(head:Array, *tail:Array) -> Array:
         x, *xs = tail
         if not len(xs):
-            return torch.vstack([torch.cat([head, i]) for i in x])
-        return torch.cat([merge(torch.cat([head, i]), *xs)for i in x])
+            return numpy.vstack([numpy.concatenate([head, i]) for i in x])
+        return numpy.concatenate([merge(numpy.concatenate([head, i]), *xs)for i in x])
     dimension, order = dimension + (0, ), order + (0, )
-    x, *xs = [index(*pair, dtype=dtype, device=device) for pair in zip(dimension, order)]
-    return torch.vstack([merge(i, *xs) for i in x])
+    x, *xs = [index(*pair) for pair in zip(dimension, order)]
+    return numpy.vstack([merge(i, *xs) for i in x])
 
 
 @multimethod
@@ -224,8 +214,9 @@ def reduce(dimension:tuple[int, ...],
     length, *size = tensor.shape
     size = shape[len(size):] if size else shape
     array = tuple(reversed(range(len(size))))
-    table = torch.arange(0, length)
-    table = table.reshape(tuple(reversed(tuple(size)))).permute(array).flatten()
+    table = numpy.arange(0, length)
+    table = table.reshape(tuple(reversed(tuple(size))))
+    table = numpy.transpose(table, array).flatten()
     sequence = tuple(map(tuple, tolist(sequence[table])))
     return sequence, shape, unique
 
@@ -462,3 +453,111 @@ def build(table:Table,
     """
     for i in signature(table):
         set(table, i, build(sequence[i], shape[i], unique))
+
+
+@multimethod
+def _index(dimension:int,
+           order:int, *,
+           dtype:torch.dtype=torch.int64,
+           device:torch.device=torch.device('cpu')) -> Tensor:
+    """
+    Generate monomial index table with repetitions for a given dimension and order
+
+    Note, output length is dimension**degree
+
+    Parameters
+    ----------
+    dimension: int, positive
+        monomial dimension (number of variables)
+    order: int, non-negative
+        derivative order (total monomial degree)
+    dtype: torch.dtype, default=torch.int64
+        data type
+    device: torch.device, default=torch.device('cpu')
+        data device
+
+    Returns
+    -------
+    Tensor
+        monomial index table with repetitions
+
+    Examples
+    --------
+    >>> _index(2, 3)
+    tensor([[3, 0],
+            [2, 1],
+            [2, 1],
+            [1, 2],
+            [2, 1],
+            [1, 2],
+            [1, 2],
+            [0, 3]])
+
+    """
+    if order == 0:
+        return torch.zeros((1, dimension), dtype=dtype, device=device)
+
+    if order == 1:
+        return torch.eye(dimension, dtype=dtype, device=device)
+
+    unit = _index(dimension, 1, dtype=dtype, device=device)
+    keys = _index(dimension, order - 1, dtype=dtype, device=device)
+
+    return torch.cat([keys + i for i in unit])
+
+
+@multimethod
+def _index(dimension:tuple[int, ...],
+           order:tuple[int, ...], *,
+           dtype:torch.dtype=torch.int64,
+           device:torch.device=torch.device('cpu')) -> Tensor:
+    """
+    Generate monomial index table with repetitions for given dimensions and corresponding orders
+
+    Note, output length is product(dimension**degree)
+
+    Parameters
+    ----------
+    dimension: tuple[int, ...], positive
+        monomial dimensions
+    order: tuple[int, ...], non-negative
+        derivative orders (total monomial degrees)
+    dtype: torch.dtype, default=torch.int64
+        data type
+    device: torch.device, default=torch.device('cpu')
+        data device
+
+    Returns
+    -------
+    Tensor
+        monomial index table with repetitions
+
+    Example
+    -------
+    >>> _index((2, 2), (3, 1))
+    tensor([[3, 0, 1, 0],
+            [3, 0, 0, 1],
+            [2, 1, 1, 0],
+            [2, 1, 0, 1],
+            [2, 1, 1, 0],
+            [2, 1, 0, 1],
+            [1, 2, 1, 0],
+            [1, 2, 0, 1],
+            [2, 1, 1, 0],
+            [2, 1, 0, 1],
+            [1, 2, 1, 0],
+            [1, 2, 0, 1],
+            [1, 2, 1, 0],
+            [1, 2, 0, 1],
+            [0, 3, 1, 0],
+            [0, 3, 0, 1]])
+
+    """
+    def merge(head:Tensor, *tail:Tensor) -> Tensor:
+        x, *xs = tail
+        if not len(xs):
+            return torch.vstack([torch.cat([head, i]) for i in x])
+        return torch.cat([merge(torch.cat([head, i]), *xs)for i in x])
+    dimension, order = dimension + (0, ), order + (0, )
+    x, *xs = [_index(*pair, dtype=dtype, device=device) for pair in zip(dimension, order)]
+    return torch.vstack([merge(i, *xs) for i in x])
