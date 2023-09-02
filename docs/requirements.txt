@@ -3,3 +3,4 @@ torch
 multimethod
 ipykernel
 nbsphinx
+ndtorch
