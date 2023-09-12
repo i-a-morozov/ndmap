@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ndtorch.factorization &mdash; ndtorch  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ndtorch
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndtorch.html">Example-01: Derivative</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndtorch.html#Example-02:-Derivative-table-representation">Example-02: Derivative table representation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndtorch.html#Example-03:-Derivative-table-propagation">Example-03: Derivative table propagation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndtorch.html#Example-04:-Jet-class">Example-04: Jet class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndtorch.html#Example-05:-Nonlinear-mapping-approximation">Example-05: Nonlinear mapping approximation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndtorch.html#Example-06:-Fixed-point">Example-06: Fixed point</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndtorch.html#Example-07:-Parametric-fixed-point">Example-07: Parametric fixed point</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndtorch.html#Example-08:-Fixed-point-manipulation-(collision)">Example-08: Fixed point manipulation (collision)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndtorch.html#Example-09:-Fixed-point-manipulation-(change-point-type)">Example-09: Fixed point manipulation (change point type)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndtorch.html#Example-10:-Alignment-indices-chaos-indicators">Example-10: Alignment indices chaos indicators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndtorch.html#Example-11:-Closed-orbit-(dispersion)">Example-11: Closed orbit (dispersion)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndtorch.html#Example-12:-Closed-orbit-(quadrupole-shift)">Example-12: Closed orbit (quadrupole shift)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndtorch.html#Example-13:-Closed-orbit-(sextupole-shift)">Example-13: Closed orbit (sextupole shift)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndtorch.html#Example-14:-Closed-orbit-(responce-matrix-&amp;-correction)">Example-14: Closed orbit (responce matrix &amp; correction)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndtorch.html#Example-15:-Tune-(chromaticity)">Example-15: Tune (chromaticity)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndtorch.html#Example-16:-Tune-(responce-matrix-&amp;-correction)">Example-16: Tune (responce matrix &amp; correction)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndtorch.html#Example-17:-Tune-(spread)">Example-17: Tune (spread)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndtorch.html#Example-18:-Parametric-twiss">Example-18: Parametric twiss</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndtorch.html#Example-19:-Parametric-phase-advance">Example-19: Parametric phase advance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndtorch.html#Example-20:-Poisson-bracket">Example-20: Poisson bracket</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndtorch.html#Example-21:-Taylor-integrator">Example-21: Taylor integrator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndtorch.html#Example-22:-Yoshida-integrator">Example-22: Yoshida integrator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndtorch.html#Example-23:-Direct-invariant">Example-23: Direct invariant</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndtorch.html#Example-24:-Direct-invariant-(parametric)">Example-24: Direct invariant (parametric)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndtorch.html#Example-25:-Composition">Example-25: Composition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndtorch.html#Example-26:-Composition-(closed-orbit)">Example-26: Composition (closed orbit)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndtorch.html#Example-27:-Inverse">Example-27: Inverse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndtorch.html#Example-28:-Inverse-(closed-orbit)">Example-28: Inverse (closed orbit)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndtorch.html#Example-29:-Momenta-generator">Example-29: Momenta generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndtorch.html#Example-30:-Factorization-(kick)">Example-30: Factorization (kick)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndtorch.html#Example-31:-Factorization-(fodo)">Example-31: Factorization (fodo)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndtorch.html#Example-32:-Factorization-(factorize)">Example-32: Factorization (factorize)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndtorch.html#Example-33:-Nonlinear-mapping-approximation-(gradient)">Example-33: Nonlinear mapping approximation (gradient)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/util.html">Util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/util.html#ndtorch.util.curry_apply"><code class="docutils literal notranslate"><span class="pre">curry_apply()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/util.html#ndtorch.util.first"><code class="docutils literal notranslate"><span class="pre">first()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/util.html#ndtorch.util.flatten"><code class="docutils literal notranslate"><span class="pre">flatten()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/util.html#ndtorch.util.last"><code class="docutils literal notranslate"><span class="pre">last()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/util.html#ndtorch.util.most"><code class="docutils literal notranslate"><span class="pre">most()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/util.html#ndtorch.util.multinomial"><code class="docutils literal notranslate"><span class="pre">multinomial()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/util.html#ndtorch.util.nest"><code class="docutils literal notranslate"><span class="pre">nest()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/util.html#ndtorch.util.orthogonal"><code class="docutils literal notranslate"><span class="pre">orthogonal()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/util.html#ndtorch.util.rest"><code class="docutils literal notranslate"><span class="pre">rest()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/util.html#ndtorch.util.symplectic"><code class="docutils literal notranslate"><span class="pre">symplectic()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/util.html#ndtorch.util.tolist"><code class="docutils literal notranslate"><span class="pre">tolist()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/derivative.html">Derivative</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/derivative.html#ndtorch.derivative.derivative"><code class="docutils literal notranslate"><span class="pre">derivative()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/gradient.html">Gradient</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/gradient.html#ndtorch.gradient.derivative"><code class="docutils literal notranslate"><span class="pre">derivative()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/gradient.html#ndtorch.gradient.evaluate"><code class="docutils literal notranslate"><span class="pre">evaluate()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/gradient.html#ndtorch.gradient.factor"><code class="docutils literal notranslate"><span class="pre">factor()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/gradient.html#ndtorch.gradient.group"><code class="docutils literal notranslate"><span class="pre">group()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/gradient.html#ndtorch.gradient.hessian"><code class="docutils literal notranslate"><span class="pre">hessian()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/gradient.html#ndtorch.gradient.index"><code class="docutils literal notranslate"><span class="pre">index()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/gradient.html#ndtorch.gradient.jacobian"><code class="docutils literal notranslate"><span class="pre">jacobian()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/gradient.html#ndtorch.gradient.naught"><code class="docutils literal notranslate"><span class="pre">naught()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/gradient.html#ndtorch.gradient.reduce"><code class="docutils literal notranslate"><span class="pre">reduce()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/gradient.html#ndtorch.gradient.scalar"><code class="docutils literal notranslate"><span class="pre">scalar()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/gradient.html#ndtorch.gradient.select"><code class="docutils literal notranslate"><span class="pre">select()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/gradient.html#ndtorch.gradient.series"><code class="docutils literal notranslate"><span class="pre">series()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/gradient.html#ndtorch.gradient.signature"><code class="docutils literal notranslate"><span class="pre">signature()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/gradient.html#ndtorch.gradient.split"><code class="docutils literal notranslate"><span class="pre">split()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/complex.html">Complex</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/signature.html">Signature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/signature.html#ndtorch.signature.apply"><code class="docutils literal notranslate"><span class="pre">apply()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/signature.html#ndtorch.signature.chop"><code class="docutils literal notranslate"><span class="pre">chop()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/signature.html#ndtorch.signature.get"><code class="docutils literal notranslate"><span class="pre">get()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/signature.html#ndtorch.signature.set"><code class="docutils literal notranslate"><span class="pre">set()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/signature.html#ndtorch.signature.signature"><code class="docutils literal notranslate"><span class="pre">signature()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/signature.html#ndtorch.signature.to"><code class="docutils literal notranslate"><span class="pre">to()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/index.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/index.html#ndtorch.index.build"><code class="docutils literal notranslate"><span class="pre">build()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/index.html#ndtorch.index.index"><code class="docutils literal notranslate"><span class="pre">index()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/index.html#ndtorch.index.reduce"><code class="docutils literal notranslate"><span class="pre">reduce()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/series.html">Series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/series.html#ndtorch.series.clean"><code class="docutils literal notranslate"><span class="pre">clean()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/series.html#ndtorch.series.fetch"><code class="docutils literal notranslate"><span class="pre">fetch()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/series.html#ndtorch.series.merge"><code class="docutils literal notranslate"><span class="pre">merge()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/series.html#ndtorch.series.series"><code class="docutils literal notranslate"><span class="pre">series()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/series.html#ndtorch.series.split"><code class="docutils literal notranslate"><span class="pre">split()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/evaluate.html">Evaluate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/evaluate.html#ndtorch.evaluate.compare"><code class="docutils literal notranslate"><span class="pre">compare()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/evaluate.html#ndtorch.evaluate.evaluate"><code class="docutils literal notranslate"><span class="pre">evaluate()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/evaluate.html#ndtorch.evaluate.table"><code class="docutils literal notranslate"><span class="pre">table()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/propagate.html">Propagate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/propagate.html#ndtorch.propagate.identity"><code class="docutils literal notranslate"><span class="pre">identity()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/propagate.html#ndtorch.propagate.propagate"><code class="docutils literal notranslate"><span class="pre">propagate()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/pfp.html">Parametric fixed point</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/pfp.html#ndtorch.pfp.chain_point"><code class="docutils literal notranslate"><span class="pre">chain_point()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/pfp.html#ndtorch.pfp.check_point"><code class="docutils literal notranslate"><span class="pre">check_point()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/pfp.html#ndtorch.pfp.clean_point"><code class="docutils literal notranslate"><span class="pre">clean_point()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/pfp.html#ndtorch.pfp.fixed_point"><code class="docutils literal notranslate"><span class="pre">fixed_point()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/pfp.html#ndtorch.pfp.matrix"><code class="docutils literal notranslate"><span class="pre">matrix()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/pfp.html#ndtorch.pfp.newton"><code class="docutils literal notranslate"><span class="pre">newton()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/pfp.html#ndtorch.pfp.parametric_fixed_point"><code class="docutils literal notranslate"><span class="pre">parametric_fixed_point()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/bracket.html">Bracket</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/bracket.html#ndtorch.bracket.bracket"><code class="docutils literal notranslate"><span class="pre">bracket()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/taylor.html">Taylor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/taylor.html#ndtorch.taylor.taylor"><code class="docutils literal notranslate"><span class="pre">taylor()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/yoshida.html">Yoshida</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/yoshida.html#ndtorch.yoshida.coefficients"><code class="docutils literal notranslate"><span class="pre">coefficients()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/yoshida.html#ndtorch.yoshida.yoshida"><code class="docutils literal notranslate"><span class="pre">yoshida()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/invariant.html">Invariant</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/invariant.html#ndtorch.invariant.invariant"><code class="docutils literal notranslate"><span class="pre">invariant()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/inverse.html">Inverse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/inverse.html#ndtorch.inverse.inverse"><code class="docutils literal notranslate"><span class="pre">inverse()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/momenta.html">Momenta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/momenta.html#ndtorch.momenta.momenta"><code class="docutils literal notranslate"><span class="pre">momenta()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/factorization.html">Factorization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/factorization.html#ndtorch.factorization.factorize"><code class="docutils literal notranslate"><span class="pre">factorize()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/factorization.html#ndtorch.factorization.hamiltonian"><code class="docutils literal notranslate"><span class="pre">hamiltonian()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/factorization.html#ndtorch.factorization.hamiltonian_inverse"><code class="docutils literal notranslate"><span class="pre">hamiltonian_inverse()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/factorization.html#ndtorch.factorization.solution"><code class="docutils literal notranslate"><span class="pre">solution()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/jet.html">Jet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/jet.html#ndtorch.jet.Jet"><code class="docutils literal notranslate"><span class="pre">Jet</span></code></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ndtorch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ndtorch.factorization</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ndtorch.factorization</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Factorization</span>
+<span class="sd">-------------</span>
+
+<span class="sd">Factorization related utilities</span>
+<span class="sd">Single exponent representation and Dragt-Finn factorization of a near identity mapping</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TypeAlias</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
+
+<span class="kn">from</span> <span class="nn">.util</span> <span class="kn">import</span> <span class="n">first</span>
+<span class="kn">from</span> <span class="nn">.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">.signature</span> <span class="kn">import</span> <span class="n">signature</span>
+<span class="kn">from</span> <span class="nn">.signature</span> <span class="kn">import</span> <span class="n">get</span>
+<span class="kn">from</span> <span class="nn">.signature</span> <span class="kn">import</span> <span class="nb">set</span>
+<span class="kn">from</span> <span class="nn">.signature</span> <span class="kn">import</span> <span class="n">chop</span>
+<span class="kn">from</span> <span class="nn">.index</span> <span class="kn">import</span> <span class="n">reduce</span>
+<span class="kn">from</span> <span class="nn">.index</span> <span class="kn">import</span> <span class="n">build</span>
+<span class="kn">from</span> <span class="nn">.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
+<span class="kn">from</span> <span class="nn">.inverse</span> <span class="kn">import</span> <span class="n">inverse</span>
+<span class="kn">from</span> <span class="nn">.taylor</span> <span class="kn">import</span> <span class="n">taylor</span>
+
+
+<span class="n">State</span>       <span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">Tensor</span>
+<span class="n">Knobs</span>       <span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span>
+<span class="n">Point</span>       <span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span>
+<span class="n">Delta</span>       <span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span>
+<span class="n">Table</span>       <span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="nb">list</span>
+<span class="n">Series</span>      <span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="n">Tensor</span><span class="p">]</span>
+<span class="n">Signature</span>   <span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="nb">float</span><span class="p">]]]</span>
+<span class="n">Mapping</span>     <span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">Callable</span>
+<span class="n">Observable</span>  <span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">Callable</span>
+<span class="n">Hamiltonian</span> <span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">Callable</span>
+
+
+<div class="viewcode-block" id="hamiltonian">
+<a class="viewcode-back" href="../../modules/factorization.html#ndtorch.factorization.hamiltonian">[docs]</a>
+<span class="k">def</span> <span class="nf">hamiltonian</span><span class="p">(</span><span class="n">order</span><span class="p">:</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+                <span class="n">state</span><span class="p">:</span><span class="n">State</span><span class="p">,</span>
+                <span class="n">knobs</span><span class="p">:</span><span class="n">Knobs</span><span class="p">,</span>
+                <span class="n">table</span><span class="p">:</span><span class="n">Table</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+                <span class="n">start</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">count</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">solve</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">jacobian</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Table</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute single exponent representation hamiltonian of a given near identity mapping</span>
+
+<span class="sd">    Note, table representation of a mapping is expected on entrance</span>
+<span class="sd">    And, taylor integrator is used to construct hamiltonian</span>
+<span class="sd">    Number of terms in the expansion is inferred from the input order or can be set</span>
+<span class="sd">    The input order is assumed to correspond to the input table order</span>
+<span class="sd">    The input table represents a near identity mapping</span>
+<span class="sd">    Thus, the first term of the hamiltonian is a degree three polynomial</span>
+<span class="sd">    Other starting degree can be passed, e.g. when preceding degrees are identically zero</span>
+
+<span class="sd">    Note, both state and knobs are expected to be zero tensors, used to infere dimension</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    order: tuple[int, ...]</span>
+<span class="sd">        input table order</span>
+<span class="sd">    state: State</span>
+<span class="sd">        state</span>
+<span class="sd">    knobs: Knobs</span>
+<span class="sd">        knobs</span>
+<span class="sd">    table: Table</span>
+<span class="sd">        table representation of a near identity mapping</span>
+<span class="sd">    start: Optional[int]</span>
+<span class="sd">        hamiltonian starting order (degree)</span>
+<span class="sd">    count: Optional[int]</span>
+<span class="sd">        number of terms to use in taylor integrator</span>
+<span class="sd">    solve: Optional[Callable]</span>
+<span class="sd">        linear solver(matrix, vecor)</span>
+<span class="sd">    jacobian: Optional[Callable]</span>
+<span class="sd">        torch.func.jacfwd (default) or torch.func.jacrev</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Table</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import torch</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.derivative import derivative</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.signature import chop</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.series import series</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.series import clean</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.taylor import taylor</span>
+<span class="sd">    &gt;&gt;&gt; def h(x):</span>
+<span class="sd">    ...     q, p = x</span>
+<span class="sd">    ...     h1 = q**3 + q**2*p + q*p**2 + p**3</span>
+<span class="sd">    ...     h2 = q**4 + q**3*p + q**2*p**2 + q*p**3 + p**4</span>
+<span class="sd">    ...     return h1 + h2</span>
+<span class="sd">    &gt;&gt;&gt; x = torch.tensor([0.0, 0.0], dtype=torch.float64)</span>
+<span class="sd">    &gt;&gt;&gt; t = derivative(3, lambda x: taylor(2, 1.0, h, x), x)</span>
+<span class="sd">    &gt;&gt;&gt; h = hamiltonian((3, ), x, [], t)</span>
+<span class="sd">    &gt;&gt;&gt; chop(h)</span>
+<span class="sd">    &gt;&gt;&gt; clean(series((2, ), (4, ), h))</span>
+<span class="sd">    (3, 0): tensor([1.], dtype=torch.float64),</span>
+<span class="sd">    (2, 1): tensor([1.], dtype=torch.float64),</span>
+<span class="sd">    (1, 2): tensor([1.], dtype=torch.float64),</span>
+<span class="sd">    (0, 3): tensor([1.], dtype=torch.float64),</span>
+<span class="sd">    (4, 0): tensor([1.], dtype=torch.float64),</span>
+<span class="sd">    (3, 1): tensor([1.], dtype=torch.float64),</span>
+<span class="sd">    (2, 2): tensor([1.], dtype=torch.float64),</span>
+<span class="sd">    (1, 3): tensor([1.], dtype=torch.float64),</span>
+<span class="sd">    (0, 4): tensor([1.], dtype=torch.float64)}</span>
+
+<span class="sd">    &gt;&gt;&gt; import torch</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.derivative import derivative</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.signature import chop</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.series import series</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.series import clean</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.taylor import taylor</span>
+<span class="sd">    &gt;&gt;&gt; def h(x, k):</span>
+<span class="sd">    ...     q, p = x</span>
+<span class="sd">    ...     a, b = k</span>
+<span class="sd">    ...     h1 = (1 + a)*q**3 + q**2*p + q*p**2 + (1 - a)*p**3</span>
+<span class="sd">    ...     h2 = (1 + b)*q**4 + q**3*p + q**2*p**2 + q*p**3 + (1 - b)*p**4</span>
+<span class="sd">    ...     return h1 + h2</span>
+<span class="sd">    &gt;&gt;&gt; x = torch.tensor([0.0, 0.0], dtype=torch.float64)</span>
+<span class="sd">    &gt;&gt;&gt; k = torch.tensor([0.0, 0.0], dtype=torch.float64)</span>
+<span class="sd">    &gt;&gt;&gt; t = derivative((3, 1), lambda x, k: taylor(2, 1.0, h, x, k), x, k)</span>
+<span class="sd">    &gt;&gt;&gt; h = hamiltonian((3, 1), x, [k], t)</span>
+<span class="sd">    &gt;&gt;&gt; chop(h)</span>
+<span class="sd">    &gt;&gt;&gt; clean(series((2, 2), (4, 1), h))</span>
+<span class="sd">    {(3, 0, 0, 0): tensor([1.], dtype=torch.float64),</span>
+<span class="sd">     (2, 1, 0, 0): tensor([1.], dtype=torch.float64),</span>
+<span class="sd">     (1, 2, 0, 0): tensor([1.], dtype=torch.float64),</span>
+<span class="sd">     (0, 3, 0, 0): tensor([1.], dtype=torch.float64),</span>
+<span class="sd">     (3, 0, 1, 0): tensor([1.], dtype=torch.float64),</span>
+<span class="sd">     (0, 3, 1, 0): tensor([-1.], dtype=torch.float64),</span>
+<span class="sd">     (4, 0, 0, 0): tensor([1.], dtype=torch.float64),</span>
+<span class="sd">     (3, 1, 0, 0): tensor([1.], dtype=torch.float64),</span>
+<span class="sd">     (2, 2, 0, 0): tensor([1.], dtype=torch.float64),</span>
+<span class="sd">     (1, 3, 0, 0): tensor([1.], dtype=torch.float64),</span>
+<span class="sd">     (0, 4, 0, 0): tensor([1.], dtype=torch.float64),</span>
+<span class="sd">     (4, 0, 0, 1): tensor([1.], dtype=torch.float64),</span>
+<span class="sd">     (0, 4, 0, 1): tensor([-1.], dtype=torch.float64)}</span>
+
+<span class="sd">    &gt;&gt;&gt; import torch</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.derivative import derivative</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.signature import chop</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.evaluate import evaluate</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.propagate import identity</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.propagate import propagate</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.series import series</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.series import clean</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.taylor import taylor</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.inverse import inverse</span>
+<span class="sd">    &gt;&gt;&gt; def fn(x, k, l, n=1):</span>
+<span class="sd">    ...     (qx, px, qy, py), (k, ), l = x, k, l/(2.0*n)</span>
+<span class="sd">    ...     for _ in range(n):</span>
+<span class="sd">    ...         qx, qy = qx + l*px, qy + l*py</span>
+<span class="sd">    ...         px, py = px - 1.0*l*k*(qx**2 - qy**2), py + 2.0*l*k*qx*qy</span>
+<span class="sd">    ...         qx, qy = qx + l*px, qy + l*py</span>
+<span class="sd">    ...     return torch.stack([qx, px, qy, py])</span>
+<span class="sd">    &gt;&gt;&gt; x = torch.tensor([0.0, 0.0, 0.0, 0.0], dtype=torch.float64)</span>
+<span class="sd">    &gt;&gt;&gt; k = torch.tensor([0.0], dtype=torch.float64)</span>
+<span class="sd">    &gt;&gt;&gt; t = identity((2, 1), [x, k])</span>
+<span class="sd">    &gt;&gt;&gt; t = propagate((4, 1), (2, 1), t, [k], fn, 0.1)</span>
+<span class="sd">    &gt;&gt;&gt; derivative(1, lambda x, k: evaluate(t, [x, k]), x, k, intermediate=False)</span>
+<span class="sd">    tensor([[1.0000, 0.1000, 0.0000, 0.0000],</span>
+<span class="sd">            [0.0000, 1.0000, 0.0000, 0.0000],</span>
+<span class="sd">            [0.0000, 0.0000, 1.0000, 0.1000],</span>
+<span class="sd">            [0.0000, 0.0000, 0.0000, 1.0000]], dtype=torch.float64)</span>
+<span class="sd">    &gt;&gt;&gt; l = derivative(1, lambda x, k: evaluate(t, [x, k]), x, k)</span>
+<span class="sd">    &gt;&gt;&gt; i = inverse(1, x, [k], l)</span>
+<span class="sd">    &gt;&gt;&gt; t = propagate((4, 1), (2, 1), i, [k], t)</span>
+<span class="sd">    &gt;&gt;&gt; chop(t)</span>
+<span class="sd">    &gt;&gt;&gt; derivative(1, lambda x, k: evaluate(t, [x, k]), x, k, intermediate=False)</span>
+<span class="sd">    tensor([[1., 0., 0., 0.],</span>
+<span class="sd">            [0., 1., 0., 0.],</span>
+<span class="sd">            [0., 0., 1., 0.],</span>
+<span class="sd">            [0., 0., 0., 1.]], dtype=torch.float64)</span>
+<span class="sd">    &gt;&gt;&gt; h = hamiltonian((2, 1), x, [k], t)</span>
+<span class="sd">    &gt;&gt;&gt; chop(h)</span>
+<span class="sd">    &gt;&gt;&gt; clean(series((4, 1), (3, 1), h))</span>
+<span class="sd">    {(3, 0, 0, 0, 1): tensor([0.0167], dtype=torch.float64),</span>
+<span class="sd">     (2, 1, 0, 0, 1): tensor([-0.0025], dtype=torch.float64),</span>
+<span class="sd">     (1, 2, 0, 0, 1): tensor([0.0001], dtype=torch.float64),</span>
+<span class="sd">     (1, 0, 2, 0, 1): tensor([-0.0500], dtype=torch.float64),</span>
+<span class="sd">     (1, 0, 1, 1, 1): tensor([0.0050], dtype=torch.float64),</span>
+<span class="sd">     (1, 0, 0, 2, 1): tensor([-0.0001], dtype=torch.float64),</span>
+<span class="sd">     (0, 3, 0, 0, 1): tensor([-2.0833e-06], dtype=torch.float64),</span>
+<span class="sd">     (0, 1, 2, 0, 1): tensor([0.0025], dtype=torch.float64),</span>
+<span class="sd">     (0, 1, 1, 1, 1): tensor([-0.0003], dtype=torch.float64),</span>
+<span class="sd">     (0, 1, 0, 2, 1): tensor([6.2500e-06], dtype=torch.float64)}</span>
+<span class="sd">    &gt;&gt;&gt; dx = torch.tensor([0.1, 0.01, 0.05, 0.01], dtype=torch.float64)</span>
+<span class="sd">    &gt;&gt;&gt; dk = torch.tensor([1.0], dtype=torch.float64)</span>
+<span class="sd">    &gt;&gt;&gt; fn(x + dx, k + dk, 0.1)</span>
+<span class="sd">    tensor([0.1010, 0.0096, 0.0510, 0.0105], dtype=torch.float64)</span>
+<span class="sd">    &gt;&gt;&gt; taylor(1, 1.0, lambda x, k: evaluate(h, [x, k]), evaluate(l, [dx, dk]), dk)</span>
+<span class="sd">    tensor([0.1010, 0.0096, 0.0510, 0.0105], dtype=torch.float64)</span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    Output is a hamiltonian h, and transformation is exp(-[h])</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">solve</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">vector</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">solution</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+
+    <span class="n">jacobian</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">jacfwd</span> <span class="k">if</span> <span class="n">jacobian</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">jacobian</span>
+
+    <span class="n">n</span><span class="p">,</span> <span class="o">*</span><span class="n">ns</span> <span class="o">=</span> <span class="n">order</span>
+
+    <span class="n">point</span> <span class="o">=</span> <span class="p">[</span><span class="n">state</span><span class="p">,</span> <span class="o">*</span><span class="n">knobs</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">auxiliary</span><span class="p">(</span><span class="o">*</span><span class="n">point</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">State</span><span class="p">:</span>
+        <span class="n">state</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">point</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">state</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+    <span class="n">ht</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">((</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">ns</span><span class="p">),</span> <span class="n">auxiliary</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="o">*</span><span class="n">knobs</span><span class="p">,</span> <span class="n">jacobian</span><span class="o">=</span><span class="n">jacobian</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">hf</span><span class="p">(</span><span class="o">*</span><span class="n">point</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">ht</span><span class="p">,</span> <span class="p">[</span><span class="o">*</span><span class="n">point</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">hs</span><span class="p">(</span><span class="o">*</span><span class="n">point</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">taylor</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">hf</span><span class="p">,</span> <span class="o">*</span><span class="n">point</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">objective</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">sequence</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">unique</span><span class="p">):</span>
+        <span class="n">n</span><span class="p">,</span> <span class="o">*</span><span class="n">ns</span> <span class="o">=</span> <span class="n">index</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">unique</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+            <span class="n">unique</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">build</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">unique</span><span class="p">)</span>
+        <span class="nb">set</span><span class="p">(</span><span class="n">ht</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">derivative</span><span class="p">((</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">ns</span><span class="p">),</span>
+                          <span class="n">hs</span><span class="p">,</span>
+                          <span class="o">*</span><span class="n">point</span><span class="p">,</span>
+                          <span class="n">intermediate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                          <span class="n">jacobian</span><span class="o">=</span><span class="n">jacobian</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+    <span class="n">dimension</span><span class="p">:</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">state</span><span class="p">),</span> <span class="o">*</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">knob</span><span class="p">)</span> <span class="k">for</span> <span class="n">knob</span> <span class="ow">in</span> <span class="n">knobs</span><span class="p">))</span>
+
+    <span class="n">start</span> <span class="o">=</span> <span class="n">start</span> <span class="k">if</span> <span class="n">start</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">3</span>
+    <span class="n">alter</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">count</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="n">count</span> <span class="k">if</span> <span class="n">count</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span>
+
+    <span class="n">array</span><span class="p">:</span> <span class="n">Signature</span> <span class="o">=</span> <span class="n">signature</span><span class="p">(</span><span class="n">ht</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">array</span><span class="p">:</span>
+        <span class="n">n</span><span class="p">,</span> <span class="o">*</span><span class="n">ns</span> <span class="o">=</span> <span class="n">i</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="n">start</span><span class="p">:</span>
+            <span class="nb">set</span><span class="p">(</span><span class="n">ht</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">alter</span><span class="p">:</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">2</span>
+        <span class="n">guess</span> <span class="o">=</span> <span class="n">get</span><span class="p">(</span><span class="n">ht</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="n">sequence</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">unique</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">guess</span><span class="p">)</span>
+        <span class="n">guess</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="o">*</span><span class="n">unique</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span>
+        <span class="n">vector</span><span class="p">,</span> <span class="n">matrix</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span>
+                                    <span class="n">objective</span><span class="p">,</span>
+                                    <span class="n">guess</span><span class="p">,</span>
+                                    <span class="n">i</span><span class="p">,</span>
+                                    <span class="n">sequence</span><span class="p">,</span>
+                                    <span class="n">shape</span><span class="p">,</span>
+                                    <span class="n">unique</span><span class="p">,</span>
+                                    <span class="n">intermediate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                    <span class="n">jacobian</span><span class="o">=</span><span class="n">jacobian</span><span class="p">)</span>
+        <span class="n">tensor</span> <span class="o">=</span> <span class="n">get</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">ns</span><span class="p">))</span>
+        <span class="n">tensor</span> <span class="o">=</span> <span class="n">tensor</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">)</span> <span class="k">else</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">vector</span><span class="p">)</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">tensor</span> <span class="o">-</span> <span class="n">vector</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">unique</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+            <span class="n">unique</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="nb">set</span><span class="p">(</span><span class="n">ht</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">build</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">unique</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">ht</span></div>
+
+
+
+<div class="viewcode-block" id="solution">
+<a class="viewcode-back" href="../../modules/factorization.html#ndtorch.factorization.solution">[docs]</a>
+<span class="k">def</span> <span class="nf">solution</span><span class="p">(</span><span class="n">order</span><span class="p">:</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+             <span class="n">state</span><span class="p">:</span><span class="n">State</span><span class="p">,</span>
+             <span class="n">knobs</span><span class="p">:</span><span class="n">Knobs</span><span class="p">,</span>
+             <span class="n">hamiltonian</span><span class="p">:</span> <span class="n">Table</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+             <span class="n">count</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+             <span class="n">inverse</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+             <span class="n">jacobian</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Table</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute table solution for a given near identity hamiltonian table</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    order: tuple[int, ...]</span>
+<span class="sd">        output table order</span>
+<span class="sd">    state: State</span>
+<span class="sd">        state</span>
+<span class="sd">    knobs: Knobs</span>
+<span class="sd">        knobs</span>
+<span class="sd">    hamiltonian: Table</span>
+<span class="sd">        hamiltonian table representation</span>
+<span class="sd">    count: Optional[int]</span>
+<span class="sd">        number of terms to use in taylor integrator</span>
+<span class="sd">    inverse: bool, default=False</span>
+<span class="sd">        flag to inverse time direction</span>
+<span class="sd">    jacobian: Optional[Callable]</span>
+<span class="sd">        torch.func.jacfwd (default) or torch.func.jacrev</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Table</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import torch</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.derivative import derivative</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.evaluate import evaluate</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.evaluate import compare</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.propagate import identity</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.propagate import propagate</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.inverse import inverse</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.factorization import hamiltonian</span>
+<span class="sd">    ... def mapping(x, k, l):</span>
+<span class="sd">    ...     (qx, px, qy, py), (k, ), l = x, k, l/2</span>
+<span class="sd">    ...     qx, qy = qx + l*px, qy + l*py</span>
+<span class="sd">    ...     px, py = px - 1.0*l*k*(qx**2 - qy**2), py + 2.0*l*k*qx*qy</span>
+<span class="sd">    ...     qx, qy = qx + l*px, qy + l*py</span>
+<span class="sd">    ...     return torch.stack([qx, px, qy, py])</span>
+<span class="sd">    &gt;&gt;&gt; x = torch.tensor(4*[0.0], dtype=torch.float64)</span>
+<span class="sd">    &gt;&gt;&gt; k = torch.tensor(1*[0.0], dtype=torch.float64)</span>
+<span class="sd">    &gt;&gt;&gt; t = identity((2, 1), [x, k])</span>
+<span class="sd">    &gt;&gt;&gt; t = propagate((4, 1), (2, 1), t, [k], mapping, 0.1)</span>
+<span class="sd">    &gt;&gt;&gt; l = derivative(1, lambda x, k: evaluate(t, [x, k]), x, k)</span>
+<span class="sd">    &gt;&gt;&gt; t = propagate((4, 1), (2, 1), inverse(1, x, [k], l), [k], t)</span>
+<span class="sd">    &gt;&gt;&gt; h = hamiltonian((2, 1), x, [k], t)</span>
+<span class="sd">    &gt;&gt;&gt; compare(t, solution((2, 1), x, [k], h))</span>
+<span class="sd">    True</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">jacobian</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">jacfwd</span> <span class="k">if</span> <span class="n">jacobian</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">jacobian</span>
+
+    <span class="n">n</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">order</span>
+
+    <span class="n">point</span> <span class="o">=</span> <span class="p">[</span><span class="n">state</span><span class="p">,</span> <span class="o">*</span><span class="n">knobs</span><span class="p">]</span>
+
+    <span class="n">count</span> <span class="o">=</span> <span class="n">count</span> <span class="k">if</span> <span class="n">count</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">hf</span><span class="p">(</span><span class="o">*</span><span class="n">point</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">hamiltonian</span><span class="p">,</span> <span class="p">[</span><span class="o">*</span><span class="n">point</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">hs</span><span class="p">(</span><span class="o">*</span><span class="n">point</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="n">first</span><span class="p">(</span><span class="n">order</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="n">taylor</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">)</span><span class="o">**</span><span class="n">inverse</span><span class="p">,</span> <span class="n">hf</span><span class="p">,</span> <span class="o">*</span><span class="n">point</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">derivative</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">hs</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">jacobian</span><span class="o">=</span><span class="n">jacobian</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="hamiltonian_inverse">
+<a class="viewcode-back" href="../../modules/factorization.html#ndtorch.factorization.hamiltonian_inverse">[docs]</a>
+<span class="k">def</span> <span class="nf">hamiltonian_inverse</span><span class="p">(</span><span class="n">order</span><span class="p">:</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+                        <span class="n">state</span><span class="p">:</span><span class="n">State</span><span class="p">,</span>
+                        <span class="n">knobs</span><span class="p">:</span><span class="n">Knobs</span><span class="p">,</span>
+                        <span class="n">table</span><span class="p">:</span><span class="n">Table</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+                        <span class="n">start</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">count</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">solve</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">jacobian</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Table</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute near identity table inverse using single exponent representation</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    order: tuple[int, ...]</span>
+<span class="sd">        table order</span>
+<span class="sd">    state: State</span>
+<span class="sd">        state</span>
+<span class="sd">    knobs: Knobs</span>
+<span class="sd">        knobs</span>
+<span class="sd">    table: Table</span>
+<span class="sd">        input near identity table</span>
+<span class="sd">    start: Optional[int]</span>
+<span class="sd">        hamiltonian starting order (degree)</span>
+<span class="sd">    count: Optional[int]</span>
+<span class="sd">        number of terms to use in taylor integrator</span>
+<span class="sd">    solve: Optional[Callable]</span>
+<span class="sd">        linear solver(matrix, vecor)</span>
+<span class="sd">    jacobian: Optional[Callable]</span>
+<span class="sd">        torch.func.jacfwd (default) or torch.func.jacrev</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Table</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import torch</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.derivative import derivative</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.evaluate import evaluate</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.evaluate import compare</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.propagate import identity</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.propagate import propagate</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.inverse import inverse</span>
+<span class="sd">    &gt;&gt;&gt; def mapping(x, k, l):</span>
+<span class="sd">    ...     (qx, px, qy, py), (k, ), l = x, k, l/2</span>
+<span class="sd">    ...     qx, qy = qx + l*px, qy + l*py</span>
+<span class="sd">    ...     px, py = px - 1.0*l*k*(qx**2 - qy**2), py + 2.0*l*k*qx*qy</span>
+<span class="sd">    ...     qx, qy = qx + l*px, qy + l*py</span>
+<span class="sd">    ...     return torch.stack([qx, px, qy, py])</span>
+<span class="sd">    &gt;&gt;&gt; x = torch.tensor(4*[0.0], dtype=torch.float64)</span>
+<span class="sd">    &gt;&gt;&gt; k = torch.tensor(1*[0.0], dtype=torch.float64)</span>
+<span class="sd">    &gt;&gt;&gt; t = identity((2, 1), [x, k])</span>
+<span class="sd">    &gt;&gt;&gt; t = propagate((4, 1), (2, 1), t, [k], mapping, 0.1)</span>
+<span class="sd">    &gt;&gt;&gt; l = derivative(1, lambda x, k: evaluate(t, [x, k]), x, k)</span>
+<span class="sd">    &gt;&gt;&gt; t = propagate((4, 1), (2, 1), inverse(1, x, [k], l), [k], t)</span>
+<span class="sd">    &gt;&gt;&gt; compare(inverse((2, 1), x, [k], t), hamiltonian_inverse((2, 1), x, [k], t))</span>
+<span class="sd">    True</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">solve</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">vector</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">solution</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+
+    <span class="n">jacobian</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">jacfwd</span> <span class="k">if</span> <span class="n">jacobian</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">jacobian</span>
+
+    <span class="n">ht</span> <span class="o">=</span> <span class="n">hamiltonian</span><span class="p">(</span><span class="n">order</span><span class="p">,</span>
+                     <span class="n">state</span><span class="p">,</span>
+                     <span class="p">[</span><span class="n">knobs</span><span class="p">],</span>
+                     <span class="n">table</span><span class="p">,</span>
+                     <span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span>
+                     <span class="n">count</span><span class="o">=</span><span class="n">count</span><span class="p">,</span>
+                     <span class="n">solve</span><span class="o">=</span><span class="n">solve</span><span class="p">,</span>
+                     <span class="n">jacobian</span><span class="o">=</span><span class="n">jacobian</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">solution</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">knobs</span><span class="p">,</span> <span class="n">ht</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">count</span><span class="p">,</span> <span class="n">inverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">jacobian</span><span class="o">=</span><span class="n">jacobian</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="factorize">
+<a class="viewcode-back" href="../../modules/factorization.html#ndtorch.factorization.factorize">[docs]</a>
+<span class="k">def</span> <span class="nf">factorize</span><span class="p">(</span><span class="n">order</span><span class="p">:</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+              <span class="n">state</span><span class="p">:</span><span class="n">State</span><span class="p">,</span>
+              <span class="n">knobs</span><span class="p">:</span><span class="n">Knobs</span><span class="p">,</span>
+              <span class="n">table</span><span class="p">:</span><span class="n">Table</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+              <span class="n">reverse</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+              <span class="n">solve</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">jacobian</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Table</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute Dragt-Finn factorization hamiltonians for a given near identity table</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    order: tuple[int, ...]</span>
+<span class="sd">        table order</span>
+<span class="sd">    state: State</span>
+<span class="sd">        state</span>
+<span class="sd">    knobs: Knobs</span>
+<span class="sd">        knobs</span>
+<span class="sd">    table: Table</span>
+<span class="sd">        input near identity table</span>
+<span class="sd">    reverse: bool, default=False</span>
+<span class="sd">        flag to reverse factorization order</span>
+<span class="sd">    solve: Optional[Callable]</span>
+<span class="sd">        linear solver(matrix, vecor)</span>
+<span class="sd">    jacobian: Optional[Callable]</span>
+<span class="sd">        torch.func.jacfwd (default) or torch.func.jacrev</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list[Table]</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import torch</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.derivative import derivative</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.signature import chop</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.evaluate import evaluate</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.evaluate import compare</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.series import series</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.series import clean</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.series import split</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.propagate import identity</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.propagate import propagate</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.bracket import bracket</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.factorization import hamiltonian</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.factorization import solution</span>
+<span class="sd">    &gt;&gt;&gt; def h(x, k):</span>
+<span class="sd">    ...     q, p = x</span>
+<span class="sd">    ...     a, b = k</span>
+<span class="sd">    ...     return a*q**3 + (1 + b)*p**3 + q**4 + q**2*p**2 + q**5 + p**4*q</span>
+<span class="sd">    &gt;&gt;&gt; x = torch.tensor([0.0, 0.0], dtype=torch.float64)</span>
+<span class="sd">    &gt;&gt;&gt; k = torch.tensor([0.0, 0.0], dtype=torch.float64)</span>
+<span class="sd">    &gt;&gt;&gt; h = derivative((5, 1), h, x, k)</span>
+<span class="sd">    &gt;&gt;&gt; chop(h, replace=True)</span>
+<span class="sd">    &gt;&gt;&gt; s, *_ = split(clean(series((2, 2), (5, 1), h)))</span>
+<span class="sd">    &gt;&gt;&gt; s</span>
+<span class="sd">    {(0, 3, 0, 0): tensor(1., dtype=torch.float64),</span>
+<span class="sd">     (3, 0, 1, 0): tensor(1., dtype=torch.float64),</span>
+<span class="sd">     (0, 3, 0, 1): tensor(1., dtype=torch.float64),</span>
+<span class="sd">     (4, 0, 0, 0): tensor(1., dtype=torch.float64),</span>
+<span class="sd">     (2, 2, 0, 0): tensor(1., dtype=torch.float64),</span>
+<span class="sd">     (5, 0, 0, 0): tensor(1., dtype=torch.float64),</span>
+<span class="sd">     (1, 4, 0, 0): tensor(1., dtype=torch.float64)}</span>
+<span class="sd">    &gt;&gt;&gt; t = solution((4, 1), x, [k], h)</span>
+<span class="sd">    &gt;&gt;&gt; compare(h, hamiltonian((4, 1), x, [k], t))</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; h1, h2, h3 = factorize((4, 1), x, [k], t)</span>
+<span class="sd">    &gt;&gt;&gt; s, *_ = split(clean(series((2, 2), (5, 1), h1)))</span>
+<span class="sd">    &gt;&gt;&gt; s</span>
+<span class="sd">    {(0, 3, 0, 0): tensor(1., dtype=torch.float64),</span>
+<span class="sd">     (3, 0, 1, 0): tensor(1., dtype=torch.float64),</span>
+<span class="sd">     (0, 3, 0, 1): tensor(1., dtype=torch.float64)}</span>
+<span class="sd">    &gt;&gt;&gt; s, *_ = split(clean(series((2, 2), (5, 1), h2)))</span>
+<span class="sd">    &gt;&gt;&gt; s</span>
+<span class="sd">    {(4, 0, 0, 0): tensor(1., dtype=torch.float64),</span>
+<span class="sd">     (2, 2, 0, 0): tensor(1., dtype=torch.float64)}</span>
+<span class="sd">    &gt;&gt;&gt; s, *_ = split(clean(series((2, 2), (5, 1), h3)))</span>
+<span class="sd">    &gt;&gt;&gt; s</span>
+<span class="sd">    {(5, 0, 0, 0): tensor(1., dtype=torch.float64),</span>
+<span class="sd">     (3, 2, 0, 0): tensor(-6., dtype=torch.float64),</span>
+<span class="sd">     (1, 4, 0, 0): tensor(-2., dtype=torch.float64),</span>
+<span class="sd">     (4, 1, 1, 0): tensor(3., dtype=torch.float64),</span>
+<span class="sd">     (3, 2, 0, 1): tensor(-6., dtype=torch.float64),</span>
+<span class="sd">     (1, 4, 0, 1): tensor(-3., dtype=torch.float64)}</span>
+<span class="sd">    &gt;&gt;&gt; t1 = solution((4, 1), x, [k], h1)</span>
+<span class="sd">    &gt;&gt;&gt; t2 = solution((4, 1), x, [k], h2)</span>
+<span class="sd">    &gt;&gt;&gt; t3 = solution((4, 1), x, [k], h3)</span>
+<span class="sd">    &gt;&gt;&gt; T = identity((4, 1), [x, k])</span>
+<span class="sd">    &gt;&gt;&gt; T = propagate((2, 2), (4, 1), T, [k], t1)</span>
+<span class="sd">    &gt;&gt;&gt; T = propagate((2, 2), (4, 1), T, [k], t2)</span>
+<span class="sd">    &gt;&gt;&gt; T = propagate((2, 2), (4, 1), T, [k], t3)</span>
+<span class="sd">    &gt;&gt;&gt; compare(t, T)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; compare(h, hamiltonian((4, 1), x, [k], T))</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; def h(x, k):</span>
+<span class="sd">    ...    q, p = x</span>
+<span class="sd">    ...    a, b = k</span>
+<span class="sd">    ...    v1 = evaluate(h1, [x, k])</span>
+<span class="sd">    ...    v2 = evaluate(h2, [x, k])</span>
+<span class="sd">    ...    v3 = evaluate(h3, [x, k])</span>
+<span class="sd">    ...    v4 = bracket(h1, h2)(x, k)</span>
+<span class="sd">    ...    return v1 + v2 + v3 - 0.5*v4</span>
+<span class="sd">    &gt;&gt;&gt; h = derivative((5, 1), h, x, k)</span>
+<span class="sd">    &gt;&gt;&gt; chop(h, replace=True)</span>
+<span class="sd">    &gt;&gt;&gt; s, *_ = split(clean(series((2, 2), (5, 1), h)))</span>
+<span class="sd">    &gt;&gt;&gt; s</span>
+<span class="sd">    {(0, 3, 0, 0): tensor(1., dtype=torch.float64),</span>
+<span class="sd">     (3, 0, 1, 0): tensor(1., dtype=torch.float64),</span>
+<span class="sd">     (0, 3, 0, 1): tensor(1., dtype=torch.float64),</span>
+<span class="sd">     (4, 0, 0, 0): tensor(1., dtype=torch.float64),</span>
+<span class="sd">     (2, 2, 0, 0): tensor(1., dtype=torch.float64),</span>
+<span class="sd">     (5, 0, 0, 0): tensor(1., dtype=torch.float64),</span>
+<span class="sd">     (1, 4, 0, 0): tensor(1., dtype=torch.float64)}</span>
+
+<span class="sd">    &gt;&gt;&gt; import torch</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.derivative import derivative</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.signature import chop</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.evaluate import evaluate</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.evaluate import compare</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.series import series</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.series import clean</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.series import split</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.propagate import identity</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.propagate import propagate</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.bracket import bracket</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.factorization import hamiltonian</span>
+<span class="sd">    &gt;&gt;&gt; from ndtorch.factorization import solution</span>
+<span class="sd">    &gt;&gt;&gt; def h(x, k):</span>
+<span class="sd">    ...     q, p = x</span>
+<span class="sd">    ...     a, b = k</span>
+<span class="sd">    ...     return a*q**3 + (1 + b)*p**3 + q**4 + q**2*p**2 + q**5 + p**4*q</span>
+<span class="sd">    &gt;&gt;&gt; x = torch.tensor([0.0, 0.0], dtype=torch.float64)</span>
+<span class="sd">    &gt;&gt;&gt; k = torch.tensor([0.0, 0.0], dtype=torch.float64)</span>
+<span class="sd">    &gt;&gt;&gt; h = derivative((5, 1), h, x, k)</span>
+<span class="sd">    &gt;&gt;&gt; chop(h, replace=True)</span>
+<span class="sd">    &gt;&gt;&gt; s, *_ = split(clean(series((2, 2), (5, 1), h)))</span>
+<span class="sd">    &gt;&gt;&gt; s</span>
+<span class="sd">    {(0, 3, 0, 0): tensor(1., dtype=torch.float64),</span>
+<span class="sd">     (3, 0, 1, 0): tensor(1., dtype=torch.float64),</span>
+<span class="sd">     (0, 3, 0, 1): tensor(1., dtype=torch.float64),</span>
+<span class="sd">     (4, 0, 0, 0): tensor(1., dtype=torch.float64),</span>
+<span class="sd">     (2, 2, 0, 0): tensor(1., dtype=torch.float64),</span>
+<span class="sd">     (5, 0, 0, 0): tensor(1., dtype=torch.float64),</span>
+<span class="sd">     (1, 4, 0, 0): tensor(1., dtype=torch.float64)}</span>
+<span class="sd">    &gt;&gt;&gt; t = solution((4, 1), x, [k], h)</span>
+<span class="sd">    &gt;&gt;&gt; compare(h, hamiltonian((4, 1), x, [k], t))</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; h1, h2, h3 = factorize((4, 1), x, [k], t, reverse=True)</span>
+<span class="sd">    &gt;&gt;&gt; s, *_ = split(clean(series((2, 2), (5, 1), h1)))</span>
+<span class="sd">    &gt;&gt;&gt; s</span>
+<span class="sd">    {(0, 3, 0, 0): tensor(1., dtype=torch.float64),</span>
+<span class="sd">     (3, 0, 1, 0): tensor(1., dtype=torch.float64),</span>
+<span class="sd">     (0, 3, 0, 1): tensor(1., dtype=torch.float64)}</span>
+<span class="sd">    &gt;&gt;&gt; s, *_ = split(clean(series((2, 2), (5, 1), h2)))</span>
+<span class="sd">    &gt;&gt;&gt; s</span>
+<span class="sd">    {(4, 0, 0, 0): tensor(1., dtype=torch.float64),</span>
+<span class="sd">     (2, 2, 0, 0): tensor(1., dtype=torch.float64)}</span>
+<span class="sd">    &gt;&gt;&gt; s, *_ = split(clean(series((2, 2), (5, 1), h3)))</span>
+<span class="sd">    &gt;&gt;&gt; s</span>
+<span class="sd">    {(5, 0, 0, 0): tensor(1., dtype=torch.float64),</span>
+<span class="sd">     (3, 2, 0, 0): tensor(6., dtype=torch.float64),</span>
+<span class="sd">     (1, 4, 0, 0): tensor(4., dtype=torch.float64),</span>
+<span class="sd">     (4, 1, 1, 0): tensor(-3., dtype=torch.float64),</span>
+<span class="sd">     (3, 2, 0, 1): tensor(6., dtype=torch.float64),</span>
+<span class="sd">     (1, 4, 0, 1): tensor(3., dtype=torch.float64)}</span>
+<span class="sd">    &gt;&gt;&gt; t1 = solution((4, 1), x, [k], h1)</span>
+<span class="sd">    &gt;&gt;&gt; t2 = solution((4, 1), x, [k], h2)</span>
+<span class="sd">    &gt;&gt;&gt; t3 = solution((4, 1), x, [k], h3)</span>
+<span class="sd">    &gt;&gt;&gt; T = identity((4, 1), [x, k])</span>
+<span class="sd">    &gt;&gt;&gt; T = propagate((2, 2), (4, 1), T, [k], t3)</span>
+<span class="sd">    &gt;&gt;&gt; T = propagate((2, 2), (4, 1), T, [k], t2)</span>
+<span class="sd">    &gt;&gt;&gt; T = propagate((2, 2), (4, 1), T, [k], t1)</span>
+<span class="sd">    &gt;&gt;&gt; compare(t, T)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; compare(h, hamiltonian((4, 1), x, [k], T))</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; def h(x, k):</span>
+<span class="sd">    ...    q, p = x</span>
+<span class="sd">    ...    a, b = k</span>
+<span class="sd">    ...    v1 = evaluate(h1, [x, k])</span>
+<span class="sd">    ...    v2 = evaluate(h2, [x, k])</span>
+<span class="sd">    ...    v3 = evaluate(h3, [x, k])</span>
+<span class="sd">    ...    v4 = bracket(h2, h1)(x, k)</span>
+<span class="sd">    ...    return v1 + v2 + v3 - 0.5*v4</span>
+<span class="sd">    &gt;&gt;&gt; h = derivative((5, 1), h, x, k)</span>
+<span class="sd">    &gt;&gt;&gt; chop(h, replace=True)</span>
+<span class="sd">    &gt;&gt;&gt; s, *_ = split(clean(series((2, 2), (5, 1), h)))</span>
+<span class="sd">    &gt;&gt;&gt; s</span>
+<span class="sd">    {(0, 3, 0, 0): tensor(1., dtype=torch.float64),</span>
+<span class="sd">     (3, 0, 1, 0): tensor(1., dtype=torch.float64),</span>
+<span class="sd">     (0, 3, 0, 1): tensor(1., dtype=torch.float64),</span>
+<span class="sd">     (4, 0, 0, 0): tensor(1., dtype=torch.float64),</span>
+<span class="sd">     (2, 2, 0, 0): tensor(1., dtype=torch.float64),</span>
+<span class="sd">     (5, 0, 0, 0): tensor(1., dtype=torch.float64),</span>
+<span class="sd">     (1, 4, 0, 0): tensor(1., dtype=torch.float64)}</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">solve</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">vector</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">solution</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+
+    <span class="n">jacobian</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">jacfwd</span> <span class="k">if</span> <span class="n">jacobian</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">jacobian</span>
+
+    <span class="k">def</span> <span class="nf">auxiliary</span><span class="p">(</span><span class="o">*</span><span class="n">point</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">State</span><span class="p">:</span>
+        <span class="n">state</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">point</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+    <span class="n">limit</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">order</span>
+
+    <span class="n">dimension</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">state</span><span class="p">),</span> <span class="o">*</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">knob</span><span class="p">)</span> <span class="k">for</span> <span class="n">knob</span> <span class="ow">in</span> <span class="n">knobs</span><span class="p">))</span>
+
+    <span class="n">start</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">array</span><span class="p">:</span> <span class="n">Signature</span> <span class="o">=</span> <span class="n">signature</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">degree</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">limit</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">array</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">first</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">degree</span><span class="p">:</span>
+                <span class="n">index</span> <span class="o">=</span> <span class="n">i</span>
+                <span class="k">continue</span>
+            <span class="k">break</span>
+
+        <span class="n">t</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">auxiliary</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="o">*</span><span class="n">knobs</span><span class="p">,</span> <span class="n">jacobian</span><span class="o">=</span><span class="n">jacobian</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">signature</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+            <span class="nb">set</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">get</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span>
+        <span class="n">chop</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">h</span> <span class="o">=</span> <span class="n">hamiltonian</span><span class="p">(</span><span class="n">index</span><span class="p">,</span>
+                        <span class="n">state</span><span class="p">,</span>
+                        <span class="n">knobs</span><span class="p">,</span>
+                        <span class="n">t</span><span class="p">,</span>
+                        <span class="n">start</span><span class="o">=</span><span class="p">(</span><span class="n">degree</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+                        <span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                        <span class="n">solve</span><span class="o">=</span><span class="n">solve</span><span class="p">,</span>
+                        <span class="n">jacobian</span><span class="o">=</span><span class="n">jacobian</span><span class="p">)</span>
+
+        <span class="n">chop</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">degree</span> <span class="o">!=</span> <span class="n">limit</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">solution</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">knobs</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">jacobian</span><span class="o">=</span><span class="n">jacobian</span><span class="p">)</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">inverse</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">knobs</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">solve</span><span class="o">=</span><span class="n">solve</span><span class="p">,</span> <span class="n">jacobian</span><span class="o">=</span><span class="n">jacobian</span><span class="p">)</span>
+            <span class="n">tx</span><span class="p">,</span> <span class="n">ty</span> <span class="o">=</span> <span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">table</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">reverse</span> <span class="k">else</span> <span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+            <span class="n">table</span> <span class="o">=</span> <span class="n">propagate</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">tx</span><span class="p">,</span> <span class="n">knobs</span><span class="p">,</span> <span class="n">ty</span><span class="p">,</span> <span class="n">jacobian</span><span class="o">=</span><span class="n">jacobian</span><span class="p">)</span>
+            <span class="n">chop</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">result</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Ivan Morozov.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

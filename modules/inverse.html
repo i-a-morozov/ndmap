@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inverse &mdash; ndtorch  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Momenta" href="momenta.html" />
+    <link rel="prev" title="Invariant" href="invariant.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ndtorch
+              <img src="../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndtorch.html">Example-01: Derivative</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndtorch.html#Example-02:-Derivative-table-representation">Example-02: Derivative table representation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndtorch.html#Example-03:-Derivative-table-propagation">Example-03: Derivative table propagation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndtorch.html#Example-04:-Jet-class">Example-04: Jet class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndtorch.html#Example-05:-Nonlinear-mapping-approximation">Example-05: Nonlinear mapping approximation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndtorch.html#Example-06:-Fixed-point">Example-06: Fixed point</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndtorch.html#Example-07:-Parametric-fixed-point">Example-07: Parametric fixed point</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndtorch.html#Example-08:-Fixed-point-manipulation-(collision)">Example-08: Fixed point manipulation (collision)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndtorch.html#Example-09:-Fixed-point-manipulation-(change-point-type)">Example-09: Fixed point manipulation (change point type)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndtorch.html#Example-10:-Alignment-indices-chaos-indicators">Example-10: Alignment indices chaos indicators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndtorch.html#Example-11:-Closed-orbit-(dispersion)">Example-11: Closed orbit (dispersion)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndtorch.html#Example-12:-Closed-orbit-(quadrupole-shift)">Example-12: Closed orbit (quadrupole shift)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndtorch.html#Example-13:-Closed-orbit-(sextupole-shift)">Example-13: Closed orbit (sextupole shift)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndtorch.html#Example-14:-Closed-orbit-(responce-matrix-&amp;-correction)">Example-14: Closed orbit (responce matrix &amp; correction)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndtorch.html#Example-15:-Tune-(chromaticity)">Example-15: Tune (chromaticity)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndtorch.html#Example-16:-Tune-(responce-matrix-&amp;-correction)">Example-16: Tune (responce matrix &amp; correction)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndtorch.html#Example-17:-Tune-(spread)">Example-17: Tune (spread)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndtorch.html#Example-18:-Parametric-twiss">Example-18: Parametric twiss</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndtorch.html#Example-19:-Parametric-phase-advance">Example-19: Parametric phase advance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndtorch.html#Example-20:-Poisson-bracket">Example-20: Poisson bracket</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndtorch.html#Example-21:-Taylor-integrator">Example-21: Taylor integrator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndtorch.html#Example-22:-Yoshida-integrator">Example-22: Yoshida integrator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndtorch.html#Example-23:-Direct-invariant">Example-23: Direct invariant</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndtorch.html#Example-24:-Direct-invariant-(parametric)">Example-24: Direct invariant (parametric)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndtorch.html#Example-25:-Composition">Example-25: Composition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndtorch.html#Example-26:-Composition-(closed-orbit)">Example-26: Composition (closed orbit)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndtorch.html#Example-27:-Inverse">Example-27: Inverse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndtorch.html#Example-28:-Inverse-(closed-orbit)">Example-28: Inverse (closed orbit)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndtorch.html#Example-29:-Momenta-generator">Example-29: Momenta generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndtorch.html#Example-30:-Factorization-(kick)">Example-30: Factorization (kick)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndtorch.html#Example-31:-Factorization-(fodo)">Example-31: Factorization (fodo)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndtorch.html#Example-32:-Factorization-(factorize)">Example-32: Factorization (factorize)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndtorch.html#Example-33:-Nonlinear-mapping-approximation-(gradient)">Example-33: Nonlinear mapping approximation (gradient)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="util.html">Util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="util.html#ndtorch.util.curry_apply"><code class="docutils literal notranslate"><span class="pre">curry_apply()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="util.html#ndtorch.util.first"><code class="docutils literal notranslate"><span class="pre">first()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="util.html#ndtorch.util.flatten"><code class="docutils literal notranslate"><span class="pre">flatten()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="util.html#ndtorch.util.last"><code class="docutils literal notranslate"><span class="pre">last()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="util.html#ndtorch.util.most"><code class="docutils literal notranslate"><span class="pre">most()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="util.html#ndtorch.util.multinomial"><code class="docutils literal notranslate"><span class="pre">multinomial()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="util.html#ndtorch.util.nest"><code class="docutils literal notranslate"><span class="pre">nest()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="util.html#ndtorch.util.orthogonal"><code class="docutils literal notranslate"><span class="pre">orthogonal()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="util.html#ndtorch.util.rest"><code class="docutils literal notranslate"><span class="pre">rest()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="util.html#ndtorch.util.symplectic"><code class="docutils literal notranslate"><span class="pre">symplectic()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="util.html#ndtorch.util.tolist"><code class="docutils literal notranslate"><span class="pre">tolist()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="derivative.html">Derivative</a></li>
+<li class="toctree-l1"><a class="reference internal" href="derivative.html#ndtorch.derivative.derivative"><code class="docutils literal notranslate"><span class="pre">derivative()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="gradient.html">Gradient</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gradient.html#ndtorch.gradient.derivative"><code class="docutils literal notranslate"><span class="pre">derivative()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="gradient.html#ndtorch.gradient.evaluate"><code class="docutils literal notranslate"><span class="pre">evaluate()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="gradient.html#ndtorch.gradient.factor"><code class="docutils literal notranslate"><span class="pre">factor()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="gradient.html#ndtorch.gradient.group"><code class="docutils literal notranslate"><span class="pre">group()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="gradient.html#ndtorch.gradient.hessian"><code class="docutils literal notranslate"><span class="pre">hessian()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="gradient.html#ndtorch.gradient.index"><code class="docutils literal notranslate"><span class="pre">index()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="gradient.html#ndtorch.gradient.jacobian"><code class="docutils literal notranslate"><span class="pre">jacobian()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="gradient.html#ndtorch.gradient.naught"><code class="docutils literal notranslate"><span class="pre">naught()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="gradient.html#ndtorch.gradient.reduce"><code class="docutils literal notranslate"><span class="pre">reduce()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="gradient.html#ndtorch.gradient.scalar"><code class="docutils literal notranslate"><span class="pre">scalar()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="gradient.html#ndtorch.gradient.select"><code class="docutils literal notranslate"><span class="pre">select()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="gradient.html#ndtorch.gradient.series"><code class="docutils literal notranslate"><span class="pre">series()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="gradient.html#ndtorch.gradient.signature"><code class="docutils literal notranslate"><span class="pre">signature()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="gradient.html#ndtorch.gradient.split"><code class="docutils literal notranslate"><span class="pre">split()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="complex.html">Complex</a></li>
+<li class="toctree-l1"><a class="reference internal" href="signature.html">Signature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="signature.html#ndtorch.signature.apply"><code class="docutils literal notranslate"><span class="pre">apply()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="signature.html#ndtorch.signature.chop"><code class="docutils literal notranslate"><span class="pre">chop()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="signature.html#ndtorch.signature.get"><code class="docutils literal notranslate"><span class="pre">get()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="signature.html#ndtorch.signature.set"><code class="docutils literal notranslate"><span class="pre">set()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="signature.html#ndtorch.signature.signature"><code class="docutils literal notranslate"><span class="pre">signature()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="signature.html#ndtorch.signature.to"><code class="docutils literal notranslate"><span class="pre">to()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#ndtorch.index.build"><code class="docutils literal notranslate"><span class="pre">build()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#ndtorch.index.index"><code class="docutils literal notranslate"><span class="pre">index()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#ndtorch.index.reduce"><code class="docutils literal notranslate"><span class="pre">reduce()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="series.html">Series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="series.html#ndtorch.series.clean"><code class="docutils literal notranslate"><span class="pre">clean()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="series.html#ndtorch.series.fetch"><code class="docutils literal notranslate"><span class="pre">fetch()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="series.html#ndtorch.series.merge"><code class="docutils literal notranslate"><span class="pre">merge()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="series.html#ndtorch.series.series"><code class="docutils literal notranslate"><span class="pre">series()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="series.html#ndtorch.series.split"><code class="docutils literal notranslate"><span class="pre">split()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="evaluate.html">Evaluate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="evaluate.html#ndtorch.evaluate.compare"><code class="docutils literal notranslate"><span class="pre">compare()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="evaluate.html#ndtorch.evaluate.evaluate"><code class="docutils literal notranslate"><span class="pre">evaluate()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="evaluate.html#ndtorch.evaluate.table"><code class="docutils literal notranslate"><span class="pre">table()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="propagate.html">Propagate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="propagate.html#ndtorch.propagate.identity"><code class="docutils literal notranslate"><span class="pre">identity()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="propagate.html#ndtorch.propagate.propagate"><code class="docutils literal notranslate"><span class="pre">propagate()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="pfp.html">Parametric fixed point</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pfp.html#ndtorch.pfp.chain_point"><code class="docutils literal notranslate"><span class="pre">chain_point()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="pfp.html#ndtorch.pfp.check_point"><code class="docutils literal notranslate"><span class="pre">check_point()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="pfp.html#ndtorch.pfp.clean_point"><code class="docutils literal notranslate"><span class="pre">clean_point()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="pfp.html#ndtorch.pfp.fixed_point"><code class="docutils literal notranslate"><span class="pre">fixed_point()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="pfp.html#ndtorch.pfp.matrix"><code class="docutils literal notranslate"><span class="pre">matrix()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="pfp.html#ndtorch.pfp.newton"><code class="docutils literal notranslate"><span class="pre">newton()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="pfp.html#ndtorch.pfp.parametric_fixed_point"><code class="docutils literal notranslate"><span class="pre">parametric_fixed_point()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="bracket.html">Bracket</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bracket.html#ndtorch.bracket.bracket"><code class="docutils literal notranslate"><span class="pre">bracket()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="taylor.html">Taylor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="taylor.html#ndtorch.taylor.taylor"><code class="docutils literal notranslate"><span class="pre">taylor()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="yoshida.html">Yoshida</a></li>
+<li class="toctree-l1"><a class="reference internal" href="yoshida.html#ndtorch.yoshida.coefficients"><code class="docutils literal notranslate"><span class="pre">coefficients()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="yoshida.html#ndtorch.yoshida.yoshida"><code class="docutils literal notranslate"><span class="pre">yoshida()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="invariant.html">Invariant</a></li>
+<li class="toctree-l1"><a class="reference internal" href="invariant.html#ndtorch.invariant.invariant"><code class="docutils literal notranslate"><span class="pre">invariant()</span></code></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Inverse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#ndtorch.inverse.inverse"><code class="docutils literal notranslate"><span class="pre">inverse()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="momenta.html">Momenta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="momenta.html#ndtorch.momenta.momenta"><code class="docutils literal notranslate"><span class="pre">momenta()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="factorization.html">Factorization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="factorization.html#ndtorch.factorization.factorize"><code class="docutils literal notranslate"><span class="pre">factorize()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="factorization.html#ndtorch.factorization.hamiltonian"><code class="docutils literal notranslate"><span class="pre">hamiltonian()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="factorization.html#ndtorch.factorization.hamiltonian_inverse"><code class="docutils literal notranslate"><span class="pre">hamiltonian_inverse()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="factorization.html#ndtorch.factorization.solution"><code class="docutils literal notranslate"><span class="pre">solution()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="jet.html">Jet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jet.html#ndtorch.jet.Jet"><code class="docutils literal notranslate"><span class="pre">Jet</span></code></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ndtorch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Inverse</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/modules/inverse.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="inverse">
+<span id="module-ndtorch.inverse"></span><h1>Inverse<a class="headerlink" href="#inverse" title="Link to this heading"></a></h1>
+<p>Compute derivative table inverse</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="ndtorch.inverse.inverse">
+<span class="sig-prename descclassname"><span class="pre">ndtorch.inverse.</span></span><span class="sig-name descname"><span class="pre">inverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">knobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solve</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jacobian</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="../_modules/ndtorch/inverse.html#inverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ndtorch.inverse.inverse" title="Link to this definition"></a></dt>
+<dd><p>Compute inverse of input derivative table</p>
+<p>Note, input table is assumed to represent a mapping
+Which is assumed to map (parametric) zero to (parametric) zero
+Input state and knobs are deviations and should equal to zero</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>order</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>...</em><em>]</em>) – computation order</p></li>
+<li><p><strong>state</strong> (<em>State</em>) – state fixed point</p></li>
+<li><p><strong>knobs</strong> (<em>Knobs</em>) – knobs value</p></li>
+<li><p><strong>solve</strong> (<em>Optional</em><em>[</em><em>Callable</em><em>]</em>) – linear solver(matrix, vecor)</p></li>
+<li><p><strong>jacobian</strong> (<em>Optional</em><em>[</em><em>Callable</em><em>]</em>) – torch.func.jacfwd (default) or torch.func.jacrev</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Table</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">fn</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">q</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">x</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">q</span><span class="p">,</span> <span class="n">p</span> <span class="o">+</span> <span class="n">q</span> <span class="o">+</span> <span class="n">q</span><span class="o">**</span><span class="mi">2</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="p">),</span> <span class="n">fn</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">inverse</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="p">),</span> <span class="n">x</span><span class="p">,</span> <span class="p">[],</span> <span class="n">t</span><span class="p">)</span>
+<span class="go">[[],</span>
+<span class="go">tensor([[ 1.,  0.],</span>
+<span class="go">        [-1.,  1.]], dtype=torch.float64),</span>
+<span class="go">tensor([[[ 0.,  0.],</span>
+<span class="go">        [ 0.,  0.]],</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>[[-2.,  0.],
+[ 0.,  0.]]], dtype=torch.float64)]</p>
+</div></blockquote>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">fn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">q</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">x</span>
+<span class="gp">... </span>    <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">k</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">q</span><span class="p">,</span> <span class="n">p</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">q</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span><span class="o">*</span><span class="n">q</span><span class="o">**</span><span class="mi">2</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">fn</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">inverse</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">t</span><span class="p">)</span>
+<span class="go">[[[], []],</span>
+<span class="go">[tensor([[ 1.,  0.],</span>
+<span class="go">        [-1.,  1.]], dtype=torch.float64),</span>
+<span class="go">tensor([[[ 0.,  0.],</span>
+<span class="go">        [ 0.,  0.]],</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>[[-1.,  0.],
+[ 0.,  0.]]], dtype=torch.float64)],</p>
+</div></blockquote>
+<dl>
+<dt>[tensor([[[ 0.,  0.],</dt><dd><p>[ 0.,  0.]],</p>
+<p>[[-2.,  0.],
+[ 0.,  0.]]], dtype=torch.float64),</p>
+</dd>
+<dt>tensor([[[[ 0.,  0.],</dt><dd><blockquote>
+<div><p>[ 0.,  0.]],</p>
+</div></blockquote>
+<dl class="simple">
+<dt>[[ 0.,  0.],</dt><dd><p>[ 0.,  0.]]],</p>
+</dd>
+<dt>[[[ 0.,  0.],</dt><dd><p>[ 0.,  0.]],</p>
+</dd>
+<dt>[[-2.,  0.],</dt><dd><p>[ 0.,  0.]]]], dtype=torch.float64)]]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="invariant.html" class="btn btn-neutral float-left" title="Invariant" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="momenta.html" class="btn btn-neutral float-right" title="Momenta" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Ivan Morozov.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
