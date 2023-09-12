@@ -1,9 +1,7 @@
-[![Documentation Status](https://readthedocs.org/projects/ndtorch/badge/?version=latest)](https://ndtorch.readthedocs.io/en/latest/?badge=latest)
-
 # ndtorch, 2022-2023
 
 <p align="center">
-  <img width="100" height="100" src="docs/pics/logo.svg">
+  <img width="100" height="100" src="https://github.com/i-a-morozov/ndtorch/blob/main/docs/pics/logo.svg">
 </p>
 
 Higher order partial derivatives computation with respect to one or several tensor-like variables.
@@ -18,6 +16,16 @@ $ cd ndtorch
 $ python -m pip install .
 
 ```
+or
+
+```
+$ pip install ndtorch -U
+
+```
+
+# Documentation
+
+[https://i-a-morozov.github.io/ndtorch/](https://i-a-morozov.github.io/ndtorch/)
 
 # Derivative (composable jacobian)
 
@@ -132,17 +140,17 @@ Compute higher order function (partial) derivatives.
 Stable and unstable invariant manifolds approximation
 
 <p align="center">
-  <img width="576" height="576" src="docs/pics/manifold.gif">
+  <img width="576" height="576" src="https://github.com/i-a-morozov/ndtorch/blob/main/docs/pics/manifold.gif">
 </p>
 
 Collision of fixed points
 
 <p align="center">
-  <img width="576" height="576" src="docs/pics/collision.gif">
+  <img width="576" height="576" src="https://github.com/i-a-morozov/ndtorch/blob/main/docs/pics/collision.gif">
 </p>
 
 Reduce real part of a hyperbolic fixed point
 
 <p align="center">
-  <img width="576" height="576" src="docs/pics/change.gif">
+  <img width="576" height="576" src="https://github.com/i-a-morozov/ndtorch/blob/main/docs/pics/change.gif">
 </p>

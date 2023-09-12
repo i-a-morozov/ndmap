@@ -1,5 +1,4 @@
-numpy
-torch
-multimethod
+pandoc
+sphinx-rtd-theme
 ipykernel
 nbsphinx
