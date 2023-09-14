@@ -231,14 +231,14 @@
 
 <div class="viewcode-block" id="multinomial">
 <a class="viewcode-back" href="../../modules/util.html#ndtorch.util.multinomial">[docs]</a>
-<span class="k">def</span> <span class="nf">multinomial</span><span class="p">(</span><span class="o">*</span><span class="n">sequence</span><span class="p">:</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">multinomial</span><span class="p">(</span><span class="o">*</span><span class="n">sequence</span><span class="p">:</span><span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute multinomial coefficient for a given sequence (n, m, ...) of non-negative integers</span>
 <span class="sd">    (n + m + ...)! / (n! * m! * ... )</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    *sequence: tuple[int, ...], non-negative</span>
+<span class="sd">    *sequence: int, non-negative</span>
 <span class="sd">        input sequence of integers</span>
 
 <span class="sd">    Returns</span>
@@ -547,6 +547,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_</span><span class="p">,</span> <span class="o">*</span><span class="n">x</span> <span class="o">=</span> <span class="n">xs</span>
     <span class="k">return</span> <span class="n">x</span></div>
+
 
 
 <span class="nd">@multimethod</span>
