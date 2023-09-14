@@ -16,9 +16,9 @@ from multimethod import multimethod
 import torch
 from torch import Tensor
 
-from .util import symplectic
-from .derivative import derivative
-from .evaluate import evaluate
+from ndtorch.util import symplectic
+from ndtorch.derivative import derivative
+from ndtorch.evaluate import evaluate
 
 
 State       : TypeAlias = Tensor

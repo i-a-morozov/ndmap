@@ -16,7 +16,7 @@ from multimethod import multimethod
 import torch
 from torch import Tensor
 
-from .util import flatten
+from ndtorch.util import flatten
 
 
 State       : TypeAlias = Tensor

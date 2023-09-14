@@ -18,10 +18,9 @@ from multimethod import multimethod
 import torch
 from torch import Tensor
 
-from .util import flatten
-from .derivative import derivative
-from .signature import signature
-from .signature import get
+from ndtorch.derivative import derivative
+from ndtorch.signature import signature
+from ndtorch.signature import get
 
 
 State       : TypeAlias = Tensor

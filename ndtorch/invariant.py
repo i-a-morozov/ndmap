@@ -14,16 +14,16 @@ from typing import Union
 import torch
 from torch import Tensor
 
-from .util import first
-from .derivative import derivative
-from .signature import signature
-from .signature import set
-from .signature import get
-from .signature import chop
-from .index import reduce
-from .index import build
-from .pfp import newton
-from .pfp import propagate
+from ndtorch.util import first
+from ndtorch.derivative import derivative
+from ndtorch.signature import signature
+from ndtorch.signature import set
+from ndtorch.signature import get
+from ndtorch.signature import chop
+from ndtorch.index import reduce
+from ndtorch.index import build
+from ndtorch.pfp import newton
+from ndtorch.pfp import propagate
 
 
 State       : TypeAlias = Tensor

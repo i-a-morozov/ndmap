@@ -15,7 +15,7 @@ from math import factorial
 import torch
 from torch import Tensor
 
-from .bracket import bracket
+from ndtorch.bracket import bracket
 
 
 State       : TypeAlias = Tensor

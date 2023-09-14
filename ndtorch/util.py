@@ -39,14 +39,14 @@ Observable  : TypeAlias = Callable
 Hamiltonian : TypeAlias = Callable
 
 
-def multinomial(*sequence:tuple[int, ...]) -> float:
+def multinomial(*sequence:int) -> float:
     """
     Compute multinomial coefficient for a given sequence (n, m, ...) of non-negative integers
     (n + m + ...)! / (n! * m! * ... )
 
     Parameters
     ----------
-    *sequence: tuple[int, ...], non-negative
+    *sequence: int, non-negative
         input sequence of integers
 
     Returns
@@ -328,6 +328,7 @@ def most(xs:Iterable[Any]) -> Any:
     """
     _, *x = xs
     return x
+
 
 @multimethod
 def tolist(tensor:Tensor) -> list:

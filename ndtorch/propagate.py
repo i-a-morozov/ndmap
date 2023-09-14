@@ -16,12 +16,12 @@ from multimethod import multimethod
 import torch
 from torch import Tensor
 
-from .util import flatten
-from .derivative import derivative
-from .signature import set
-from .signature import get
-from .series import series
-from .evaluate import evaluate
+from ndtorch.util import flatten
+from ndtorch.derivative import derivative
+from ndtorch.signature import set
+from ndtorch.signature import get
+from ndtorch.series import series
+from ndtorch.evaluate import evaluate
 
 
 State       : TypeAlias = Tensor

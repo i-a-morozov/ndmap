@@ -14,10 +14,10 @@ from typing import Union
 import torch
 from torch import Tensor
 
-from .evaluate import evaluate
-from .propagate import identity
-from .propagate import propagate
-from .inverse import inverse
+from ndtorch.evaluate import evaluate
+from ndtorch.propagate import identity
+from ndtorch.propagate import propagate
+from ndtorch.inverse import inverse
 
 State       : TypeAlias = Tensor
 Knobs       : TypeAlias = list[Tensor]

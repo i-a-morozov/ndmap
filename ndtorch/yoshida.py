@@ -19,8 +19,8 @@ from multimethod import multimethod
 import torch
 from torch import Tensor
 
-from .util import first
-from .util import last
+from ndtorch.util import first
+from ndtorch.util import last
 
 
 State       : TypeAlias = Tensor

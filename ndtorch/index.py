@@ -19,10 +19,10 @@ from numpy import ndarray as Array
 import torch
 from torch import Tensor
 
-from .util import tolist
-from .signature import signature
-from .signature import get
-from .signature import set
+from ndtorch.util import tolist
+from ndtorch.signature import signature
+from ndtorch.signature import get
+from ndtorch.signature import set
 
 State       : TypeAlias = Tensor
 Knobs       : TypeAlias = list[Tensor]

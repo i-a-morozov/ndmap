@@ -19,11 +19,11 @@ from multimethod import multimethod
 import torch
 from torch import Tensor
 
-from .util import flatten
-from .util import tolist
-from .derivative import derivative
-from .signature import signature
-from .index import index
+from ndtorch.util import flatten
+from ndtorch.util import tolist
+from ndtorch.derivative import derivative
+from ndtorch.signature import signature
+from ndtorch.index import index
 
 
 State       : TypeAlias = Tensor

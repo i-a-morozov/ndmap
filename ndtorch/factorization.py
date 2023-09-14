@@ -15,18 +15,18 @@ from typing import Union
 import torch
 from torch import Tensor
 
-from .util import first
-from .derivative import derivative
-from .signature import signature
-from .signature import get
-from .signature import set
-from .signature import chop
-from .index import reduce
-from .index import build
-from .evaluate import evaluate
-from .propagate import propagate
-from .inverse import inverse
-from .taylor import taylor
+from ndtorch.util import first
+from ndtorch.derivative import derivative
+from ndtorch.signature import signature
+from ndtorch.signature import get
+from ndtorch.signature import set
+from ndtorch.signature import chop
+from ndtorch.index import reduce
+from ndtorch.index import build
+from ndtorch.evaluate import evaluate
+from ndtorch.propagate import propagate
+from ndtorch.inverse import inverse
+from ndtorch.taylor import taylor
 
 
 State       : TypeAlias = Tensor

@@ -16,16 +16,16 @@ from typing import Union
 import torch
 from torch import Tensor
 
-from .util import flatten
-from .derivative import derivative
-from .signature import signature
-from .signature import get
-from .signature import set
-from .series import series
-from .evaluate import evaluate
-from .evaluate import table
-from .propagate import identity
-from .propagate import propagate
+from ndtorch.util import flatten
+from ndtorch.derivative import derivative
+from ndtorch.signature import signature
+from ndtorch.signature import get
+from ndtorch.signature import set
+from ndtorch.series import series
+from ndtorch.evaluate import evaluate
+from ndtorch.evaluate import table
+from ndtorch.propagate import identity
+from ndtorch.propagate import propagate
 
 
 State       : TypeAlias = Tensor
