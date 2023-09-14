@@ -4653,7 +4653,7 @@ tensor([-1.070014e-18,  3.763685e-18, -1.733072e-17, -1.661201e-17], dtype=torch
 <span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
 <span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
 
-<span class="kn">from</span> <span class="nn">twiss.twiss</span> <span class="kn">import</span> <span class="n">twiss</span>
+<span class="kn">from</span> <span class="nn">twiss.wolski</span> <span class="kn">import</span> <span class="n">twiss</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
@@ -5099,7 +5099,7 @@ tensor([1.000000e+00, 1.000000e+00], dtype=torch.float64)
 <span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
 <span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
 
-<span class="kn">from</span> <span class="nn">twiss.twiss</span> <span class="kn">import</span> <span class="n">twiss</span>
+<span class="kn">from</span> <span class="nn">twiss.wolski</span> <span class="kn">import</span> <span class="n">twiss</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
@@ -5435,7 +5435,7 @@ tensor([2.627666e-01, 1.199040e-01], dtype=torch.float64)
 <span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
 <span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
 
-<span class="kn">from</span> <span class="nn">twiss.twiss</span> <span class="kn">import</span> <span class="n">twiss</span>
+<span class="kn">from</span> <span class="nn">twiss.wolski</span> <span class="kn">import</span> <span class="n">twiss</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
@@ -5794,8 +5794,8 @@ tensor([1.973939e-03, 4.063140e-03], dtype=torch.float64)
 <span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
 <span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
 
-<span class="kn">from</span> <span class="nn">twiss.twiss</span> <span class="kn">import</span> <span class="n">twiss</span>
-<span class="kn">from</span> <span class="nn">twiss.twiss</span> <span class="kn">import</span> <span class="n">propagate</span> <span class="k">as</span> <span class="n">propagate_twiss</span>
+<span class="kn">from</span> <span class="nn">twiss.wolski</span> <span class="kn">import</span> <span class="n">twiss</span>
+<span class="kn">from</span> <span class="nn">twiss.wolski</span> <span class="kn">import</span> <span class="n">propagate</span> <span class="k">as</span> <span class="n">propagate_twiss</span>
 <span class="kn">from</span> <span class="nn">twiss.convert</span> <span class="kn">import</span> <span class="n">wolski_to_cs</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
@@ -6268,9 +6268,9 @@ tensor(3.559e-10, dtype=torch.float64)
 <span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
 <span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
 
-<span class="kn">from</span> <span class="nn">twiss.twiss</span> <span class="kn">import</span> <span class="n">twiss</span>
-<span class="kn">from</span> <span class="nn">twiss.twiss</span> <span class="kn">import</span> <span class="n">propagate</span> <span class="k">as</span> <span class="n">propagate_twiss</span>
-<span class="kn">from</span> <span class="nn">twiss.twiss</span> <span class="kn">import</span> <span class="n">advance</span>
+<span class="kn">from</span> <span class="nn">twiss.wolski</span> <span class="kn">import</span> <span class="n">twiss</span>
+<span class="kn">from</span> <span class="nn">twiss.wolski</span> <span class="kn">import</span> <span class="n">propagate</span> <span class="k">as</span> <span class="n">propagate_twiss</span>
+<span class="kn">from</span> <span class="nn">twiss.wolski</span> <span class="kn">import</span> <span class="n">advance</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
@@ -7712,7 +7712,7 @@ tensor([1.988014274981e-01, -2.394392236666e-02], dtype=torch.float64)
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import</span>
@@ -7727,7 +7727,7 @@ tensor([1.988014274981e-01, -2.394392236666e-02], dtype=torch.float64)
 <span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
 <span class="kn">from</span> <span class="nn">ndtorch.invariant</span> <span class="kn">import</span> <span class="n">invariant</span>
 
-<span class="kn">from</span> <span class="nn">twiss.twiss</span> <span class="kn">import</span> <span class="n">twiss</span>
+<span class="kn">from</span> <span class="nn">twiss.wolski</span> <span class="kn">import</span> <span class="n">twiss</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
 
@@ -8095,7 +8095,7 @@ tensor(3.553736e-09, dtype=torch.float64)
 <span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
 <span class="kn">from</span> <span class="nn">ndtorch.invariant</span> <span class="kn">import</span> <span class="n">invariant</span>
 
-<span class="kn">from</span> <span class="nn">twiss.twiss</span> <span class="kn">import</span> <span class="n">twiss</span>
+<span class="kn">from</span> <span class="nn">twiss.wolski</span> <span class="kn">import</span> <span class="n">twiss</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
 
