@@ -11,16 +11,11 @@ Parametric fixed point computation.
 # Install & build
 
 ```
-$ git clone https://github.com/i-a-morozov/ndtorch.git
-$ cd ndtorch
-$ python -m pip install .
-
+$ pip install git+https://github.com/i-a-morozov/ndtorch.git@main
 ```
 or
-
 ```
 $ pip install ndtorch -U
-
 ```
 
 # Documentation
