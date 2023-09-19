@@ -3,7 +3,7 @@ requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "ndtorch"
+name = "ndmap"
 version = "0.1.7"
 authors = [{name = "Ivan Morozov"}]
 description = "Higher order partial derivatives computation with respect to one or several tensor-like variables, application to nonlinear dynamics"
@@ -16,6 +16,6 @@ dependencies = ["torch>=2.0.1", "multimethod>=1.9.1", "numpy>=1.23.5"]
 
 [project.optional-dependencies]
 examples = ["jupyter-lab", "matplotlib", "twiss"]
-test=["pytest", "pytest-cov"]
+test=["pytest", "pytest-cov", "pylint", "mypy"]
 all = ["ndtorch[examples, test]"]
 

@@ -18,9 +18,9 @@ from multimethod import multimethod
 import torch
 from torch import Tensor
 
-from ndtorch.derivative import derivative
-from ndtorch.signature import signature
-from ndtorch.signature import get
+from ndmap.derivative import derivative
+from ndmap.signature import signature
+from ndmap.signature import get
 
 
 State       : TypeAlias = Tensor
@@ -57,7 +57,7 @@ def evaluate(table:Table,
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.derivative import derivative
+    >>> from ndmap.derivative import derivative
     >>> def fn(x, y):
     ...    x1, x2 = x
     ...    y1, y2 = y
@@ -122,8 +122,8 @@ def evaluate(series:Series,
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.derivative import derivative
-    >>> from ndtorch.series import series
+    >>> from ndmap.derivative import derivative
+    >>> from ndmap.series import series
     >>> def fn(x, y):
     ...    x1, x2 = x
     ...    y1, y2 = y
@@ -187,8 +187,8 @@ def table(dimension:tuple[int, ...],
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.derivative import derivative
-    >>> from ndtorch.series import series
+    >>> from ndmap.derivative import derivative
+    >>> from ndmap.series import series
     >>> def fn(x, y):
     ...    x1, x2 = x
     ...    y1, y2 = y
@@ -231,7 +231,7 @@ def compare(probe:Table, other:Table) -> bool:
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.derivative import derivative
+    >>> from ndmap.derivative import derivative
     >>> def fn(x, y):
     ...    x1, x2 = x
     ...    y1, y2 = y

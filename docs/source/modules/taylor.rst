@@ -1,2 +1,2 @@
-.. automodule:: ndtorch.taylor
+.. automodule:: ndmap.taylor
     :members:

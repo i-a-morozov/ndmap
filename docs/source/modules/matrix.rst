@@ -1,2 +1,2 @@
-.. automodule:: ndtorch.matrix
+.. automodule:: ndmap.matrix
     :members:

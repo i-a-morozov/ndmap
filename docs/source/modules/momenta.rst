@@ -1,2 +1,2 @@
-.. automodule:: ndtorch.momenta
+.. automodule:: ndmap.momenta
     :members:

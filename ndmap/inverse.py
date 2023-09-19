@@ -14,15 +14,15 @@ from typing import Union
 import torch
 from torch import Tensor
 
-from ndtorch.util import first
-from ndtorch.derivative import derivative
-from ndtorch.signature import signature
-from ndtorch.signature import set
-from ndtorch.signature import get
-from ndtorch.index import reduce
-from ndtorch.index import build
-from ndtorch.pfp import newton
-from ndtorch.pfp import propagate
+from ndmap.util import first
+from ndmap.derivative import derivative
+from ndmap.signature import signature
+from ndmap.signature import set
+from ndmap.signature import get
+from ndmap.index import reduce
+from ndmap.index import build
+from ndmap.pfp import newton
+from ndmap.pfp import propagate
 
 State       : TypeAlias = Tensor
 Knobs       : TypeAlias = list[Tensor]
@@ -69,8 +69,8 @@ def inverse(order:tuple[int, ...],
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.derivative import derivative
-    >>> from ndtorch.propagate import propagate
+    >>> from ndmap.derivative import derivative
+    >>> from ndmap.propagate import propagate
     >>> def fn(x):
     ...     q, p = x
     ...     return torch.stack([q, p + q + q**2])
@@ -87,8 +87,8 @@ def inverse(order:tuple[int, ...],
             [ 0.,  0.]]], dtype=torch.float64)]
 
     >>> import torch
-    >>> from ndtorch.derivative import derivative
-    >>> from ndtorch.propagate import propagate
+    >>> from ndmap.derivative import derivative
+    >>> from ndmap.propagate import propagate
     >>> def fn(x, k):
     ...     q, p = x
     ...     a, b = k

@@ -1,2 +1,2 @@
-.. automodule:: ndtorch.evaluate
+.. automodule:: ndmap.evaluate
     :members:

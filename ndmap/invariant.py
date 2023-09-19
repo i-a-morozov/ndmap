@@ -14,16 +14,16 @@ from typing import Union
 import torch
 from torch import Tensor
 
-from ndtorch.util import first
-from ndtorch.derivative import derivative
-from ndtorch.signature import signature
-from ndtorch.signature import set
-from ndtorch.signature import get
-from ndtorch.signature import chop
-from ndtorch.index import reduce
-from ndtorch.index import build
-from ndtorch.pfp import newton
-from ndtorch.pfp import propagate
+from ndmap.util import first
+from ndmap.derivative import derivative
+from ndmap.signature import signature
+from ndmap.signature import set
+from ndmap.signature import get
+from ndmap.signature import chop
+from ndmap.index import reduce
+from ndmap.index import build
+from ndmap.pfp import newton
+from ndmap.pfp import propagate
 
 
 State       : TypeAlias = Tensor
@@ -75,11 +75,11 @@ def invariant(order:tuple[int, ...],
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.util import nest
-    >>> from ndtorch.derivative import derivative
-    >>> from ndtorch.series import series
-    >>> from ndtorch.series import clean
-    >>> from ndtorch.yoshida import yoshida
+    >>> from ndmap.util import nest
+    >>> from ndmap.derivative import derivative
+    >>> from ndmap.series import series
+    >>> from ndmap.series import clean
+    >>> from ndmap.yoshida import yoshida
     >>> def fn(x, t): q, p = x ; return torch.stack([q, p - t*q - t*q**2])
     >>> def gn(x, t): q, p = x ; return torch.stack([q + t*p, p])
     >>> l = torch.tensor(1.0, dtype=torch.float64)
@@ -91,11 +91,11 @@ def invariant(order:tuple[int, ...],
     (0, 2): tensor([0.5000], dtype=torch.float64),
     (3, 0): tensor([0.3333], dtype=torch.float64)}
 
-    >>> from ndtorch.util import nest
-    >>> from ndtorch.derivative import derivative
-    >>> from ndtorch.series import series
-    >>> from ndtorch.series import clean
-    >>> from ndtorch.yoshida import yoshida
+    >>> from ndmap.util import nest
+    >>> from ndmap.derivative import derivative
+    >>> from ndmap.series import series
+    >>> from ndmap.series import clean
+    >>> from ndmap.yoshida import yoshida
     >>> def fn(x, t, k): q, p = x ; k, = k ; return torch.stack([q, p - t*q - t*(1 + k)*q**2])
     >>> def gn(x, t, k): q, p = x ; k, = k ; return torch.stack([q + t*p, p])
     >>> l = torch.tensor(1.0, dtype=torch.float64)

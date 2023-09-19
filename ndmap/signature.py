@@ -16,7 +16,7 @@ from multimethod import multimethod
 import torch
 from torch import Tensor
 
-from ndtorch.util import flatten
+from ndmap.util import flatten
 
 
 State       : TypeAlias = Tensor
@@ -52,7 +52,7 @@ def signature(order:tuple[int, ...], *,
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.derivative import derivative
+    >>> from ndmap.derivative import derivative
     >>> def fn(x, y):
     ...    x1, x2 = x
     ...    y1, y2 = y
@@ -120,7 +120,7 @@ def signature(table:Table, *,
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.derivative import derivative
+    >>> from ndmap.derivative import derivative
     >>> def fn(x, y):
     ...    x1, x2 = x
     ...    y1, y2 = y
@@ -184,7 +184,7 @@ def get(table:Table,
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.derivative import derivative
+    >>> from ndmap.derivative import derivative
     >>> def fn(x, y):
     ...    x1, x2 = x
     ...    y1, y2 = y
@@ -230,7 +230,7 @@ def set(table:Table,
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.derivative import derivative
+    >>> from ndmap.derivative import derivative
     >>> def fn(x, y):
     ...    x1, x2 = x
     ...    y1, y2 = y
@@ -279,7 +279,7 @@ def apply(table:Table,
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.derivative import derivative
+    >>> from ndmap.derivative import derivative
     >>> def fn(x, y):
     ...    x1, x2 = x
     ...    y1, y2 = y
@@ -320,7 +320,7 @@ def apply(table:Table,
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.derivative import derivative
+    >>> from ndmap.derivative import derivative
     >>> def fn(x, y):
     ...    x1, x2 = x
     ...    y1, y2 = y
@@ -359,7 +359,7 @@ def apply(table:Table,
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.derivative import derivative
+    >>> from ndmap.derivative import derivative
     >>> def fn(x, y):
     ...    x1, x2 = x
     ...    y1, y2 = y
@@ -402,7 +402,7 @@ def chop(table:Table, *,
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.derivative import derivative
+    >>> from ndmap.derivative import derivative
     >>> def fn(x, y):
     ...    x1, x2 = x
     ...    y1, y2 = y
@@ -445,7 +445,7 @@ def to(table:Table,
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.derivative import derivative
+    >>> from ndmap.derivative import derivative
     >>> x = torch.tensor(0.0)
     >>> y = torch.tensor(0.0)
     >>> t = derivative((1, 1), lambda x, y: x + y, x, y)

@@ -16,16 +16,16 @@ from typing import Union
 import torch
 from torch import Tensor
 
-from ndtorch.util import flatten
-from ndtorch.derivative import derivative
-from ndtorch.signature import signature
-from ndtorch.signature import get
-from ndtorch.signature import set
-from ndtorch.series import series
-from ndtorch.evaluate import evaluate
-from ndtorch.evaluate import table
-from ndtorch.propagate import identity
-from ndtorch.propagate import propagate
+from ndmap.util import flatten
+from ndmap.derivative import derivative
+from ndmap.signature import signature
+from ndmap.signature import get
+from ndmap.signature import set
+from ndmap.series import series
+from ndmap.evaluate import evaluate
+from ndmap.evaluate import table
+from ndmap.propagate import identity
+from ndmap.propagate import propagate
 
 
 State       : TypeAlias = Tensor
@@ -429,7 +429,7 @@ class Jet:
         Examples
         --------
         >>> import torch
-        >>> from ndtorch.derivative import derivative
+        >>> from ndmap.derivative import derivative
         >>> x = torch.tensor([0.0, 0.0])
         >>> k = torch.tensor([0.0, 0.0])
         >>> def mapping(x, k):
@@ -500,9 +500,9 @@ class Jet:
         Jet
 
         >>> import torch
-        >>> from ndtorch.util import curry_apply
-        >>> from ndtorch.series import series
-        >>> from ndtorch.propagate import identity
+        >>> from ndmap.util import curry_apply
+        >>> from ndmap.series import series
+        >>> from ndmap.propagate import identity
         >>> x = torch.tensor([0.0, 0.0])
         >>> k = torch.tensor([0.0, 0.0])
         >>> def mapping(x, k):

@@ -1,2 +1,2 @@
-.. automodule:: ndtorch.series
+.. automodule:: ndmap.series
     :members:

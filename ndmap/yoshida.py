@@ -19,8 +19,8 @@ from multimethod import multimethod
 import torch
 from torch import Tensor
 
-from ndtorch.util import first
-from ndtorch.util import last
+from ndmap.util import first
+from ndmap.util import last
 
 
 State       : TypeAlias = Tensor
@@ -289,7 +289,7 @@ def yoshida(n:int,
     >>> torch.allclose(yoshida(3, 3, False, [s6])(x, t), yoshida(0, 3, True, [fn, gn])(x, t))
     True
 
-    >>> from ndtorch.derivative import derivative
+    >>> from ndmap.derivative import derivative
     >>> def fn(x, t, k): q, p = x ; return torch.stack([q, p - t*k*q])
     >>> def gn(x, t, k): q, p = x ; return torch.stack([q + t*p, p])
     >>> t = torch.tensor(0.5, dtype=torch.float64)
@@ -320,9 +320,9 @@ def yoshida(n:int,
        tensor([[-0.4654, -0.0978],
                [-0.7473, -0.4654]], dtype=torch.float64)]]]
 
-    >>> from ndtorch.propagate import identity
-    >>> from ndtorch.propagate import propagate
-    >>> from ndtorch.derivative import derivative
+    >>> from ndmap.propagate import identity
+    >>> from ndmap.propagate import propagate
+    >>> from ndmap.derivative import derivative
     >>> def fn(x, t, k): q, p = x ; return torch.stack([q, p - t*k*q])
     >>> def gn(x, t, k): q, p = x ; return torch.stack([q + t*p, p])
     >>> t = torch.tensor(0.5, dtype=torch.float64)

@@ -1,5 +1,5 @@
 __about__ = """
-ndtorch is a collection of tools for computation of higher order derivatives (including all intermediate derivatives) with some applications in nonlinear dynamics (accelerator physics)
+ndmap is a collection of tools for computation of higher order derivatives (including all intermediate derivatives) with some applications in nonlinear dynamics (accelerator physics)
 
 Compute derivatives of f(x, y, ...) with respect to several tensor arguments x, y, ... and corresponding derivative orders n, m, ...
 Input function f(x, y, ...) is expected to return a tensor or a (nested) list of tensors

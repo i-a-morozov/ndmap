@@ -14,10 +14,10 @@ from typing import Union
 import torch
 from torch import Tensor
 
-from ndtorch.evaluate import evaluate
-from ndtorch.propagate import identity
-from ndtorch.propagate import propagate
-from ndtorch.inverse import inverse
+from ndmap.evaluate import evaluate
+from ndmap.propagate import identity
+from ndmap.propagate import propagate
+from ndmap.inverse import inverse
 
 State       : TypeAlias = Tensor
 Knobs       : TypeAlias = list[Tensor]
@@ -64,9 +64,9 @@ def momenta(order:tuple[int, ...],
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.derivative import derivative
-    >>> from ndtorch.signature import chop
-    >>> from ndtorch.evaluate import evaluate
+    >>> from ndmap.derivative import derivative
+    >>> from ndmap.signature import chop
+    >>> from ndmap.evaluate import evaluate
     >>> def quad(x, w, k, l, n=10):
     ...    (qx, px, qy, py), (w, ), (k, ), l = x, w, k, 0.5*l/n
     ...    for _ in range(n):
@@ -113,9 +113,9 @@ def momenta(order:tuple[int, ...],
             -1.000000000000e-04], dtype=torch.float64)
 
     >>> import torch
-    >>> from ndtorch.derivative import derivative
-    >>> from ndtorch.signature import chop
-    >>> from ndtorch.evaluate import evaluate
+    >>> from ndmap.derivative import derivative
+    >>> from ndmap.signature import chop
+    >>> from ndmap.evaluate import evaluate
     >>> def quad(x, w, k, l, n=10):
     ...    (qx, px, qy, py), (w, ), (k, ), l = x, w, k, 0.5*l/n
     ...    for _ in range(n):

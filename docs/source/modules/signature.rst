@@ -1,2 +1,2 @@
-.. automodule:: ndtorch.signature
+.. automodule:: ndmap.signature
     :members:

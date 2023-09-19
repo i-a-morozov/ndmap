@@ -16,12 +16,12 @@ from multimethod import multimethod
 import torch
 from torch import Tensor
 
-from ndtorch.util import flatten
-from ndtorch.derivative import derivative
-from ndtorch.signature import set
-from ndtorch.signature import get
-from ndtorch.series import series
-from ndtorch.evaluate import evaluate
+from ndmap.util import flatten
+from ndmap.derivative import derivative
+from ndmap.signature import set
+from ndmap.signature import get
+from ndmap.series import series
+from ndmap.evaluate import evaluate
 
 
 State       : TypeAlias = Tensor
@@ -146,8 +146,8 @@ def propagate(dimension:tuple[int, ...],
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.util import flatten
-    >>> from ndtorch.derivative import derivative
+    >>> from ndmap.util import flatten
+    >>> from ndmap.derivative import derivative
     >>> state = torch.tensor([0.0, 0.0])
     >>> knobs = torch.tensor([1.0, 1.0])
     >>> def fn(state, knobs):
@@ -222,9 +222,9 @@ def propagate(dimension:tuple[int, ...],
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.util import flatten
-    >>> from ndtorch.derivative import derivative
-    >>> from ndtorch.series import series
+    >>> from ndmap.util import flatten
+    >>> from ndmap.derivative import derivative
+    >>> from ndmap.series import series
     >>> state = torch.tensor([0.0, 0.0])
     >>> knobs = torch.tensor([1.0, 1.0])
     >>> def fn(state, knobs):
@@ -312,8 +312,8 @@ def propagate(dimension:tuple[int, ...],
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.derivative import derivative
-    >>> from ndtorch.evaluate import compare
+    >>> from ndmap.derivative import derivative
+    >>> from ndmap.evaluate import compare
     >>> def fn(x, l): q, p = x; return torch.stack([q + l*p, p])
     >>> x = torch.tensor([0.0, 0.0], dtype=torch.float64)
     >>> t = derivative(1, fn, x, 0.5)

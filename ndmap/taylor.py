@@ -15,7 +15,7 @@ from math import factorial
 import torch
 from torch import Tensor
 
-from ndtorch.bracket import bracket
+from ndmap.bracket import bracket
 
 
 State       : TypeAlias = Tensor
@@ -77,7 +77,7 @@ def taylor(degree:int,
      tensor([0.1074, 0.0920])]
 
     >>> import torch
-    >>> from ndtorch.derivative import derivative
+    >>> from ndmap.derivative import derivative
     >>> x = torch.tensor([1.0, 1.0])
     >>> l = torch.tensor(0.1)
     >>> def h(x):

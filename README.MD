@@ -1,7 +1,7 @@
-# ndtorch, 2022-2023
+# ndmap, 2022-2023
 
 <p align="center">
-  <img width="100" height="100" src="https://github.com/i-a-morozov/ndtorch/blob/main/docs/pics/logo.svg">
+  <img width="100" height="100" src="https://github.com/i-a-morozov/ndmap/blob/main/docs/pics/logo.svg">
 </p>
 
 Higher order partial derivatives computation with respect to one or several tensor-like variables.
@@ -11,23 +11,23 @@ Parametric fixed point computation.
 # Install & build
 
 ```
-$ pip install git+https://github.com/i-a-morozov/ndtorch.git@main
+$ pip install git+https://github.com/i-a-morozov/ndmap.git@main
 ```
 or
 ```
-$ pip install ndtorch -U
+$ pip install ndmap -U
 ```
 
 # Documentation
 
-[https://i-a-morozov.github.io/ndtorch/](https://i-a-morozov.github.io/ndtorch/)
+[https://i-a-morozov.github.io/ndmap/](https://i-a-morozov.github.io/ndmap/)
 
 # Derivative (composable jacobian)
 
 Compute higher order function (partial) derivatives.
 
 ```python
->>> from ndtorch.derivative import derivative
+>>> from ndmap.derivative import derivative
 >>> def fn(x):
 ...     return 1 + x + x**2 + x**3 + x**4 + x**5
 ... 
@@ -38,7 +38,7 @@ Compute higher order function (partial) derivatives.
 ```
 
 ```python
->>> from ndtorch.derivative import derivative
+>>> from ndmap.derivative import derivative
 >>> def fn(x):
 ...     x1, x2 = x
 ...     return x1**2 + x1*x2 + x2**2
@@ -51,7 +51,7 @@ tensor([[2., 1.],
 ```
 
 ```python
->>> from ndtorch.derivative import derivative
+>>> from ndmap.derivative import derivative
 >>> def fn(x, y):
 ...     x1, x2 = x
 ...     return x1**2*(1 + y) + x2**2*(1 - y)
@@ -70,7 +70,7 @@ tensor([[2., 1.],
 Compute higher order function (partial) derivatives.
 
 ```python
->>> from ndtorch.gradient import series
+>>> from ndmap.gradient import series
 >>> def fn(x):
 ...     return 1 + x + x**2 + x**3 + x**4 + x**5
 ... 
@@ -86,7 +86,7 @@ Compute higher order function (partial) derivatives.
 ```
 
 ```python
->>> from ndtorch.gradient import series
+>>> from ndmap.gradient import series
 >>> def fn(x):
 ...     x1, x2 = x
 ...     return x1**2 + x1*x2 + x2**2
@@ -99,7 +99,7 @@ Compute higher order function (partial) derivatives.
 ```
 
 ```python
->>> from ndtorch.gradient import series
+>>> from ndmap.gradient import series
 >>> def fn(x, y):
 ...     x1, x2 = x
 ...     y1, = y
@@ -126,8 +126,8 @@ Compute higher order function (partial) derivatives.
 # Desription
 
 ```python
->>> import ndtorch
->>> ndtorch.__about__
+>>> import ndmap
+>>> ndmap.__about__
 ```
 
 # Animations
@@ -135,17 +135,17 @@ Compute higher order function (partial) derivatives.
 Stable and unstable invariant manifolds approximation
 
 <p align="center">
-  <img width="576" height="576" src="https://github.com/i-a-morozov/ndtorch/blob/main/docs/pics/manifold.gif">
+  <img width="576" height="576" src="https://github.com/i-a-morozov/ndmap/blob/main/docs/pics/manifold.gif">
 </p>
 
 Collision of fixed points
 
 <p align="center">
-  <img width="576" height="576" src="https://github.com/i-a-morozov/ndtorch/blob/main/docs/pics/collision.gif">
+  <img width="576" height="576" src="https://github.com/i-a-morozov/ndmap/blob/main/docs/pics/collision.gif">
 </p>
 
 Reduce real part of a hyperbolic fixed point
 
 <p align="center">
-  <img width="576" height="576" src="https://github.com/i-a-morozov/ndtorch/blob/main/docs/pics/change.gif">
+  <img width="576" height="576" src="https://github.com/i-a-morozov/ndmap/blob/main/docs/pics/change.gif">
 </p>

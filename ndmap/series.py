@@ -19,11 +19,11 @@ from multimethod import multimethod
 import torch
 from torch import Tensor
 
-from ndtorch.util import flatten
-from ndtorch.util import tolist
-from ndtorch.derivative import derivative
-from ndtorch.signature import signature
-from ndtorch.index import index
+from ndmap.util import flatten
+from ndmap.util import tolist
+from ndmap.derivative import derivative
+from ndmap.signature import signature
+from ndmap.index import index
 
 
 State       : TypeAlias = Tensor
@@ -61,7 +61,7 @@ def series(dimension:tuple[int, ...],
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.derivative import derivative
+    >>> from ndmap.derivative import derivative
     >>> def fn(x, y):
     ...    x1, x2 = x
     ...    y1, y2 = y
@@ -130,7 +130,7 @@ def series(index:tuple[int, ...],
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.util import curry_apply
+    >>> from ndmap.util import curry_apply
     >>> def fn(x, y):
     ...    x1, x2 = x
     ...    y1, y2 = y
@@ -192,7 +192,7 @@ def series(index:list[tuple[int, ...]],
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.util import curry_apply
+    >>> from ndmap.util import curry_apply
     >>> def fn(x, y):
     ...    x1, x2 = x
     ...    y1, y2 = y
@@ -256,7 +256,7 @@ def merge(probe:Series,
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.derivative import derivative
+    >>> from ndmap.derivative import derivative
     >>> def fn(x, y):
     ...    x1, x2 = x
     ...    y1, y2 = y
@@ -305,7 +305,7 @@ def clean(probe:Series, *,
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.derivative import derivative
+    >>> from ndmap.derivative import derivative
     >>> def fn(x, y):
     ...    x1, x2 = x
     ...    y1, y2 = y
@@ -343,7 +343,7 @@ def fetch(probe:Series,
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.derivative import derivative
+    >>> from ndmap.derivative import derivative
     >>> def fn(x, y):
     ...    x1, x2 = x
     ...    y1, y2 = y
@@ -377,7 +377,7 @@ def split(probe:Series) -> list[Series]:
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.derivative import derivative
+    >>> from ndmap.derivative import derivative
     >>> def fn(x, y):
     ...    x1, x2 = x
     ...    y1, y2 = y

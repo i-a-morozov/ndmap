@@ -14,14 +14,14 @@ from typing import Union
 import torch
 from torch import Tensor
 
-from ndtorch.derivative import derivative
-from ndtorch.signature import signature
-from ndtorch.signature import get
-from ndtorch.signature import set
-from ndtorch.index import reduce
-from ndtorch.index import build
-from ndtorch.propagate import identity
-from ndtorch.propagate import propagate
+from ndmap.derivative import derivative
+from ndmap.signature import signature
+from ndmap.signature import get
+from ndmap.signature import set
+from ndmap.index import reduce
+from ndmap.index import build
+from ndmap.propagate import identity
+from ndmap.propagate import propagate
 
 
 State       : TypeAlias = Tensor
@@ -160,7 +160,7 @@ def fixed_point(limit:int,
     --------
     >>> from math import pi
     >>> import torch
-    >>> from ndtorch.util import nest
+    >>> from ndmap.util import nest
     >>> mu = 2.0*pi*torch.tensor(1/3 - 0.01)
     >>> kq, ks, ko = torch.tensor([0.0, 0.25, -0.25])
     >>> def mapping(x):
@@ -233,7 +233,7 @@ def check_point(power:int,
     --------
     >>> from math import pi
     >>> import torch
-    >>> from ndtorch.util import nest
+    >>> from ndmap.util import nest
     >>> mu = 2.0*pi*torch.tensor(1/3 - 0.01)
     >>> kq, ks, ko = torch.tensor([0.0, 0.25, -0.25])
     >>> def mapping(x):
@@ -304,7 +304,7 @@ def clean_point(power:int,
     --------
     >>> from math import pi
     >>> import torch
-    >>> from ndtorch.util import nest
+    >>> from ndmap.util import nest
     >>> mu = 2.0*pi*torch.tensor(1/3 - 0.01)
     >>> kq, ks, ko = torch.tensor([0.0, 0.25, -0.25])
     >>> def mapping(x):
@@ -373,7 +373,7 @@ def chain_point(power:int,
     --------
     >>> from math import pi
     >>> import torch
-    >>> from ndtorch.util import nest
+    >>> from ndmap.util import nest
     >>> mu = 2.0*pi*torch.tensor(1/3 - 0.01)
     >>> kq, ks, ko = torch.tensor([0.0, 0.25, -0.25])
     >>> def mapping(x):
@@ -428,7 +428,7 @@ def matrix(power:int,
     --------
     >>> from math import pi
     >>> import torch
-    >>> from ndtorch.util import nest
+    >>> from ndmap.util import nest
     >>> mu = 2.0*pi*torch.tensor(1/3 - 0.01)
     >>> kq, ks, ko = torch.tensor([0.0, 0.25, -0.25])
     >>> def mapping(x):
@@ -490,10 +490,10 @@ def parametric_fixed_point(order:tuple[int, ...],
     --------
     >>> from math import pi
     >>> import torch
-    >>> from ndtorch.util import flatten
-    >>> from ndtorch.util import nest
-    >>> from ndtorch.evaluate import evaluate
-    >>> from ndtorch.propagate import propagate
+    >>> from ndmap.util import flatten
+    >>> from ndmap.util import nest
+    >>> from ndmap.evaluate import evaluate
+    >>> from ndmap.propagate import propagate
     >>> mu = 2.0*pi*torch.tensor(1/5 - 0.01, dtype=torch.float64)
     >>> k = torch.tensor([0.25, -0.25], dtype=torch.float64)
     >>> def mapping(x, k):

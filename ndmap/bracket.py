@@ -16,9 +16,9 @@ from multimethod import multimethod
 import torch
 from torch import Tensor
 
-from ndtorch.util import symplectic
-from ndtorch.derivative import derivative
-from ndtorch.evaluate import evaluate
+from ndmap.util import symplectic
+from ndmap.derivative import derivative
+from ndmap.evaluate import evaluate
 
 
 State       : TypeAlias = Tensor
@@ -76,7 +76,7 @@ def bracket(f:Union[Observable, Mapping],
     tensor([ 1., -1.,  1., -1.])
 
     >>> import torch
-    >>> from ndtorch.derivative import derivative
+    >>> from ndmap.derivative import derivative
     >>> def f(state): q, p = state; return -p**2/2
     >>> def g(state): return state
     >>> state = torch.tensor([0.0, 0.0])
@@ -133,8 +133,8 @@ def bracket(tf:Union[Table, Series],
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.propagate import identity
-    >>> from ndtorch.propagate import propagate
+    >>> from ndmap.propagate import identity
+    >>> from ndmap.propagate import propagate
     >>> def f(x):
     ...     x1, x2 = x
     ...     return x1**2
@@ -151,9 +151,9 @@ def bracket(tf:Union[Table, Series],
     True
 
     >>> import torch
-    >>> from ndtorch.util import curry_apply
-    >>> from ndtorch.propagate import identity
-    >>> from ndtorch.propagate import propagate
+    >>> from ndmap.util import curry_apply
+    >>> from ndmap.propagate import identity
+    >>> from ndmap.propagate import propagate
     >>> def f(x):
     ...     x1, x2 = x
     ...     return x1**2

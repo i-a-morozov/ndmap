@@ -19,10 +19,10 @@ from numpy import ndarray as Array
 import torch
 from torch import Tensor
 
-from ndtorch.util import tolist
-from ndtorch.signature import signature
-from ndtorch.signature import get
-from ndtorch.signature import set
+from ndmap.util import tolist
+from ndmap.signature import signature
+from ndmap.signature import get
+from ndmap.signature import set
 
 State       : TypeAlias = Tensor
 Knobs       : TypeAlias = list[Tensor]
@@ -161,8 +161,8 @@ def reduce(dimension:tuple[int, ...],
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.derivative import derivative
-    >>> from ndtorch.signature import get
+    >>> from ndmap.derivative import derivative
+    >>> from ndmap.signature import get
     >>> def fn(x, y): x1, x2 = x; y1, = y; return torch.stack([x1*y1 + x2, x2**2]).sum()
     >>> x = torch.tensor([0.0, 0.0])
     >>> y = torch.tensor([0.0])
@@ -183,8 +183,8 @@ def reduce(dimension:tuple[int, ...],
     {(2, 0, 0): tensor(0.), (1, 1, 0): tensor(0.), (0, 2, 0): tensor(2.)}
 
     >>> import torch
-    >>> from ndtorch.derivative import derivative
-    >>> from ndtorch.signature import get
+    >>> from ndmap.derivative import derivative
+    >>> from ndmap.signature import get
     >>> def fn(x, y): x1, x2 = x; y1, = y; return torch.stack([x1*y1 + x2, x2**2])
     >>> x = torch.tensor([0.0, 0.0])
     >>> y = torch.tensor([0.0])
@@ -244,8 +244,8 @@ def reduce(dimension:tuple[int, ...],
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.derivative import derivative
-    >>> from ndtorch.signature import get
+    >>> from ndmap.derivative import derivative
+    >>> from ndmap.signature import get
     >>> def fn(x, y): x1, x2 = x; y1, = y; return torch.stack([x1*y1 + x2, x2**2]).sum()
     >>> x = torch.tensor([0.0, 0.0])
     >>> y = torch.tensor([0.0])
@@ -287,7 +287,7 @@ def reduce(dimension:tuple[int, ...],
     (0, 2, 1): tensor(0.)}
 
     >>> import torch
-    >>> from ndtorch.derivative import derivative
+    >>> from ndmap.derivative import derivative
     >>> def fn(x, y): x1, x2 = x; y1, = y; return torch.stack([x1*y1 + x2, x2**2])
     >>> x = torch.tensor([0.0, 0.0])
     >>> y = torch.tensor([0.0])
@@ -354,8 +354,8 @@ def build(sequence:tuple,
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.derivative import derivative
-    >>> from ndtorch.signature import get
+    >>> from ndmap.derivative import derivative
+    >>> from ndmap.signature import get
     >>> def fn(x, y): x1, x2 = x; y1, = y; return torch.stack([x1*y1 + x2, x2**2]).sum()
     >>> x = torch.tensor([0.0, 0.0])
     >>> y = torch.tensor([0.0])
@@ -368,8 +368,8 @@ def build(sequence:tuple,
             [0., 2.]])
 
     >>> import torch
-    >>> from ndtorch.derivative import derivative
-    >>> from ndtorch.signature import get
+    >>> from ndmap.derivative import derivative
+    >>> from ndmap.signature import get
     >>> def fn(x, y): x1, x2 = x; y1, = y; return torch.stack([x1*y1 + x2, x2**2])
     >>> x = torch.tensor([0.0, 0.0])
     >>> y = torch.tensor([0.0])
@@ -420,7 +420,7 @@ def build(table:Table,
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.derivative import derivative
+    >>> from ndmap.derivative import derivative
     >>> def fn(x, y): x1, x2 = x; y1, = y; return torch.stack([x1*y1 + x2, x2**2]).sum()
     >>> x = torch.tensor([0.0, 0.0])
     >>> y = torch.tensor([0.0])
@@ -438,8 +438,8 @@ def build(table:Table,
                 [0., 0.]]]])]]
 
     >>> import torch
-    >>> from ndtorch.util import equal
-    >>> from ndtorch.derivative import derivative
+    >>> from ndmap.util import equal
+    >>> from ndmap.derivative import derivative
     >>> def fn(x, y): x1, x2 = x; y1, = y; return torch.stack([x1*y1 + x2, x2**2])
     >>> x = torch.tensor([0.0, 0.0])
     >>> y = torch.tensor([0.0])

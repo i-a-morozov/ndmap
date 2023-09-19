@@ -1,2 +1,2 @@
-.. automodule:: ndtorch.propagate
+.. automodule:: ndmap.propagate
     :members:

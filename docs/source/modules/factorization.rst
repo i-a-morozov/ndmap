@@ -1,2 +1,2 @@
-.. automodule:: ndtorch.factorization
+.. automodule:: ndmap.factorization
     :members:

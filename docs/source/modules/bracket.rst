@@ -1,2 +1,2 @@
-.. automodule:: ndtorch.bracket
+.. automodule:: ndmap.bracket
     :members:

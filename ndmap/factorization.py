@@ -15,18 +15,18 @@ from typing import Union
 import torch
 from torch import Tensor
 
-from ndtorch.util import first
-from ndtorch.derivative import derivative
-from ndtorch.signature import signature
-from ndtorch.signature import get
-from ndtorch.signature import set
-from ndtorch.signature import chop
-from ndtorch.index import reduce
-from ndtorch.index import build
-from ndtorch.evaluate import evaluate
-from ndtorch.propagate import propagate
-from ndtorch.inverse import inverse
-from ndtorch.taylor import taylor
+from ndmap.util import first
+from ndmap.derivative import derivative
+from ndmap.signature import signature
+from ndmap.signature import get
+from ndmap.signature import set
+from ndmap.signature import chop
+from ndmap.index import reduce
+from ndmap.index import build
+from ndmap.evaluate import evaluate
+from ndmap.propagate import propagate
+from ndmap.inverse import inverse
+from ndmap.taylor import taylor
 
 
 State       : TypeAlias = Tensor
@@ -88,11 +88,11 @@ def hamiltonian(order:tuple[int, ...],
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.derivative import derivative
-    >>> from ndtorch.signature import chop
-    >>> from ndtorch.series import series
-    >>> from ndtorch.series import clean
-    >>> from ndtorch.taylor import taylor
+    >>> from ndmap.derivative import derivative
+    >>> from ndmap.signature import chop
+    >>> from ndmap.series import series
+    >>> from ndmap.series import clean
+    >>> from ndmap.taylor import taylor
     >>> def h(x):
     ...     q, p = x
     ...     h1 = q**3 + q**2*p + q*p**2 + p**3
@@ -114,11 +114,11 @@ def hamiltonian(order:tuple[int, ...],
     (0, 4): tensor([1.], dtype=torch.float64)}
 
     >>> import torch
-    >>> from ndtorch.derivative import derivative
-    >>> from ndtorch.signature import chop
-    >>> from ndtorch.series import series
-    >>> from ndtorch.series import clean
-    >>> from ndtorch.taylor import taylor
+    >>> from ndmap.derivative import derivative
+    >>> from ndmap.signature import chop
+    >>> from ndmap.series import series
+    >>> from ndmap.series import clean
+    >>> from ndmap.taylor import taylor
     >>> def h(x, k):
     ...     q, p = x
     ...     a, b = k
@@ -146,15 +146,15 @@ def hamiltonian(order:tuple[int, ...],
      (0, 4, 0, 1): tensor([-1.], dtype=torch.float64)}
 
     >>> import torch
-    >>> from ndtorch.derivative import derivative
-    >>> from ndtorch.signature import chop
-    >>> from ndtorch.evaluate import evaluate
-    >>> from ndtorch.propagate import identity
-    >>> from ndtorch.propagate import propagate
-    >>> from ndtorch.series import series
-    >>> from ndtorch.series import clean
-    >>> from ndtorch.taylor import taylor
-    >>> from ndtorch.inverse import inverse
+    >>> from ndmap.derivative import derivative
+    >>> from ndmap.signature import chop
+    >>> from ndmap.evaluate import evaluate
+    >>> from ndmap.propagate import identity
+    >>> from ndmap.propagate import propagate
+    >>> from ndmap.series import series
+    >>> from ndmap.series import clean
+    >>> from ndmap.taylor import taylor
+    >>> from ndmap.inverse import inverse
     >>> def fn(x, k, l, n=1):
     ...     (qx, px, qy, py), (k, ), l = x, k, l/(2.0*n)
     ...     for _ in range(n):
@@ -310,13 +310,13 @@ def solution(order:tuple[int],
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.derivative import derivative
-    >>> from ndtorch.evaluate import evaluate
-    >>> from ndtorch.evaluate import compare
-    >>> from ndtorch.propagate import identity
-    >>> from ndtorch.propagate import propagate
-    >>> from ndtorch.inverse import inverse
-    >>> from ndtorch.factorization import hamiltonian
+    >>> from ndmap.derivative import derivative
+    >>> from ndmap.evaluate import evaluate
+    >>> from ndmap.evaluate import compare
+    >>> from ndmap.propagate import identity
+    >>> from ndmap.propagate import propagate
+    >>> from ndmap.inverse import inverse
+    >>> from ndmap.factorization import hamiltonian
     ... def mapping(x, k, l):
     ...     (qx, px, qy, py), (k, ), l = x, k, l/2
     ...     qx, qy = qx + l*px, qy + l*py
@@ -388,12 +388,12 @@ def hamiltonian_inverse(order:tuple[int, ...],
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.derivative import derivative
-    >>> from ndtorch.evaluate import evaluate
-    >>> from ndtorch.evaluate import compare
-    >>> from ndtorch.propagate import identity
-    >>> from ndtorch.propagate import propagate
-    >>> from ndtorch.inverse import inverse
+    >>> from ndmap.derivative import derivative
+    >>> from ndmap.evaluate import evaluate
+    >>> from ndmap.evaluate import compare
+    >>> from ndmap.propagate import identity
+    >>> from ndmap.propagate import propagate
+    >>> from ndmap.inverse import inverse
     >>> def mapping(x, k, l):
     ...     (qx, px, qy, py), (k, ), l = x, k, l/2
     ...     qx, qy = qx + l*px, qy + l*py
@@ -462,18 +462,18 @@ def factorize(order:tuple[int, ...],
     Examples
     --------
     >>> import torch
-    >>> from ndtorch.derivative import derivative
-    >>> from ndtorch.signature import chop
-    >>> from ndtorch.evaluate import evaluate
-    >>> from ndtorch.evaluate import compare
-    >>> from ndtorch.series import series
-    >>> from ndtorch.series import clean
-    >>> from ndtorch.series import split
-    >>> from ndtorch.propagate import identity
-    >>> from ndtorch.propagate import propagate
-    >>> from ndtorch.bracket import bracket
-    >>> from ndtorch.factorization import hamiltonian
-    >>> from ndtorch.factorization import solution
+    >>> from ndmap.derivative import derivative
+    >>> from ndmap.signature import chop
+    >>> from ndmap.evaluate import evaluate
+    >>> from ndmap.evaluate import compare
+    >>> from ndmap.series import series
+    >>> from ndmap.series import clean
+    >>> from ndmap.series import split
+    >>> from ndmap.propagate import identity
+    >>> from ndmap.propagate import propagate
+    >>> from ndmap.bracket import bracket
+    >>> from ndmap.factorization import hamiltonian
+    >>> from ndmap.factorization import solution
     >>> def h(x, k):
     ...     q, p = x
     ...     a, b = k
@@ -544,18 +544,18 @@ def factorize(order:tuple[int, ...],
      (1, 4, 0, 0): tensor(1., dtype=torch.float64)}
 
     >>> import torch
-    >>> from ndtorch.derivative import derivative
-    >>> from ndtorch.signature import chop
-    >>> from ndtorch.evaluate import evaluate
-    >>> from ndtorch.evaluate import compare
-    >>> from ndtorch.series import series
-    >>> from ndtorch.series import clean
-    >>> from ndtorch.series import split
-    >>> from ndtorch.propagate import identity
-    >>> from ndtorch.propagate import propagate
-    >>> from ndtorch.bracket import bracket
-    >>> from ndtorch.factorization import hamiltonian
-    >>> from ndtorch.factorization import solution
+    >>> from ndmap.derivative import derivative
+    >>> from ndmap.signature import chop
+    >>> from ndmap.evaluate import evaluate
+    >>> from ndmap.evaluate import compare
+    >>> from ndmap.series import series
+    >>> from ndmap.series import clean
+    >>> from ndmap.series import split
+    >>> from ndmap.propagate import identity
+    >>> from ndmap.propagate import propagate
+    >>> from ndmap.bracket import bracket
+    >>> from ndmap.factorization import hamiltonian
+    >>> from ndmap.factorization import solution
     >>> def h(x, k):
     ...     q, p = x
     ...     a, b = k

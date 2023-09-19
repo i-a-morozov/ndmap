@@ -1,2 +1,2 @@
-.. automodule:: ndtorch.gradient
+.. automodule:: ndmap.gradient
     :members:
