@@ -1,2 +1,2 @@
-.. automodule:: ndtorch.pfp
+.. automodule:: ndmap.pfp
     :members:

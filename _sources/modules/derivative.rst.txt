@@ -1,2 +1,2 @@
-.. automodule:: ndtorch.derivative
+.. automodule:: ndmap.derivative
     :members:

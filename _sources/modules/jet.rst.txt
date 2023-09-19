@@ -1,2 +1,2 @@
-.. automodule:: ndtorch.jet
+.. automodule:: ndmap.jet
     :members:

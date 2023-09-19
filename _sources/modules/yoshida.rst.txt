@@ -1,2 +1,2 @@
-.. automodule:: ndtorch.yoshida
+.. automodule:: ndmap.yoshida
     :members:

@@ -1,9 +1,9 @@
-.. ndtorch documentation master file, created by
+.. ndmap documentation master file, created by
    sphinx-quickstart on Mon May 15 15:32:41 2023.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to ndtorch's documentation!
+Welcome to ndmap's documentation!
 ===================================
 
 Higher order partial derivatives computation with respect to one or several tensor-like variables.
@@ -14,7 +14,7 @@ Parametric fixed point computation.
    :caption: Examples:
    :maxdepth: 1
 
-   examples/ndtorch.ipynb
+   examples/ndmap.ipynb
 
 .. toctree::
    :caption: API:

@@ -1,2 +1,2 @@
-.. automodule:: ndtorch.inverse
+.. automodule:: ndmap.inverse
     :members:

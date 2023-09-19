@@ -1,2 +1,2 @@
-.. automodule:: ndtorch.invariant
+.. automodule:: ndmap.invariant
     :members:

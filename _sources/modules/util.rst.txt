@@ -1,2 +1,2 @@
-.. automodule:: ndtorch.util
+.. automodule:: ndmap.util
     :members:
