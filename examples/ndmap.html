@@ -84,7 +84,7 @@
 <li class="toctree-l1"><a class="reference internal" href="#Example-33:-Nonlinear-mapping-approximation-(gradient)">Example-33: Nonlinear mapping approximation (gradient)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#Example-34:-ORM-optics-correction">Example-34: ORM optics correction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#Example-35:-ORM-optics-correction-(training-loop)">Example-35: ORM optics correction (training loop)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#Example-35:-R_{ij}-optics-correction">Example-35: <span class="math notranslate nohighlight">\(R_{ij}\)</span> optics correction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#Example-36:-ORM-optics-correction-(training-loop-+-elementwise-computation)">Example-36: ORM optics correction (training loop + elementwise computation)</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API:</span></p>
 <ul>
@@ -262,9 +262,9 @@
 
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.series</span> <span class="kn">import</span> <span class="n">series</span>
+<span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">ndmap.series</span> <span class="kn">import</span> <span class="n">series</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
@@ -793,15 +793,15 @@ True
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
-<span class="kn">from</span> <span class="nn">ndtorch.signature</span> <span class="kn">import</span> <span class="n">signature</span>
-<span class="kn">from</span> <span class="nn">ndtorch.signature</span> <span class="kn">import</span> <span class="n">get</span>
-<span class="kn">from</span> <span class="nn">ndtorch.index</span> <span class="kn">import</span> <span class="n">index</span>
-<span class="kn">from</span> <span class="nn">ndtorch.index</span> <span class="kn">import</span> <span class="n">reduce</span>
-<span class="kn">from</span> <span class="nn">ndtorch.index</span> <span class="kn">import</span> <span class="n">build</span>
-<span class="kn">from</span> <span class="nn">ndtorch.series</span> <span class="kn">import</span> <span class="n">series</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
+<span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">ndmap.signature</span> <span class="kn">import</span> <span class="n">signature</span>
+<span class="kn">from</span> <span class="nn">ndmap.signature</span> <span class="kn">import</span> <span class="n">get</span>
+<span class="kn">from</span> <span class="nn">ndmap.index</span> <span class="kn">import</span> <span class="n">index</span>
+<span class="kn">from</span> <span class="nn">ndmap.index</span> <span class="kn">import</span> <span class="n">reduce</span>
+<span class="kn">from</span> <span class="nn">ndmap.index</span> <span class="kn">import</span> <span class="n">build</span>
+<span class="kn">from</span> <span class="nn">ndmap.series</span> <span class="kn">import</span> <span class="n">series</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
@@ -1235,12 +1235,12 @@ True
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
-<span class="kn">from</span> <span class="nn">ndtorch.series</span> <span class="kn">import</span> <span class="n">series</span>
-<span class="kn">from</span> <span class="nn">ndtorch.series</span> <span class="kn">import</span> <span class="n">clean</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
+<span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">ndmap.series</span> <span class="kn">import</span> <span class="n">series</span>
+<span class="kn">from</span> <span class="nn">ndmap.series</span> <span class="kn">import</span> <span class="n">clean</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
@@ -1529,9 +1529,9 @@ True
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.jet</span> <span class="kn">import</span> <span class="n">Jet</span>
+<span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">ndmap.jet</span> <span class="kn">import</span> <span class="n">Jet</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
@@ -1665,10 +1665,10 @@ True
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
-<span class="kn">from</span> <span class="nn">ndtorch.series</span> <span class="kn">import</span> <span class="n">series</span>
-<span class="kn">from</span> <span class="nn">ndtorch.series</span> <span class="kn">import</span> <span class="n">clean</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">ndmap.series</span> <span class="kn">import</span> <span class="n">series</span>
+<span class="kn">from</span> <span class="nn">ndmap.series</span> <span class="kn">import</span> <span class="n">clean</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
@@ -1902,10 +1902,10 @@ True
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">clean_point</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">chain_point</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">matrix</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">clean_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">chain_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">matrix</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
@@ -2165,14 +2165,14 @@ tensor([-1.110223024625e-16,  0.000000000000e+00], dtype=torch.float64)
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.util</span> <span class="kn">import</span> <span class="n">flatten</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">clean_point</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">chain_point</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">matrix</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.util</span> <span class="kn">import</span> <span class="n">flatten</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">clean_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">chain_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">matrix</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
@@ -2383,13 +2383,13 @@ True
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">clean_point</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">chain_point</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">matrix</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">clean_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">chain_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">matrix</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
@@ -2690,17 +2690,17 @@ True
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.util</span> <span class="kn">import</span> <span class="n">nest</span>
-<span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">clean_point</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">chain_point</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">matrix</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.util</span> <span class="kn">import</span> <span class="n">nest</span>
+<span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">clean_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">chain_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">matrix</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
@@ -3121,7 +3121,7 @@ tensor([-1.974190541982e-01, -4.137846718749e-01, -5.970747283789e-01, -7.018818
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
@@ -3381,14 +3381,14 @@ True
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.signature</span> <span class="kn">import</span> <span class="n">chop</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
-<span class="kn">from</span> <span class="nn">ndtorch.series</span> <span class="kn">import</span> <span class="n">series</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.signature</span> <span class="kn">import</span> <span class="n">chop</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
+<span class="kn">from</span> <span class="nn">ndmap.series</span> <span class="kn">import</span> <span class="n">series</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
@@ -3704,14 +3704,14 @@ True
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
-<span class="kn">from</span> <span class="nn">ndtorch.signature</span> <span class="kn">import</span> <span class="n">chop</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">ndmap.signature</span> <span class="kn">import</span> <span class="n">chop</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
@@ -4014,14 +4014,14 @@ tensor([1.254045e-03, 0.000000e+00, 5.924960e-03, 0.000000e+00], dtype=torch.flo
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
-<span class="kn">from</span> <span class="nn">ndtorch.signature</span> <span class="kn">import</span> <span class="n">chop</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">ndmap.signature</span> <span class="kn">import</span> <span class="n">chop</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
@@ -4288,14 +4288,14 @@ tensor([6.769223e-07, 3.104300e-08, 1.819394e-06, 2.833964e-08], dtype=torch.flo
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
-<span class="kn">from</span> <span class="nn">ndtorch.signature</span> <span class="kn">import</span> <span class="n">chop</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">ndmap.signature</span> <span class="kn">import</span> <span class="n">chop</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
@@ -4646,15 +4646,15 @@ tensor([-1.070014e-18,  3.763685e-18, -1.733072e-17, -1.661201e-17], dtype=torch
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
-<span class="kn">from</span> <span class="nn">ndtorch.signature</span> <span class="kn">import</span> <span class="n">chop</span>
-<span class="kn">from</span> <span class="nn">ndtorch.series</span> <span class="kn">import</span> <span class="n">series</span>
-<span class="kn">from</span> <span class="nn">ndtorch.series</span> <span class="kn">import</span> <span class="n">clean</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">ndmap.signature</span> <span class="kn">import</span> <span class="n">chop</span>
+<span class="kn">from</span> <span class="nn">ndmap.series</span> <span class="kn">import</span> <span class="n">series</span>
+<span class="kn">from</span> <span class="nn">ndmap.series</span> <span class="kn">import</span> <span class="n">clean</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
 
 <span class="kn">from</span> <span class="nn">twiss.wolski</span> <span class="kn">import</span> <span class="n">twiss</span>
 
@@ -5092,15 +5092,15 @@ tensor([1.000000e+00, 1.000000e+00], dtype=torch.float64)
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
-<span class="kn">from</span> <span class="nn">ndtorch.signature</span> <span class="kn">import</span> <span class="n">chop</span>
-<span class="kn">from</span> <span class="nn">ndtorch.series</span> <span class="kn">import</span> <span class="n">series</span>
-<span class="kn">from</span> <span class="nn">ndtorch.series</span> <span class="kn">import</span> <span class="n">clean</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">ndmap.signature</span> <span class="kn">import</span> <span class="n">chop</span>
+<span class="kn">from</span> <span class="nn">ndmap.series</span> <span class="kn">import</span> <span class="n">series</span>
+<span class="kn">from</span> <span class="nn">ndmap.series</span> <span class="kn">import</span> <span class="n">clean</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
 
 <span class="kn">from</span> <span class="nn">twiss.wolski</span> <span class="kn">import</span> <span class="n">twiss</span>
 
@@ -5428,15 +5428,15 @@ tensor([2.627666e-01, 1.199040e-01], dtype=torch.float64)
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
-<span class="kn">from</span> <span class="nn">ndtorch.signature</span> <span class="kn">import</span> <span class="n">chop</span>
-<span class="kn">from</span> <span class="nn">ndtorch.series</span> <span class="kn">import</span> <span class="n">series</span>
-<span class="kn">from</span> <span class="nn">ndtorch.series</span> <span class="kn">import</span> <span class="n">clean</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">ndmap.signature</span> <span class="kn">import</span> <span class="n">chop</span>
+<span class="kn">from</span> <span class="nn">ndmap.series</span> <span class="kn">import</span> <span class="n">series</span>
+<span class="kn">from</span> <span class="nn">ndmap.series</span> <span class="kn">import</span> <span class="n">clean</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
 
 <span class="kn">from</span> <span class="nn">twiss.wolski</span> <span class="kn">import</span> <span class="n">twiss</span>
 
@@ -5787,15 +5787,15 @@ tensor([1.973939e-03, 4.063140e-03], dtype=torch.float64)
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
-<span class="kn">from</span> <span class="nn">ndtorch.signature</span> <span class="kn">import</span> <span class="n">chop</span>
-<span class="kn">from</span> <span class="nn">ndtorch.series</span> <span class="kn">import</span> <span class="n">series</span>
-<span class="kn">from</span> <span class="nn">ndtorch.series</span> <span class="kn">import</span> <span class="n">clean</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">ndmap.signature</span> <span class="kn">import</span> <span class="n">chop</span>
+<span class="kn">from</span> <span class="nn">ndmap.series</span> <span class="kn">import</span> <span class="n">series</span>
+<span class="kn">from</span> <span class="nn">ndmap.series</span> <span class="kn">import</span> <span class="n">clean</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
 
 <span class="kn">from</span> <span class="nn">twiss.wolski</span> <span class="kn">import</span> <span class="n">twiss</span>
 <span class="kn">from</span> <span class="nn">twiss.wolski</span> <span class="kn">import</span> <span class="n">propagate</span> <span class="k">as</span> <span class="n">propagate_twiss</span>
@@ -6261,15 +6261,15 @@ tensor(3.559e-10, dtype=torch.float64)
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
-<span class="kn">from</span> <span class="nn">ndtorch.signature</span> <span class="kn">import</span> <span class="n">chop</span>
-<span class="kn">from</span> <span class="nn">ndtorch.series</span> <span class="kn">import</span> <span class="n">series</span>
-<span class="kn">from</span> <span class="nn">ndtorch.series</span> <span class="kn">import</span> <span class="n">clean</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">ndmap.signature</span> <span class="kn">import</span> <span class="n">chop</span>
+<span class="kn">from</span> <span class="nn">ndmap.series</span> <span class="kn">import</span> <span class="n">series</span>
+<span class="kn">from</span> <span class="nn">ndmap.series</span> <span class="kn">import</span> <span class="n">clean</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
 
 <span class="kn">from</span> <span class="nn">twiss.wolski</span> <span class="kn">import</span> <span class="n">twiss</span>
 <span class="kn">from</span> <span class="nn">twiss.wolski</span> <span class="kn">import</span> <span class="n">propagate</span> <span class="k">as</span> <span class="n">propagate_twiss</span>
@@ -6733,10 +6733,10 @@ tensor(2.344e-15, dtype=torch.float64)
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.bracket</span> <span class="kn">import</span> <span class="n">bracket</span>
+<span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
+<span class="kn">from</span> <span class="nn">ndmap.bracket</span> <span class="kn">import</span> <span class="n">bracket</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
@@ -6918,12 +6918,12 @@ tensor([2.000e+00, 0.000e+00], dtype=torch.float64)
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
-<span class="kn">from</span> <span class="nn">ndtorch.signature</span> <span class="kn">import</span> <span class="n">chop</span>
-<span class="kn">from</span> <span class="nn">ndtorch.series</span> <span class="kn">import</span> <span class="n">series</span>
-<span class="kn">from</span> <span class="nn">ndtorch.series</span> <span class="kn">import</span> <span class="n">clean</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.taylor</span> <span class="kn">import</span> <span class="n">taylor</span>
+<span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">ndmap.signature</span> <span class="kn">import</span> <span class="n">chop</span>
+<span class="kn">from</span> <span class="nn">ndmap.series</span> <span class="kn">import</span> <span class="n">series</span>
+<span class="kn">from</span> <span class="nn">ndmap.series</span> <span class="kn">import</span> <span class="n">clean</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">ndmap.taylor</span> <span class="kn">import</span> <span class="n">taylor</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
@@ -7153,14 +7153,14 @@ tensor([4.999748e-01, -3.787395e-03])
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.util</span> <span class="kn">import</span> <span class="n">first</span>
-<span class="kn">from</span> <span class="nn">ndtorch.util</span> <span class="kn">import</span> <span class="n">nest</span>
-<span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.yoshida</span> <span class="kn">import</span> <span class="n">coefficients</span>
-<span class="kn">from</span> <span class="nn">ndtorch.yoshida</span> <span class="kn">import</span> <span class="n">yoshida</span>
+<span class="kn">from</span> <span class="nn">ndmap.util</span> <span class="kn">import</span> <span class="n">first</span>
+<span class="kn">from</span> <span class="nn">ndmap.util</span> <span class="kn">import</span> <span class="n">nest</span>
+<span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
+<span class="kn">from</span> <span class="nn">ndmap.yoshida</span> <span class="kn">import</span> <span class="n">coefficients</span>
+<span class="kn">from</span> <span class="nn">ndmap.yoshida</span> <span class="kn">import</span> <span class="n">yoshida</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
@@ -7723,12 +7723,12 @@ tensor([1.988014274981e-01, -2.394392236666e-02], dtype=torch.float64)
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
-<span class="kn">from</span> <span class="nn">ndtorch.series</span> <span class="kn">import</span> <span class="n">series</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.invariant</span> <span class="kn">import</span> <span class="n">invariant</span>
+<span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">ndmap.series</span> <span class="kn">import</span> <span class="n">series</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
+<span class="kn">from</span> <span class="nn">ndmap.invariant</span> <span class="kn">import</span> <span class="n">invariant</span>
 
 <span class="kn">from</span> <span class="nn">twiss.wolski</span> <span class="kn">import</span> <span class="n">twiss</span>
 
@@ -8084,19 +8084,19 @@ tensor(3.553736e-09, dtype=torch.float64)
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.util</span> <span class="kn">import</span> <span class="n">first</span>
-<span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
-<span class="kn">from</span> <span class="nn">ndtorch.signature</span> <span class="kn">import</span> <span class="n">chop</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
-<span class="kn">from</span> <span class="nn">ndtorch.series</span> <span class="kn">import</span> <span class="n">series</span>
-<span class="kn">from</span> <span class="nn">ndtorch.series</span> <span class="kn">import</span> <span class="n">clean</span>
-<span class="kn">from</span> <span class="nn">ndtorch.series</span> <span class="kn">import</span> <span class="n">split</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
-<span class="kn">from</span> <span class="nn">ndtorch.invariant</span> <span class="kn">import</span> <span class="n">invariant</span>
+<span class="kn">from</span> <span class="nn">ndmap.util</span> <span class="kn">import</span> <span class="n">first</span>
+<span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">ndmap.signature</span> <span class="kn">import</span> <span class="n">chop</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
+<span class="kn">from</span> <span class="nn">ndmap.series</span> <span class="kn">import</span> <span class="n">series</span>
+<span class="kn">from</span> <span class="nn">ndmap.series</span> <span class="kn">import</span> <span class="n">clean</span>
+<span class="kn">from</span> <span class="nn">ndmap.series</span> <span class="kn">import</span> <span class="n">split</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.invariant</span> <span class="kn">import</span> <span class="n">invariant</span>
 
 <span class="kn">from</span> <span class="nn">twiss.wolski</span> <span class="kn">import</span> <span class="n">twiss</span>
 
@@ -8531,11 +8531,11 @@ True
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
+<span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
@@ -8781,14 +8781,14 @@ True
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.util</span> <span class="kn">import</span> <span class="n">first</span>
-<span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.util</span> <span class="kn">import</span> <span class="n">first</span>
+<span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
 
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 
@@ -9137,13 +9137,13 @@ True
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
-<span class="kn">from</span> <span class="nn">ndtorch.signature</span> <span class="kn">import</span> <span class="n">chop</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.inverse</span> <span class="kn">import</span> <span class="n">inverse</span>
+<span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">ndmap.signature</span> <span class="kn">import</span> <span class="n">chop</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
+<span class="kn">from</span> <span class="nn">ndmap.inverse</span> <span class="kn">import</span> <span class="n">inverse</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
@@ -9327,16 +9327,16 @@ tensor([0., 0., 0., 0.], dtype=torch.float64)
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.util</span> <span class="kn">import</span> <span class="n">first</span>
-<span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
-<span class="kn">from</span> <span class="nn">ndtorch.signature</span> <span class="kn">import</span> <span class="n">chop</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
-<span class="kn">from</span> <span class="nn">ndtorch.inverse</span> <span class="kn">import</span> <span class="n">inverse</span>
+<span class="kn">from</span> <span class="nn">ndmap.util</span> <span class="kn">import</span> <span class="n">first</span>
+<span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">ndmap.signature</span> <span class="kn">import</span> <span class="n">chop</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.inverse</span> <span class="kn">import</span> <span class="n">inverse</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
@@ -9609,16 +9609,16 @@ True
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.util</span> <span class="kn">import</span> <span class="n">first</span>
-<span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
-<span class="kn">from</span> <span class="nn">ndtorch.signature</span> <span class="kn">import</span> <span class="n">chop</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
-<span class="kn">from</span> <span class="nn">ndtorch.momenta</span> <span class="kn">import</span> <span class="n">momenta</span>
+<span class="kn">from</span> <span class="nn">ndmap.util</span> <span class="kn">import</span> <span class="n">first</span>
+<span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">ndmap.signature</span> <span class="kn">import</span> <span class="n">chop</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.momenta</span> <span class="kn">import</span> <span class="n">momenta</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
@@ -9941,16 +9941,16 @@ tensor([-2.360460892419e-05, -6.800430928312e-05,  9.999999996933e-05,
 
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
-<span class="kn">from</span> <span class="nn">ndtorch.signature</span> <span class="kn">import</span> <span class="n">chop</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.series</span> <span class="kn">import</span> <span class="n">series</span>
-<span class="kn">from</span> <span class="nn">ndtorch.series</span> <span class="kn">import</span> <span class="n">clean</span>
-<span class="kn">from</span> <span class="nn">ndtorch.taylor</span> <span class="kn">import</span> <span class="n">taylor</span>
-<span class="kn">from</span> <span class="nn">ndtorch.inverse</span> <span class="kn">import</span> <span class="n">inverse</span>
-<span class="kn">from</span> <span class="nn">ndtorch.factorization</span> <span class="kn">import</span> <span class="n">hamiltonian</span>
+<span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">ndmap.signature</span> <span class="kn">import</span> <span class="n">chop</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
+<span class="kn">from</span> <span class="nn">ndmap.series</span> <span class="kn">import</span> <span class="n">series</span>
+<span class="kn">from</span> <span class="nn">ndmap.series</span> <span class="kn">import</span> <span class="n">clean</span>
+<span class="kn">from</span> <span class="nn">ndmap.taylor</span> <span class="kn">import</span> <span class="n">taylor</span>
+<span class="kn">from</span> <span class="nn">ndmap.inverse</span> <span class="kn">import</span> <span class="n">inverse</span>
+<span class="kn">from</span> <span class="nn">ndmap.factorization</span> <span class="kn">import</span> <span class="n">hamiltonian</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
@@ -10172,18 +10172,18 @@ tensor([1.009811250000e-01, 9.622500000000e-03, 5.102537625000e-02, 1.0507525000
 
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
-<span class="kn">from</span> <span class="nn">ndtorch.signature</span> <span class="kn">import</span> <span class="n">chop</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.series</span> <span class="kn">import</span> <span class="n">series</span>
-<span class="kn">from</span> <span class="nn">ndtorch.series</span> <span class="kn">import</span> <span class="n">clean</span>
-<span class="kn">from</span> <span class="nn">ndtorch.taylor</span> <span class="kn">import</span> <span class="n">taylor</span>
-<span class="kn">from</span> <span class="nn">ndtorch.inverse</span> <span class="kn">import</span> <span class="n">inverse</span>
-<span class="kn">from</span> <span class="nn">ndtorch.factorization</span> <span class="kn">import</span> <span class="n">hamiltonian</span>
-<span class="kn">from</span> <span class="nn">ndtorch.factorization</span> <span class="kn">import</span> <span class="n">solution</span>
+<span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">ndmap.signature</span> <span class="kn">import</span> <span class="n">chop</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
+<span class="kn">from</span> <span class="nn">ndmap.series</span> <span class="kn">import</span> <span class="n">series</span>
+<span class="kn">from</span> <span class="nn">ndmap.series</span> <span class="kn">import</span> <span class="n">clean</span>
+<span class="kn">from</span> <span class="nn">ndmap.taylor</span> <span class="kn">import</span> <span class="n">taylor</span>
+<span class="kn">from</span> <span class="nn">ndmap.inverse</span> <span class="kn">import</span> <span class="n">inverse</span>
+<span class="kn">from</span> <span class="nn">ndmap.factorization</span> <span class="kn">import</span> <span class="n">hamiltonian</span>
+<span class="kn">from</span> <span class="nn">ndmap.factorization</span> <span class="kn">import</span> <span class="n">solution</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
@@ -10488,19 +10488,19 @@ True
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import</span>
 
 <span class="kn">import</span> <span class="nn">torch</span>
-<span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
-<span class="kn">from</span> <span class="nn">ndtorch.signature</span> <span class="kn">import</span> <span class="n">chop</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
-<span class="kn">from</span> <span class="nn">ndtorch.series</span> <span class="kn">import</span> <span class="n">series</span>
-<span class="kn">from</span> <span class="nn">ndtorch.series</span> <span class="kn">import</span> <span class="n">clean</span>
-<span class="kn">from</span> <span class="nn">ndtorch.series</span> <span class="kn">import</span> <span class="n">split</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.bracket</span> <span class="kn">import</span> <span class="n">bracket</span>
-<span class="kn">from</span> <span class="nn">ndtorch.factorization</span> <span class="kn">import</span> <span class="n">hamiltonian</span>
-<span class="kn">from</span> <span class="nn">ndtorch.factorization</span> <span class="kn">import</span> <span class="n">solution</span>
-<span class="kn">from</span> <span class="nn">ndtorch.factorization</span> <span class="kn">import</span> <span class="n">factorize</span>
+<span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">ndmap.signature</span> <span class="kn">import</span> <span class="n">chop</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
+<span class="kn">from</span> <span class="nn">ndmap.series</span> <span class="kn">import</span> <span class="n">series</span>
+<span class="kn">from</span> <span class="nn">ndmap.series</span> <span class="kn">import</span> <span class="n">clean</span>
+<span class="kn">from</span> <span class="nn">ndmap.series</span> <span class="kn">import</span> <span class="n">split</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
+<span class="kn">from</span> <span class="nn">ndmap.bracket</span> <span class="kn">import</span> <span class="n">bracket</span>
+<span class="kn">from</span> <span class="nn">ndmap.factorization</span> <span class="kn">import</span> <span class="n">hamiltonian</span>
+<span class="kn">from</span> <span class="nn">ndmap.factorization</span> <span class="kn">import</span> <span class="n">solution</span>
+<span class="kn">from</span> <span class="nn">ndmap.factorization</span> <span class="kn">import</span> <span class="n">factorize</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
@@ -10751,8 +10751,8 @@ True
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.gradient</span> <span class="kn">import</span> <span class="n">series</span>
-<span class="kn">from</span> <span class="nn">ndtorch.series</span> <span class="kn">import</span> <span class="n">clean</span>
+<span class="kn">from</span> <span class="nn">ndmap.gradient</span> <span class="kn">import</span> <span class="n">series</span>
+<span class="kn">from</span> <span class="nn">ndmap.series</span> <span class="kn">import</span> <span class="n">clean</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
@@ -10928,15 +10928,15 @@ True
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.util</span> <span class="kn">import</span> <span class="n">first</span>
-<span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
-<span class="kn">from</span> <span class="nn">ndtorch.signature</span> <span class="kn">import</span> <span class="n">chop</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.util</span> <span class="kn">import</span> <span class="n">first</span>
+<span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">ndmap.signature</span> <span class="kn">import</span> <span class="n">chop</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
@@ -11305,15 +11305,15 @@ tensor(8.477e-11, dtype=torch.float64, grad_fn=&lt;SumBackward0&gt;)
 <span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">TensorDataset</span>
 <span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.util</span> <span class="kn">import</span> <span class="n">first</span>
-<span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
-<span class="kn">from</span> <span class="nn">ndtorch.signature</span> <span class="kn">import</span> <span class="n">chop</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.util</span> <span class="kn">import</span> <span class="n">first</span>
+<span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">ndmap.signature</span> <span class="kn">import</span> <span class="n">chop</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
@@ -11653,25 +11653,67 @@ tensor([-5.000e-03, 1.000e-03], dtype=torch.float64)
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Train model</span>
 
-<span class="n">epochs</span> <span class="o">=</span> <span class="mi">64</span>
-<span class="n">vals</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">epochs</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="n">knobs</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">batch</span><span class="p">,</span> <span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dataloader</span><span class="p">):</span>
         <span class="n">y_hat</span> <span class="o">=</span> <span class="n">mod</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-        <span class="n">val</span> <span class="o">=</span> <span class="n">lf</span><span class="p">(</span><span class="n">y_hat</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="n">lf</span><span class="p">(</span><span class="n">y_hat</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
         <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
-            <span class="n">vals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">())</span>
-        <span class="n">val</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+            <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">())</span>
+            <span class="n">knobs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mod</span><span class="o">.</span><span class="n">knobs</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">())</span>
+        <span class="n">error</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
         <span class="n">opt</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
         <span class="n">opt</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;epoch: </span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s1">, error: </span><span class="si">{</span><span class="n">error</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+epoch: 0, error: 0.07889209666796847
+epoch: 1, error: 0.016407936252706767
+epoch: 2, error: 0.029603304010232305
+epoch: 3, error: 0.02066875990152206
+epoch: 4, error: 0.008021363605828181
+epoch: 5, error: 0.0062046212368926795
+epoch: 6, error: 0.005451716630724069
+epoch: 7, error: 0.003743944282292502
+epoch: 8, error: 0.0028542350256587183
+epoch: 9, error: 0.002950762270264369
+epoch: 10, error: 0.002317148142058254
+epoch: 11, error: 0.002184753715351144
+epoch: 12, error: 0.0029421413610196323
+epoch: 13, error: 0.0013134645694476274
+epoch: 14, error: 0.0013993534434043023
+epoch: 15, error: 0.002174191018619874
+epoch: 16, error: 0.000559584199574974
+epoch: 17, error: 0.000838372317397709
+epoch: 18, error: 0.0005723736654445169
+epoch: 19, error: 0.0003261217702462589
+epoch: 20, error: 0.0001226953180525377
+epoch: 21, error: 0.0001832289513233207
+epoch: 22, error: 0.00012353633918316418
+epoch: 23, error: 8.642310499954448e-05
+epoch: 24, error: 0.00010222632684101955
+epoch: 25, error: 0.00010478097348641246
+epoch: 26, error: 2.9043073838182584e-05
+epoch: 27, error: 0.0006182352934149388
+epoch: 28, error: 0.0011784444613159393
+epoch: 29, error: 0.00015465452722323363
+epoch: 30, error: 8.103332289780618e-06
+epoch: 31, error: 3.264145731402655e-05
+</pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
@@ -11690,7 +11732,7 @@ tensor([-5.000e-03, 1.000e-03], dtype=torch.float64)
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Parameter containing:
-tensor([-5.000e-03, 9.998e-04], dtype=torch.float64, requires_grad=True)
+tensor([-4.941e-03, 1.003e-03], dtype=torch.float64, requires_grad=True)
 tensor([-5.000e-03, 1.000e-03], dtype=torch.float64)
 </pre></div></div>
 </div>
@@ -11701,7 +11743,7 @@ tensor([-5.000e-03, 1.000e-03], dtype=torch.float64)
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot loss vs iteration</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vals</span><span class="p">)),</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)),</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -11713,23 +11755,30 @@ tensor([-5.000e-03, 1.000e-03], dtype=torch.float64)
 <img alt="../_images/examples_ndmap_430_0.png" src="../_images/examples_ndmap_430_0.png" />
 </div>
 </div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot knobs path</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">knobs</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_ndmap_431_0.png" src="../_images/examples_ndmap_431_0.png" />
+</div>
+</div>
 </section>
-<section id="Example-35:-R_{ij}-optics-correction">
-<h1>Example-35: <span class="math notranslate nohighlight">\(R_{ij}\)</span> optics correction<a class="headerlink" href="#Example-35:-R_{ij}-optics-correction" title="Link to this heading"></a></h1>
+<section id="Example-36:-ORM-optics-correction-(training-loop-+-elementwise-computation)">
+<h1>Example-36: ORM optics correction (training loop + elementwise computation)<a class="headerlink" href="#Example-36:-ORM-optics-correction-(training-loop-+-elementwise-computation)" title="Link to this heading"></a></h1>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># -- define rings for each observation point</span>
-<span class="c1"># -- in most cases there is np need to compute/recompute dynanical fixed point</span>
-<span class="c1"># -- using Taylor rings is an option</span>
-<span class="c1"># -- derivative with respect to all correctors is replaced with one derivative</span>
-<span class="c1"># -- triple index (plane, location, coorrector)</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># In this example orbit responce matrix is used to correct linear optics</span>
@@ -11741,12 +11790,12 @@ tensor([-5.000e-03, 1.000e-03], dtype=torch.float64)
 <span class="c1"># Fitting step mirrors neural net training loop</span>
 <span class="c1"># Elements of measured responce matrix are used as targets</span>
 
-<span class="c1"># Note, full matrix is computed, it is also possible to define element computation</span>
+<span class="c1"># Note, elements of matrix are computed, but forward method is sequential</span>
 </pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import</span>
@@ -11759,15 +11808,15 @@ tensor([-5.000e-03, 1.000e-03], dtype=torch.float64)
 <span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">TensorDataset</span>
 <span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.util</span> <span class="kn">import</span> <span class="n">first</span>
-<span class="kn">from</span> <span class="nn">ndtorch.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
-<span class="kn">from</span> <span class="nn">ndtorch.signature</span> <span class="kn">import</span> <span class="n">chop</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
-<span class="kn">from</span> <span class="nn">ndtorch.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
-<span class="kn">from</span> <span class="nn">ndtorch.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.util</span> <span class="kn">import</span> <span class="n">first</span>
+<span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">ndmap.signature</span> <span class="kn">import</span> <span class="n">chop</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">compare</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
@@ -11788,7 +11837,7 @@ True
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set data type and device</span>
@@ -11799,7 +11848,7 @@ True
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set elements</span>
@@ -11843,7 +11892,7 @@ True
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set transport maps between observation points</span>
@@ -11899,7 +11948,7 @@ True
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set ring at the entrance point</span>
@@ -11912,7 +11961,7 @@ True
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set rings at observation points</span>
@@ -11929,7 +11978,7 @@ True
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set deviation variables</span>
@@ -11941,7 +11990,7 @@ True
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute fixed point</span>
@@ -11952,7 +12001,7 @@ True
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute fixed points</span>
@@ -11977,7 +12026,7 @@ tensor([[0., 0., 0., 0.],
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define parametric responce matrix</span>
@@ -12001,7 +12050,7 @@ tensor([[0., 0., 0., 0.],
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -12019,7 +12068,7 @@ tensor([[7.582e+00, 5.939e+00, 7.582e+00, 5.939e+00, 0.000e+00, 0.000e+00, 0.000
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Test responce matrix</span>
@@ -12050,25 +12099,19 @@ True
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[90]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define parametric responce matrix element</span>
 
-<span class="kn">from</span> <span class="nn">ndtorch.util</span> <span class="kn">import</span> <span class="n">flatten</span>
+<span class="kn">from</span> <span class="nn">ndmap.util</span> <span class="kn">import</span> <span class="n">flatten</span>
 
 <span class="n">vs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cs</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="nf">tolist</span><span class="p">(</span><span class="n">tensor</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">_C</span><span class="o">.</span><span class="n">_functorch</span><span class="o">.</span><span class="n">is_gradtrackingtensor</span><span class="p">(</span><span class="n">tensor</span><span class="p">):</span>
-        <span class="n">tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">_C</span><span class="o">.</span><span class="n">_functorch</span><span class="o">.</span><span class="n">get_unwrapped</span><span class="p">(</span><span class="n">tensor</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">tensor</span><span class="o">.</span><span class="n">storage</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">tensor</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 
 <span class="k">def</span> <span class="nf">rm_ijk</span><span class="p">(</span><span class="n">dkq</span><span class="p">,</span> <span class="n">loc</span><span class="p">):</span>
     <span class="n">location</span><span class="p">,</span> <span class="n">corrector</span><span class="p">,</span> <span class="n">plane</span> <span class="o">=</span> <span class="n">loc</span>
     <span class="n">r</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">cs</span><span class="p">:</span> <span class="n">rs</span><span class="p">[</span><span class="n">location</span><span class="p">](</span><span class="n">x</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">cs</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">dkq</span><span class="p">)</span>
-    <span class="n">v</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">tolist</span><span class="p">(</span><span class="n">vs</span><span class="p">[</span><span class="n">corrector</span><span class="p">[</span><span class="kc">None</span><span class="p">]][</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">vs</span><span class="p">[</span><span class="n">corrector</span><span class="p">[</span><span class="kc">None</span><span class="p">]][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
     <span class="n">fp</span> <span class="o">=</span> <span class="n">fps</span><span class="p">[</span><span class="n">location</span><span class="p">[</span><span class="kc">None</span><span class="p">]][</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">pfp</span> <span class="o">=</span> <span class="n">parametric_fixed_point</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">cs</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">r</span><span class="p">,</span> <span class="n">jacobian</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">jacrev</span><span class="p">)</span>
     <span class="n">_</span><span class="p">,</span> <span class="p">(</span><span class="n">dqx</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">dqy</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="n">flatten</span><span class="p">(</span><span class="n">pfp</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="nb">list</span><span class="p">)]</span>
@@ -12077,7 +12120,7 @@ True
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[91]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set quadrupole errors</span>
@@ -12087,21 +12130,21 @@ True
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[92]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set data</span>
 
-<span class="n">i_max</span><span class="p">,</span> <span class="n">j_max</span><span class="p">,</span> <span class="n">k_max</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">2</span> <span class="c1"># 2???</span>
+<span class="n">i_max</span><span class="p">,</span> <span class="n">j_max</span><span class="p">,</span> <span class="n">k_max</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">2</span>
 <span class="n">i_val</span><span class="p">,</span> <span class="n">j_val</span><span class="p">,</span> <span class="n">k_val</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">i_max</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">j_max</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">k_max</span><span class="p">)</span>
 
 <span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">i_val</span><span class="p">,</span> <span class="n">j_val</span><span class="p">,</span> <span class="n">k_val</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s1">&#39;xy&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">T</span><span class="p">])])</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">rm_ijk</span><span class="p">(</span><span class="n">dkq</span><span class="p">,</span> <span class="n">loc</span><span class="p">)</span> <span class="k">for</span> <span class="n">loc</span> <span class="ow">in</span> <span class="n">X</span><span class="p">])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">rm_ijk</span><span class="p">(</span><span class="n">ekq</span><span class="p">,</span> <span class="n">loc</span><span class="p">)</span> <span class="k">for</span> <span class="n">loc</span> <span class="ow">in</span> <span class="n">X</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[93]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">batch</span> <span class="o">=</span> <span class="mi">16</span>
@@ -12111,7 +12154,7 @@ True
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[94]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set model</span>
@@ -12130,7 +12173,7 @@ True
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[95]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initial knobs</span>
@@ -12151,7 +12194,7 @@ tensor([-5.000e-03, 1.000e-03], dtype=torch.float64)
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[96]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set loss</span>
@@ -12161,7 +12204,7 @@ tensor([-5.000e-03, 1.000e-03], dtype=torch.float64)
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[97]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set optimizer</span>
@@ -12171,23 +12214,25 @@ tensor([-5.000e-03, 1.000e-03], dtype=torch.float64)
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Train model</span>
 
-<span class="n">epochs</span> <span class="o">=</span> <span class="mi">16</span>
-<span class="n">vals</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">epochs</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="n">knobs</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">batch</span><span class="p">,</span> <span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dataloader</span><span class="p">):</span>
         <span class="n">y_hat</span> <span class="o">=</span> <span class="n">mod</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-        <span class="n">val</span> <span class="o">=</span> <span class="n">lf</span><span class="p">(</span><span class="n">y_hat</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="n">lf</span><span class="p">(</span><span class="n">y_hat</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
         <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
-            <span class="n">vals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">())</span>
-        <span class="n">val</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+            <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">())</span>
+            <span class="n">knobs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mod</span><span class="o">.</span><span class="n">knobs</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">())</span>
+        <span class="n">error</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
         <span class="n">opt</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
         <span class="n">opt</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;epoch: </span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s1">, error: </span><span class="si">{</span><span class="n">error</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -12196,15 +12241,42 @@ tensor([-5.000e-03, 1.000e-03], dtype=torch.float64)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-tensor(5.251e-02, dtype=torch.float64, grad_fn=&lt;MseLossBackward0&gt;)
-tensor(2.177e-02, dtype=torch.float64, grad_fn=&lt;MseLossBackward0&gt;)
-tensor(2.309e-04, dtype=torch.float64, grad_fn=&lt;MseLossBackward0&gt;)
-tensor(2.959e-02, dtype=torch.float64, grad_fn=&lt;MseLossBackward0&gt;)
-tensor(5.793e-02, dtype=torch.float64, grad_fn=&lt;MseLossBackward0&gt;)
+epoch: 0, error: 0.06640328823247192
+epoch: 1, error: 0.015543788518357582
+epoch: 2, error: 0.01794665451560671
+epoch: 3, error: 0.009149083576404291
+epoch: 4, error: 0.004045774362679741
+epoch: 5, error: 0.004988331194311739
+epoch: 6, error: 0.009729660740588885
+epoch: 7, error: 0.001644530740165998
+epoch: 8, error: 0.0018892821246260041
+epoch: 9, error: 0.002175191472030692
+epoch: 10, error: 0.001292460144565729
+epoch: 11, error: 0.0006889626639139122
+epoch: 12, error: 0.0027427648450759484
+epoch: 13, error: 0.0004858114023444501
+epoch: 14, error: 0.0005751390024191303
+epoch: 15, error: 0.0004148716127534646
+epoch: 16, error: 0.0006838256655128721
+epoch: 17, error: 0.00015342423772876087
+epoch: 18, error: 0.00044201858335257775
+epoch: 19, error: 0.0007288940394284181
+epoch: 20, error: 3.797618910533068e-05
+epoch: 21, error: 0.0003236006737658973
+epoch: 22, error: 0.00022370843533815995
+epoch: 23, error: 9.436620800953906e-06
+epoch: 24, error: 7.281192602265238e-05
+epoch: 25, error: 2.078942697435631e-05
+epoch: 26, error: 0.0004115386265720715
+epoch: 27, error: 0.0001420603588116038
+epoch: 28, error: 0.00011707309232147282
+epoch: 29, error: 0.0011033559757419576
+epoch: 30, error: 0.008292279836568458
+epoch: 31, error: 0.0001801580909505279
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[98]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Final knobs</span>
@@ -12220,18 +12292,18 @@ tensor(5.793e-02, dtype=torch.float64, grad_fn=&lt;MseLossBackward0&gt;)
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Parameter containing:
-tensor([0., 0.], dtype=torch.float64, requires_grad=True)
+tensor([-4.959e-03, 1.061e-03], dtype=torch.float64, requires_grad=True)
 tensor([-5.000e-03, 1.000e-03], dtype=torch.float64)
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[99]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot loss vs iteration</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vals</span><span class="p">)),</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)),</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -12243,38 +12315,23 @@ tensor([-5.000e-03, 1.000e-03], dtype=torch.float64)
 <img alt="../_images/examples_ndmap_455_0.png" src="../_images/examples_ndmap_455_0.png" />
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot knobs path</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">knobs</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># PIC CODES!</span>
-<span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">ECP</span><span class="o">-</span><span class="n">WarpX</span><span class="o">/</span><span class="n">WarpX</span>
-<span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">fbpic</span><span class="o">/</span><span class="n">fbpic</span>
-</pre></div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_ndmap_456_0.png" src="../_images/examples_ndmap_456_0.png" />
 </div>
 </div>
 </section>
