@@ -20,7 +20,10 @@ $ pip install ndmap -U
 
 # Documentation
 
+[![Run In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/i-a-morozov/ndmap/blob/main/docs/source/examples/ndmap.ipynb)
+
 [https://i-a-morozov.github.io/ndmap/](https://i-a-morozov.github.io/ndmap/)
+
 
 # Derivative (composable jacobian)
 
