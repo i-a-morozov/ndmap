@@ -5,8 +5,6 @@ Derivative
 Computation of higher order derivatives
 
 """
-
-from typing import TypeAlias
 from typing import Callable
 from typing import Optional
 from typing import Union
@@ -16,20 +14,12 @@ from multimethod import multimethod
 import torch
 from torch import Tensor
 
+from ndmap.types import State
+from ndmap.types import Knobs
+from ndmap.types import Point
+from ndmap.types import Table
+
 from ndmap.util import flatten
-
-
-State       : TypeAlias = Tensor
-Knobs       : TypeAlias = list[Tensor]
-Point       : TypeAlias = list[Tensor]
-Delta       : TypeAlias = list[Tensor]
-Table       : TypeAlias = list
-Series      : TypeAlias = dict[tuple[int, ...], Tensor]
-Signature   : TypeAlias = Union[list[tuple[int, ...]], list[tuple[tuple[int, ...], float]]]
-Mapping     : TypeAlias = Callable
-Observable  : TypeAlias = Callable
-Hamiltonian : TypeAlias = Callable
-
 
 @multimethod
 def derivative(order:int,
@@ -70,6 +60,7 @@ def derivative(order:int,
     Examples
     --------
     >>> import torch
+    >>> from ndmap.derivative import derivative
     >>> def fn(x, y):
     ...    x1, x2 = x
     ...    y1, y2 = y
@@ -139,14 +130,23 @@ def derivative(order:tuple[int, ...],
     Examples
     --------
     >>> import torch
+    >>> from ndmap.derivative import derivative
     >>> def fn(x, y):
     ...    x1, x2 = x
     ...    y1, y2 = y
     ...    return (x1 + x2 + x1**2 + x1*x2 + x2**2)*(1 + y1 + y2)
     >>> x = torch.tensor([0.0, 0.0])
     >>> y = torch.zeros_like(x)
-    >>> derivative((1, 1), fn, x, y)
-    [[tensor(0.), tensor([0., 0.])], [tensor([1., 1.]), tensor([[1., 1.], [1., 1.]])]]
+    >>> [[f, dfdy], [dfdx, dfdxdy]] = derivative((1, 1), fn, x, y)
+    >>> f
+    tensor(0.)
+    >>> dfdy
+    tensor([0., 0.])
+    >>> dfdx
+    tensor([1., 1.])
+    >>> dfdxdy
+    tensor([[1., 1.],
+            [1., 1.]])
     
     """
     jacobian = torch.func.jacfwd if jacobian is None else jacobian

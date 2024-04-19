@@ -8,14 +8,19 @@ version = "0.1.7"
 authors = [{name = "Ivan Morozov"}]
 description = "Higher order partial derivatives computation with respect to one or several tensor-like variables, application to nonlinear dynamics"
 readme = "README.MD"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 keywords = ["torch", "derivative"]
 license = {text = "MIT"}
 classifiers = ["Programming Language :: Python :: 3"]
-dependencies = ["torch>=2.0.1", "multimethod>=1.9.1", "numpy>=1.23.5"]
+dependencies = ["torch>=2.2.0", "multimethod>=1.11", "numpy>=1.26.3"]
 
 [project.optional-dependencies]
 examples = ["jupyter-lab", "matplotlib", "twiss"]
 test=["pytest", "pytest-cov", "pylint", "mypy"]
 all = ["ndtorch[examples, test]"]
+
+[tool.ruff.lint]
+ignore = [
+    "F811"
+]
 
