@@ -1,5 +1,22 @@
-
-
+# +util
+# +derivative
+# +gradient
+# -complex
+# -signature
+# -index
+# -series
+# -evaluate
+# -propagate
+# -pfp
+# -bracket
+# -taylor
+# -yoshida
+# -invariant
+# -inverse
+# -momenta
+# -factorization
+# -matrix
+# -jet
 
 __about__ = """
 ndmap is a collection of tools for computation of higher order derivatives (including all intermediate derivatives) with some applications in nonlinear dynamics (accelerator physics)

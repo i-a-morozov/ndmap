@@ -8,10 +8,8 @@ Monomial matrix computation (real & complex)
 
 from typing import TypeAlias
 from typing import Callable
-from typing import Optional
 from typing import Union
 
-import torch
 from torch import Tensor
 
 

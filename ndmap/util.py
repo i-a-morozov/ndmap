@@ -11,8 +11,6 @@ from math import prod
 
 from functools import partial
 
-from typing import TypeAlias
-from typing import Union
 from typing import Iterable
 from typing import Iterator
 from typing import Callable
@@ -25,18 +23,6 @@ from numpy import ndarray as Array
 
 import torch
 from torch import Tensor
-
-
-State       : TypeAlias = Tensor
-Knobs       : TypeAlias = list[Tensor]
-Point       : TypeAlias = list[Tensor]
-Delta       : TypeAlias = list[Tensor]
-Table       : TypeAlias = list
-Series      : TypeAlias = dict[tuple[int, ...], Tensor]
-Signature   : TypeAlias = Union[list[tuple[int, ...]], list[tuple[tuple[int, ...], float]]]
-Mapping     : TypeAlias = Callable
-Observable  : TypeAlias = Callable
-Hamiltonian : TypeAlias = Callable
 
 
 def multinomial(*sequence:int) -> float:
@@ -128,14 +114,14 @@ def curry_apply(function:Callable, table:tuple[int, ...], *pars:tuple) -> Callab
     True
 
     """
-    def clouser(*args:tuple):
+    def closure(*args:tuple):
         start = 0
         vecs = []
         for length in table:
             vecs.append(args[start:start + length])
             start += length
         return function(*vecs, *pars)
-    return partial(clouser)
+    return partial(closure)
 
 
 def nest(power:int, function:Callable, *pars:tuple) -> Callable:
@@ -194,7 +180,7 @@ def orthogonal(n:int,
     Examples
     --------
     >>> import torch
-    >>> torch.manual_seed(1)
+    >>> generator = torch.manual_seed(1)
     >>> orthogonal(4, 4)
     tensor([[-0.4048, -0.7515, -0.5066, -0.1216],
             [ 0.1141, -0.5599,  0.6068,  0.5525],
@@ -208,7 +194,7 @@ def orthogonal(n:int,
 
 def symplectic(state:Tensor) -> Tensor:
     """
-    Generate symplectic identicy matrix for a given state
+    Generate symplectic identity matrix for a given state
 
     Parameters
     ----------
@@ -276,7 +262,7 @@ def last(xs:Iterable[Any]) -> Any:
 
     Examples
     --------
-    >>> first([1, 2, 3, 4])
+    >>> last([1, 2, 3, 4])
     4
 
     """
@@ -299,7 +285,7 @@ def rest(xs:Iterable[Any]) -> Any:
 
     Examples
     --------
-    >>> first([1, 2, 3, 4])
+    >>> rest([1, 2, 3, 4])
     [1, 2, 3]
 
     """
@@ -322,7 +308,7 @@ def most(xs:Iterable[Any]) -> Any:
 
     Examples
     --------
-    >>> first([1, 2, 3, 4])
+    >>> most([1, 2, 3, 4])
     [2, 3, 4]
 
     """

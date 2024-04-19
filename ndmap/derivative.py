@@ -2,7 +2,7 @@
 Derivative
 ----------
 
-Computation of higher order derivatives
+Computation of higher order derivatives (functional, composable)
 
 """
 from typing import Callable
@@ -185,7 +185,23 @@ def derivative(order:int,
                point:Point,
                *pars:tuple,
                **kwargs:dict) -> Union[Table, Tensor]:
-    """ Compute function derivatives at evaluation point upto a given order """
+    """ 
+    Compute function derivatives at evaluation point upto a given order wrt 1st point element
+
+    Examples
+    --------    
+    >>> import torch
+    >>> from ndmap.derivative import derivative
+    >>> def fn(x, y):
+    ...    x1, x2 = x
+    ...    y1, y2 = y
+    ...    return (x1 + x2 + x1**2 + x1*x2 + x2**2)*(1 + y1 + y2)
+    >>> x = torch.tensor([0.0, 0.0])
+    >>> y = torch.zeros_like(x)
+    >>> derivative(1, fn, [x, y])    
+    [tensor(0.), tensor([1., 1.])]
+    
+    """
     return derivative(order, function, *point, *pars, **kwargs)
 
 
@@ -195,7 +211,32 @@ def derivative(order:tuple[int, ...],
                point:Point,
                *pars:tuple,
                **kwargs:dict) -> Union[Table, Tensor]:
-    """ Compute function derivatives at evaluation point upto given orders """
+    """ 
+    
+    Compute function derivatives at evaluation point upto given orders
+
+    Examples
+    --------    
+    >>> import torch
+    >>> from ndmap.derivative import derivative
+    >>> def fn(x, y):
+    ...    x1, x2 = x
+    ...    y1, y2 = y
+    ...    return (x1 + x2 + x1**2 + x1*x2 + x2**2)*(1 + y1 + y2)
+    >>> x = torch.tensor([0.0, 0.0])
+    >>> y = torch.zeros_like(x)
+    >>> [[f, dfdy], [dfdx, dfdxdy]] = derivative((1, 1), fn, [x, y])
+    >>> f
+    tensor(0.)
+    >>> dfdy
+    tensor([0., 0.])
+    >>> dfdx
+    tensor([1., 1.])
+    >>> dfdxdy
+    tensor([[1., 1.],
+            [1., 1.]])
+    
+    """
     return derivative(order, function, *point, *pars, **kwargs)
 
 
@@ -206,7 +247,24 @@ def derivative(order:int,
                knobs:Knobs,
                *pars:tuple,
                **kwargs:dict) -> Union[Table, Tensor]:
-    """ Compute function derivatives for state and knobs upto a given order wrt state """
+    """ 
+    
+    Compute function derivatives for state and knobs upto a given order wrt state 
+    
+    Examples
+    --------    
+    >>> import torch
+    >>> from ndmap.derivative import derivative
+    >>> def fn(x, y):
+    ...    x1, x2 = x
+    ...    y1, y2 = y
+    ...    return (x1 + x2 + x1**2 + x1*x2 + x2**2)*(1 + y1 + y2)
+    >>> x = torch.tensor([0.0, 0.0])
+    >>> y = torch.zeros_like(x)
+    >>> derivative(1, fn, x, [y])    
+    [tensor(0.), tensor([1., 1.])]
+
+    """
     return derivative(order, function, state, *knobs, *pars, **kwargs)
 
 
@@ -217,5 +275,30 @@ def derivative(order:tuple[int, ...],
                knobs:Knobs,
                *pars:tuple,
                **kwargs:dict) -> Union[Table, Tensor]:
-    """ Compute function derivatives for state and knobs upto given orders wrt state and knobs """
+    """ 
+    
+    Compute function derivatives for state and knobs upto given orders wrt state and knobs
+
+    Examples
+    --------    
+    >>> import torch
+    >>> from ndmap.derivative import derivative
+    >>> def fn(x, y):
+    ...    x1, x2 = x
+    ...    y1, y2 = y
+    ...    return (x1 + x2 + x1**2 + x1*x2 + x2**2)*(1 + y1 + y2)
+    >>> x = torch.tensor([0.0, 0.0])
+    >>> y = torch.zeros_like(x)
+    >>> [[f, dfdy], [dfdx, dfdxdy]] = derivative((1, 1), fn, x, [y])
+    >>> f
+    tensor(0.)
+    >>> dfdy
+    tensor([0., 0.])
+    >>> dfdx
+    tensor([1., 1.])
+    >>> dfdxdy
+    tensor([[1., 1.],
+            [1., 1.]])
+    
+    """
     return derivative(order, function, state, *knobs, *pars, **kwargs)

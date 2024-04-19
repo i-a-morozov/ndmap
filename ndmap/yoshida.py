@@ -131,7 +131,7 @@ def coefficients(n:int,
 
 
 @multimethod
-def coefficients(l:int,
+def coefficients(k:int,
                  n:int,
                  m:int,
                  merge:bool) -> list[list[int], list[float]]:
@@ -145,7 +145,7 @@ def coefficients(l:int,
 
     Parameters
     ----------
-    l: int, positive
+    k: int, positive
         number of mappings
     n: int, non-negative
         start Yoshida order
@@ -198,8 +198,8 @@ def coefficients(l:int,
       0.6756035959798289]]
 
     """
-    ps = [[i, 0.5] for i in range(l - 1)]
-    ps = ps + [[l - 1, 1.0]] + [*reversed(ps)]
+    ps = [[i, 0.5] for i in range(k - 1)]
+    ps = ps + [[k - 1, 1.0]] + [*reversed(ps)]
     ns, vs = map(list, zip(*ps))
     cs = coefficients(n, m)
     ps = sum(([[n, v*c] for (n, v) in zip(ns, vs)] for c in cs), start = [])

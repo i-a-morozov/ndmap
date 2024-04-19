@@ -37,6 +37,10 @@ def signature(order:tuple[int, ...]) -> list[tuple[int, ...]]:
     --------
     >>> signature((2, ))
     [(0,), (1,), (2,)]
+    >>> signature((1, 2))
+    [(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2)]
+    >>> signature((2, 1))
+    [(0, 0), (0, 1), (1, 0), (1, 1), (2, 0), (2, 1)]
     >>> signature((2, 2))
     [(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2), (2, 0), (2, 1), (2, 2)]
     
@@ -76,6 +80,10 @@ def split(array:tuple[int, ...],
     --------
     >>> split((1, 2, 3, 4, 5), (2, 3))
     [(1, 2), (3, 4, 5)]
+    >>> split((1, 2, 3, 4, 5), (2, 1))
+    [(1, 2), (3,)]
+    >>> split((1, 2, 3, 4, 5), (2, 1, 2))
+    [(1, 2), (3,), (4, 5)]
 
     """
     marker:int = 0
@@ -104,14 +112,12 @@ def group(arrays:list[tuple[int, ...]],
 
     Examples
     --------
-    >>> xs = [(0, 2, 0, 1),(0, 2, 1, 0), (1, 1, 0, 1), (1, 1, 1, 0), (2, 0, 0, 1), (2, 0, 1, 0)]
+    >>> xs = [(0, 2), (1, 1), (2, 0)]
+    >>> group(xs, (2, ))
+    [(2, 0), (1, 1), (0, 2)]
+    >>> xs = [(0, 2, 0, 1), (0, 2, 1, 0), (1, 1, 0, 1), (1, 1, 1, 0), (2, 0, 0, 1), (2, 0, 1, 0)]
     >>> group(xs, (2, 2))
-    [(2, 0, 1, 0),
-     (2, 0, 0, 1),
-     (1, 1, 1, 0),
-     (1, 1, 0, 1),
-     (0, 2, 1, 0),
-     (0, 2, 0, 1)]
+    [(2, 0, 1, 0), (2, 0, 0, 1), (1, 1, 1, 0), (1, 1, 0, 1), (0, 2, 1, 0), (0, 2, 0, 1)]
 
     """
     output:list[list[tuple[int, ...]]] = [split(array, dimension) for array in arrays]
@@ -149,19 +155,9 @@ def index(dimension:tuple[int, ...],
     >>> index((4, ), (3, )) == index((2, 2), (2, 1))
     True
     >>> index((2, 2), (2, 1), signature=signature((2, 1)))
-    [(0, 2, 0, 1),
-     (0, 2, 1, 0),
-     (1, 1, 0, 1),
-     (1, 1, 1, 0),
-     (2, 0, 0, 1),
-     (2, 0, 1, 0)] 
+    [(0, 2, 0, 1), (0, 2, 1, 0), (1, 1, 0, 1), (1, 1, 1, 0), (2, 0, 0, 1), (2, 0, 1, 0)]
     >>> index((2, 2), (2, 1), signature=signature((2, 1)), group=group)
-    [(2, 0, 1, 0),
-     (2, 0, 0, 1),
-     (1, 1, 1, 0),
-     (1, 1, 0, 1),
-     (0, 2, 1, 0),
-     (0, 2, 0, 1)]
+    [(2, 0, 1, 0), (2, 0, 0, 1), (1, 1, 1, 0), (1, 1, 0, 1), (0, 2, 1, 0), (0, 2, 0, 1)]
 
     """
     length:int = sum(dimension)
@@ -271,9 +267,9 @@ def scalar(function:Callable,
     tensor(True)
 
     """
-    def clouser(*args:tuple):
+    def closure(*args:int):
         return function(*[torch.stack(arg) for arg in split(args, table)])
-    return partial(clouser)
+    return partial(closure)
 
 
 def select(function:Callable,
@@ -309,10 +305,10 @@ def select(function:Callable,
     Input fuction is assumed to have scalar tensor arguments
 
     """
-    def clouser(*args:tuple):
+    def closure(*args:tuple):
         output:Tensor = function(*args).flatten()[index]
         return output + naught(torch.stack([*args])) if naught else output
-    return clouser
+    return closure
 
 
 def reduce(array:tuple[int, ...]) -> list[tuple[int, ...]]:
@@ -394,6 +390,7 @@ def series(order:tuple[int, ...],
 
     Examples
     --------
+    >>> from pprint import pprint
     >>> import torch
     >>> def fn(x, y, a, b):
     ...    x1, x2 = x
@@ -401,7 +398,8 @@ def series(order:tuple[int, ...],
     ...    return (a*(x1 + x2) + b*(x1**2 + x1*x2 + x2**2))*(1 + y1 + y2)
     >>> x = torch.tensor([0.0, 0.0])
     >>> y = torch.zeros_like(x)
-    >>> series((2, 1), fn, x, y, 1.0, 1.0, retain=False, series=True, intermediate=True)
+    >>> t = series((2, 1), fn, x, y, 1.0, 1.0, retain=False, series=True, intermediate=True)
+    >>> pprint(t, sort_dicts=False)
     {(0, 0, 0, 0): tensor(0.),
      (0, 0, 1, 0): tensor(0.),
      (0, 0, 0, 1): tensor(0.),
@@ -420,18 +418,22 @@ def series(order:tuple[int, ...],
      (1, 1, 0, 1): tensor(1.),
      (0, 2, 1, 0): tensor(1.),
      (0, 2, 0, 1): tensor(1.)}
-    >>> series((2, 1), fn, x, y, 1.0, 1.0, retain=False, series=True, intermediate=False)
+    >>> t = series((2, 1), fn, x, y, 1.0, 1.0, retain=False, series=True, intermediate=False)
+    >>> pprint(t, sort_dicts=False)
     {(2, 0, 1, 0): tensor(1.),
      (2, 0, 0, 1): tensor(1.),
      (1, 1, 1, 0): tensor(1.),
      (1, 1, 0, 1): tensor(1.),
      (0, 2, 1, 0): tensor(1.),
      (0, 2, 0, 1): tensor(1.)}
-    >>> series((2, 1), fn, x, y, 1.0, 1.0, retain=False, series=True, intermediate=(2, 0, 1, 0))
+    >>> t = series((2, 1), fn, x, y, 1.0, 1.0, retain=False, series=True, intermediate=(2, 0, 1, 0))
+    >>> pprint(t, sort_dicts=False)
     {(2, 0, 1, 0): tensor(1.)}
-    >>> series((2, 1), fn, x, y, 1.0, 1.0, retain=False, series=False, intermediate=(2, 0, 1, 0))
+    >>> t = series((2, 1), fn, x, y, 1.0, 1.0, retain=False, series=False, intermediate=(2, 0, 1, 0))
+    >>> pprint(t, sort_dicts=False)
     {(2, 0, 1, 0): tensor(2.)}
-    >>> series((2, 1), fn, x, y, 1.0, 1.0, retain=True, series=True, intermediate=(2, 0, 1, 0))
+    >>> t = series((2, 1), fn, x, y, 1.0, 1.0, retain=True, series=True, intermediate=(2, 0, 1, 0))
+    >>> pprint(t, sort_dicts=False)
     {(2, 0, 1, 0): tensor(1., grad_fn=<MulBackward0>)}
 
     """
@@ -540,24 +542,20 @@ def jacobian(function:Callable) -> Callable:
     ...    y2 = torch.stack([5.0*x1 + 6.0*x2, 7.0*x1 + 8.0*x2])
     ...    return torch.stack([y1, y2])
     >>> x = torch.tensor([0.0, 0.0])
-    >>> torch.func.jacrev(fn)(x)
-    tensor([[[1., 2.],
-             [3., 4.]],
-            [[5., 6.],
-             [7., 8.]]])
-    >>> jacobian(fn)(x).detach().permute(1, 2, 0)
-    tensor([[[1., 2.],
-             [3., 4.]],
-            [[5., 6.],
-             [7., 8.]]])
+    >>> torch.func.jacrev(fn)(x).tolist()
+    [[[1.0, 2.0], [3.0, 4.0]], [[5.0, 6.0], [7.0, 8.0]]]
+    >>> jacobian(fn)(x).detach().tolist()
+    [[[1.0, 3.0], [5.0, 7.0]], [[2.0, 4.0], [6.0, 8.0]]]
+    >>> jacobian(fn)(x).detach().permute(1, -1, 0).tolist()
+    [[[1.0, 2.0], [3.0, 4.0]], [[5.0, 6.0], [7.0, 8.0]]]
 
     """
-    def clouser(*args):
+    def closure(*args):
         arg, *args = args
         table:dict[tuple[int, ...], Tensor] = series((1, ), function, arg, *args)
         output:Tensor = torch.stack([table[key] for key in index((len(arg),), (1,), group=group)])
         return output
-    return clouser
+    return closure
 
 
 def hessian(function:Callable) -> Callable:
@@ -628,6 +626,7 @@ def evaluate(series:dict[tuple[int, ...], Tensor],
     >>> evaluate(s, [dx, dy])
     tensor(80.)
 
+    >>> from pprint import pprint
     >>> import torch
     >>> def fn(x, y, a, b):
     ...    x1, x2 = x
@@ -636,7 +635,8 @@ def evaluate(series:dict[tuple[int, ...], Tensor],
     >>> x = torch.tensor([0.0, 0.0])
     >>> y = torch.zeros_like(x)
     >>> s = series((2, 1), fn, x, y, 1.0, 1.0, retain=False)
-    >>> series((2, 1), lambda x, y: evaluate(s, [x, y]), x, y, retain=False)
+    >>> s = series((2, 1), lambda x, y: evaluate(s, [x, y]), x, y, retain=False)
+    >>> pprint(s, sort_dicts=False)
     {(0, 0, 0, 0): tensor(0.),
      (0, 0, 1, 0): tensor(0.),
      (0, 0, 0, 1): tensor(0.),
@@ -687,12 +687,13 @@ def derivative(series:dict[tuple[int, ...], Tensor],
 
     Examples
     --------
+    >>> from pprint import pprint
     >>> import torch
     >>> def fn(x):
     ...    return 1.0 + x + x**2 + x**3 + x**4 + x**5
     >>> x = torch.tensor([0.0])
     >>> s = series((5, ), fn, x, retain=False)
-    >>> derivative(s, (1, ))
+    >>> pprint(derivative(s, (1, )), sort_dicts=False)
     {(0,): tensor([1.]),
      (1,): tensor([2.]),
      (2,): tensor([3.]),
