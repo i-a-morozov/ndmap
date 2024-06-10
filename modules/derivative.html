@@ -85,6 +85,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../examples/ndmap.html#Example-35:-ORM-optics-correction-(training-loop)">Example-35: ORM optics correction (training loop)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/ndmap.html#Example-36:-ORM-optics-correction-(training-loop-+-elementwise-computation)">Example-36: ORM optics correction (training loop + elementwise computation)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/ndmap.html#Example-37:-Normalized-dispersion">Example-37: Normalized dispersion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/ndmap.html#Example-38:-Coupling-(minimal-tune-distance)">Example-38: Coupling (minimal tune distance)</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API:</span></p>
 <ul class="current">
@@ -198,12 +199,33 @@
              
   <section id="derivative">
 <span id="module-ndmap.derivative"></span><h1>Derivative<a class="headerlink" href="#derivative" title="Link to this heading"></a></h1>
-<p>Computation of higher order derivatives</p>
+<p>Computation of higher order derivatives (functional, composable)</p>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="ndmap.derivative.derivative">
 <span class="sig-prename descclassname"><span class="pre">ndmap.derivative.</span></span><span class="sig-name descname"><span class="pre">derivative</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">knobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">pars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">torch.Tensor</span></span></span><a class="headerlink" href="#ndmap.derivative.derivative" title="Link to this definition"></a></dt>
 <dd><p>Compute function derivatives for state and knobs upto given orders wrt state and knobs</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">fn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span> <span class="o">=</span> <span class="n">x</span>
+<span class="gp">... </span>   <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">y</span>
+<span class="gp">... </span>   <span class="k">return</span> <span class="p">(</span><span class="n">x1</span> <span class="o">+</span> <span class="n">x2</span> <span class="o">+</span> <span class="n">x1</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">x1</span><span class="o">*</span><span class="n">x2</span> <span class="o">+</span> <span class="n">x2</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">y1</span> <span class="o">+</span> <span class="n">y2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[[</span><span class="n">f</span><span class="p">,</span> <span class="n">dfdy</span><span class="p">],</span> <span class="p">[</span><span class="n">dfdx</span><span class="p">,</span> <span class="n">dfdxdy</span><span class="p">]]</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">fn</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="n">y</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span>
+<span class="go">tensor(0.)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dfdy</span>
+<span class="go">tensor([0., 0.])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dfdx</span>
+<span class="go">tensor([1., 1.])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dfdxdy</span>
+<span class="go">tensor([[1., 1.],</span>
+<span class="go">        [1., 1.]])</span>
+</pre></div>
+</div>
 </dd></dl>
 
 

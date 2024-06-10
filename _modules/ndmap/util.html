@@ -82,6 +82,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../examples/ndmap.html#Example-35:-ORM-optics-correction-(training-loop)">Example-35: ORM optics correction (training loop)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples/ndmap.html#Example-36:-ORM-optics-correction-(training-loop-+-elementwise-computation)">Example-36: ORM optics correction (training loop + elementwise computation)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples/ndmap.html#Example-37:-Normalized-dispersion">Example-37: Normalized dispersion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ndmap.html#Example-38:-Coupling-(minimal-tune-distance)">Example-38: Coupling (minimal tune distance)</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API:</span></p>
 <ul>
@@ -207,8 +208,6 @@
 
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TypeAlias</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterator</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
@@ -221,18 +220,6 @@
 
 <span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
-
-
-<span class="n">State</span>       <span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">Tensor</span>
-<span class="n">Knobs</span>       <span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span>
-<span class="n">Point</span>       <span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span>
-<span class="n">Delta</span>       <span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span>
-<span class="n">Table</span>       <span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="nb">list</span>
-<span class="n">Series</span>      <span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="n">Tensor</span><span class="p">]</span>
-<span class="n">Signature</span>   <span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="nb">float</span><span class="p">]]]</span>
-<span class="n">Mapping</span>     <span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">Callable</span>
-<span class="n">Observable</span>  <span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">Callable</span>
-<span class="n">Hamiltonian</span> <span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">Callable</span>
 
 
 <div class="viewcode-block" id="multinomial">
@@ -332,14 +319,14 @@
 <span class="sd">    True</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">clouser</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span><span class="nb">tuple</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">closure</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span><span class="nb">tuple</span><span class="p">):</span>
         <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">vecs</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">length</span> <span class="ow">in</span> <span class="n">table</span><span class="p">:</span>
             <span class="n">vecs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">start</span> <span class="o">+</span> <span class="n">length</span><span class="p">])</span>
             <span class="n">start</span> <span class="o">+=</span> <span class="n">length</span>
         <span class="k">return</span> <span class="n">function</span><span class="p">(</span><span class="o">*</span><span class="n">vecs</span><span class="p">,</span> <span class="o">*</span><span class="n">pars</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">partial</span><span class="p">(</span><span class="n">clouser</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">partial</span><span class="p">(</span><span class="n">closure</span><span class="p">)</span></div>
 
 
 
@@ -404,7 +391,7 @@
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; import torch</span>
-<span class="sd">    &gt;&gt;&gt; torch.manual_seed(1)</span>
+<span class="sd">    &gt;&gt;&gt; generator = torch.manual_seed(1)</span>
 <span class="sd">    &gt;&gt;&gt; orthogonal(4, 4)</span>
 <span class="sd">    tensor([[-0.4048, -0.7515, -0.5066, -0.1216],</span>
 <span class="sd">            [ 0.1141, -0.5599,  0.6068,  0.5525],</span>
@@ -421,7 +408,7 @@
 <a class="viewcode-back" href="../../modules/util.html#ndmap.util.symplectic">[docs]</a>
 <span class="k">def</span> <span class="nf">symplectic</span><span class="p">(</span><span class="n">state</span><span class="p">:</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Generate symplectic identicy matrix for a given state</span>
+<span class="sd">    Generate symplectic identity matrix for a given state</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -495,7 +482,7 @@
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; first([1, 2, 3, 4])</span>
+<span class="sd">    &gt;&gt;&gt; last([1, 2, 3, 4])</span>
 <span class="sd">    4</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -521,7 +508,7 @@
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; first([1, 2, 3, 4])</span>
+<span class="sd">    &gt;&gt;&gt; rest([1, 2, 3, 4])</span>
 <span class="sd">    [1, 2, 3]</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -547,7 +534,7 @@
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; first([1, 2, 3, 4])</span>
+<span class="sd">    &gt;&gt;&gt; most([1, 2, 3, 4])</span>
 <span class="sd">    [2, 3, 4]</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
