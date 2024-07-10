@@ -89,7 +89,8 @@
 <li class="toctree-l1"><a class="reference internal" href="#Example-36:-ORM-optics-correction-(training-loop-+-elementwise-computation)">Example-36: ORM optics correction (training loop + elementwise computation)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#Example-37:-Normalized-dispersion">Example-37: Normalized dispersion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#Example-38:-Coupling-(minimal-tune-distance)">Example-38: Coupling (minimal tune distance)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#Example-39:-Coupling-(responce-&amp;-correction)">Example-39: Coupling (responce &amp; correction)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#Example-39:-Coupling-(minimal-tune-distance-correction)">Example-39: Coupling (minimal tune distance correction)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#Example-40:-Coupling-(amplitude-ratio-correction)">Example-40: Coupling (amplitude ratio correction)</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API:</span></p>
 <ul>
@@ -13212,8 +13213,18 @@ tensor(2.021e-16, dtype=torch.float64)
 </section>
 <section id="Example-38:-Coupling-(minimal-tune-distance)">
 <h1>Example-38: Coupling (minimal tune distance)<a class="headerlink" href="#Example-38:-Coupling-(minimal-tune-distance)" title="Link to this heading"></a></h1>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># In this example, minimal tune distance is computed using TEAPOT expression</span>
+<span class="c1"># The value is compared with some approximate analytical expressions</span>
+<span class="c1"># Computation dQmin of derivative (gradient) is illustrated</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import</span>
@@ -13254,7 +13265,7 @@ False
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set data type and device</span>
@@ -13265,7 +13276,7 @@ False
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set elements</span>
@@ -13309,10 +13320,10 @@ False
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set transport maps between observation points (close tunes, bends are replaced with drifts)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set transport maps between observation points</span>
 
 <span class="k">def</span> <span class="nf">map_01_02</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
     <span class="n">kf</span><span class="p">,</span> <span class="n">kd</span> <span class="o">=</span> <span class="n">k</span>
@@ -13367,7 +13378,7 @@ tensor([0., 0., 0., 0.], dtype=torch.float64)
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute fixed point</span>
@@ -13389,7 +13400,7 @@ tensor([0., 0., 0., 0.], dtype=torch.float64)
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute parametric fixed point</span>
@@ -13401,7 +13412,7 @@ tensor([0., 0., 0., 0.], dtype=torch.float64)
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -13414,7 +13425,7 @@ tensor([0., 0., 0., 0.], dtype=torch.float64)
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Propagate parametric fixed point</span>
@@ -13426,7 +13437,7 @@ tensor([0., 0., 0., 0.], dtype=torch.float64)
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -13439,7 +13450,7 @@ tensor([0., 0., 0., 0.], dtype=torch.float64)
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Propagate parametric identity (surrogate model for linear dynamics)</span>
@@ -13450,10 +13461,10 @@ tensor([0., 0., 0., 0.], dtype=torch.float64)
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute uncoupled one-turn matrix</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute uncoupled one-turn matrix (zero skew quadrupole amplitudes)</span>
 
 <span class="n">m</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">jet</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">k</span><span class="p">]),</span> <span class="n">fp</span><span class="p">,</span> <span class="n">intermediate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">m</span>
@@ -13461,7 +13472,7 @@ tensor([0., 0., 0., 0.], dtype=torch.float64)
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -13472,23 +13483,36 @@ tensor([[2.192e-01, 1.772e+01, 0.000e+00, 0.000e+00],
         [0.000e+00, 0.000e+00, -1.116e-01, 5.733e-01]], dtype=torch.float64)
 </pre></div></div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute CS twiss parameters</span>
-
-<span class="p">(</span><span class="n">nux</span><span class="p">,</span> <span class="n">nuy</span><span class="p">),</span> <span class="n">_</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">twiss</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
-<span class="n">mux</span><span class="p">,</span> <span class="n">muy</span> <span class="o">=</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">nux</span><span class="p">,</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">nuy</span>
-<span class="n">ax</span><span class="p">,</span> <span class="n">bx</span><span class="p">,</span> <span class="n">ay</span><span class="p">,</span> <span class="n">by</span> <span class="o">=</span> <span class="n">wolski_to_cs</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Coupled one-turn matrix</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute (uncoupled) CS twiss parameters</span>
+
+<span class="p">(</span><span class="n">nux</span><span class="p">,</span> <span class="n">nuy</span><span class="p">),</span> <span class="n">_</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">twiss</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+
+<span class="n">mux</span><span class="p">,</span> <span class="n">muy</span> <span class="o">=</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">nux</span><span class="p">,</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">nuy</span>
+
+<span class="n">ax</span><span class="p">,</span> <span class="n">bx</span><span class="p">,</span> <span class="n">ay</span><span class="p">,</span> <span class="n">by</span> <span class="o">=</span> <span class="n">wolski_to_cs</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+
+<span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">ax</span><span class="p">,</span> <span class="n">bx</span><span class="p">,</span> <span class="n">ay</span><span class="p">,</span> <span class="n">by</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+tensor([7.539e-16, 1.816e+01, 1.423e-15, 7.345e+00], dtype=torch.float64)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute coupled one-turn matrix</span>
 
 <span class="n">dm</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">kick</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5E-3</span><span class="p">,</span> <span class="n">intermediate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">dm</span> <span class="o">@</span> <span class="n">m</span> <span class="o">@</span> <span class="n">dm</span>
@@ -13496,7 +13520,7 @@ tensor([[2.192e-01, 1.772e+01, 0.000e+00, 0.000e+00],
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -13508,10 +13532,11 @@ tensor([[ 2.192e-01,  1.772e+01,  8.859e-03,  0.000e+00],
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Coupled one-turn matrix (jet)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Coupled one-turn matrix from jet</span>
+<span class="c1"># Note, jet is first order in skew quadrupole strenght</span>
 
 <span class="n">dkf</span> <span class="o">=</span> <span class="mf">1.0E-3</span>
 <span class="n">dkd</span> <span class="o">=</span> <span class="mf">0.0</span>
@@ -13524,7 +13549,7 @@ tensor([[ 2.192e-01,  1.772e+01,  8.859e-03,  0.000e+00],
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -13536,32 +13561,12 @@ tensor([[ 2.192e-01,  1.772e+01,  8.859e-03,  0.000e+00],
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dQmin (approximate formula Edwards &amp; Shyphers)</span>
-
-<span class="nb">abs</span><span class="p">(</span><span class="n">dkf</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">bx</span><span class="o">*</span><span class="n">by</span><span class="p">)</span><span class="o">.</span><span class="n">sqrt</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-tensor(1.838e-03, dtype=torch.float64)
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dQmin (exact in nux - nuy, first order in skew quadrupole amplitude)</span>
-<span class="c1"># Note, without abs, this expression should be valid for nux and nuy in [0, 1/2]</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># |dQmin| (Edwards &amp; Shyphers, first order in amplitude and unperturbed tune differenct)</span>
 
-<span class="nb">abs</span><span class="p">(</span><span class="n">dkf</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">bx</span><span class="o">*</span><span class="n">by</span><span class="p">)</span><span class="o">.</span><span class="n">sqrt</span><span class="p">()</span><span class="o">*</span><span class="p">(</span><span class="n">mux</span><span class="o">.</span><span class="n">sin</span><span class="p">()</span><span class="o">*</span><span class="n">muy</span><span class="o">.</span><span class="n">sin</span><span class="p">())</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">sqrt</span><span class="p">()</span><span class="o">/</span><span class="p">(</span><span class="n">mux</span><span class="o">.</span><span class="n">sin</span><span class="p">()</span> <span class="o">+</span> <span class="n">muy</span><span class="o">.</span><span class="n">sin</span><span class="p">())</span>
+<span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">abs</span><span class="p">(</span><span class="n">dkf</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">bx</span><span class="o">*</span><span class="n">by</span><span class="p">)</span><span class="o">.</span><span class="n">sqrt</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s1">.6e</span><span class="si">}</span><span class="s1">&#39;</span>
 </pre></div>
 </div>
 </div>
@@ -13571,23 +13576,17 @@ tensor(1.838e-03, dtype=torch.float64)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-tensor(1.831e-03, dtype=torch.float64)
+&#39;1.838149e-03&#39;
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dQmin (TEAPOT manual, appendix G, 1996)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dQmin (first order in amplitude)</span>
+<span class="c1"># Note, tunes in [0, 1/2] are assumed</span>
 
-<span class="p">(</span><span class="n">nux</span><span class="p">,</span> <span class="n">nuy</span><span class="p">),</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">twiss</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
-
-<span class="n">mux</span><span class="p">,</span> <span class="n">muy</span> <span class="o">=</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">nux</span><span class="p">,</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">nuy</span>
-
-<span class="n">B</span> <span class="o">=</span> <span class="n">m</span><span class="p">[:</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">:]</span>
-<span class="n">C</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="mi">2</span><span class="p">:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span>
-
-<span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">C</span> <span class="o">+</span> <span class="n">symplectic_conjugate</span><span class="p">(</span><span class="n">B</span><span class="p">))</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">sqrt</span><span class="p">()</span><span class="o">/</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">mux</span><span class="o">.</span><span class="n">sin</span><span class="p">()</span> <span class="o">+</span> <span class="n">muy</span><span class="o">.</span><span class="n">sin</span><span class="p">()))</span>
+<span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">abs</span><span class="p">(</span><span class="n">dkf</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">bx</span><span class="o">*</span><span class="n">by</span><span class="p">)</span><span class="o">.</span><span class="n">sqrt</span><span class="p">()</span><span class="o">*</span><span class="p">(</span><span class="n">mux</span><span class="o">.</span><span class="n">sin</span><span class="p">()</span><span class="o">*</span><span class="n">muy</span><span class="o">.</span><span class="n">sin</span><span class="p">())</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">sqrt</span><span class="p">()</span><span class="o">/</span><span class="p">(</span><span class="n">mux</span><span class="o">.</span><span class="n">sin</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">muy</span><span class="o">.</span><span class="n">sin</span><span class="p">())</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s1">.6e</span><span class="si">}</span><span class="s1">&#39;</span>
 </pre></div>
 </div>
 </div>
@@ -13597,19 +13596,62 @@ tensor(1.831e-03, dtype=torch.float64)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-tensor(1.831e-03, dtype=torch.float64)
+&#39;1.831163e-03&#39;
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dQmin (TEAPOT manual, appendix G, 1996) (exact expression)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dQmin (TEAPOT manual, appendix G, 1996)</span>
+<span class="c1"># Note,</span>
 
-<span class="c1"># Note, first order derivative is not zero</span>
-<span class="c1"># Do not evaluate at exact zero</span>
+<span class="p">(</span><span class="n">NUX</span><span class="p">,</span> <span class="n">NUY</span><span class="p">),</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">twiss</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">target</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+<span class="n">mux</span><span class="p">,</span> <span class="n">muy</span> <span class="o">=</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">NUX</span><span class="p">,</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">NUY</span>
+
+<span class="n">B</span> <span class="o">=</span> <span class="n">m</span><span class="p">[:</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">:]</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="mi">2</span><span class="p">:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+
+<span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">C</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">symplectic_conjugate</span><span class="p">(</span><span class="n">B</span><span class="p">))</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">sqrt</span><span class="p">()</span><span class="o">/</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">mux</span><span class="o">.</span><span class="n">sin</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">muy</span><span class="o">.</span><span class="n">sin</span><span class="p">()))</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s1">.6e</span><span class="si">}</span><span class="s1">&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#39;1.831193e-03&#39;
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Effect of skew quadrupole on tunes</span>
+
+<span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">nux</span> <span class="o">-</span> <span class="n">NUX</span><span class="p">,</span> <span class="n">nuy</span> <span class="o">-</span> <span class="n">NUY</span><span class="p">])</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+tensor([1.275e-05, 1.314e-05], dtype=torch.float64)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dQmin derivative (TEAPOT manual, appendix G, 1996)</span>
+
+<span class="k">def</span> <span class="nf">dQmin</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
     <span class="n">m</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">fodo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">k</span><span class="p">),</span> <span class="n">fp</span><span class="p">,</span> <span class="n">intermediate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="p">(</span><span class="n">nux</span><span class="p">,</span> <span class="n">nuy</span><span class="p">),</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">twiss</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
     <span class="n">mux</span><span class="p">,</span> <span class="n">muy</span> <span class="o">=</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">nux</span><span class="p">,</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">nuy</span>
@@ -13617,10 +13659,24 @@ tensor(1.831e-03, dtype=torch.float64)
     <span class="n">C</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="mi">2</span><span class="p">:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">C</span> <span class="o">+</span> <span class="n">symplectic_conjugate</span><span class="p">(</span><span class="n">B</span><span class="p">))</span><span class="o">.</span><span class="n">diag</span><span class="p">()</span><span class="o">.</span><span class="n">prod</span><span class="p">()</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">sqrt</span><span class="p">()</span><span class="o">/</span><span class="p">(</span><span class="n">mux</span><span class="o">.</span><span class="n">sin</span><span class="p">()</span> <span class="o">+</span> <span class="n">muy</span><span class="o">.</span><span class="n">sin</span><span class="p">())</span><span class="o">/</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">target</span><span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="n">dk</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">derivative</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">k</span> <span class="o">+</span> <span class="n">dk</span><span class="p">,</span> <span class="n">intermediate</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">derivative</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">k</span> <span class="o">+</span> <span class="mf">1.0E-16</span><span class="p">,</span> <span class="n">intermediate</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">derivative</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">intermediate</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dQmin</span><span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="n">dk</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">()</span>
+
+<span class="c1"># Derivative a zero is not defined</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">derivative</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">dQmin</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">intermediate</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">()</span>
+
+<span class="c1"># Derivatives at points near zero are valid (note the sign flip)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">derivative</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">dQmin</span><span class="p">,</span> <span class="n">k</span> <span class="o">+</span> <span class="mf">1.0E-16</span><span class="p">,</span> <span class="n">intermediate</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">derivative</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">dQmin</span><span class="p">,</span> <span class="n">k</span> <span class="o">-</span> <span class="mf">1.0E-16</span><span class="p">,</span> <span class="n">intermediate</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">()</span>
+
+<span class="c1"># Derivative at a point</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">derivative</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">dQmin</span><span class="p">,</span> <span class="n">k</span> <span class="o">+</span> <span class="n">dk</span><span class="p">,</span> <span class="n">intermediate</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -13630,16 +13686,30 @@ tensor(1.831e-03, dtype=torch.float64)
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 tensor(1.831e-03, dtype=torch.float64)
-tensor([1.831e+00, 1.725e+00], dtype=torch.float64)
-tensor([1.835e+00, 1.715e+00], dtype=torch.float64)
+
 tensor([nan, nan], dtype=torch.float64)
+
+tensor([1.835e+00, 1.715e+00], dtype=torch.float64)
+tensor([-1.835e+00, -1.715e+00], dtype=torch.float64)
+
+tensor([1.831e+00, 1.725e+00], dtype=torch.float64)
+
 </pre></div></div>
 </div>
 </section>
-<section id="Example-39:-Coupling-(responce-&amp;-correction)">
-<h1>Example-39: Coupling (responce &amp; correction)<a class="headerlink" href="#Example-39:-Coupling-(responce-&-correction)" title="Link to this heading"></a></h1>
-<div class="nbinput docutils container">
+<section id="Example-39:-Coupling-(minimal-tune-distance-correction)">
+<h1>Example-39: Coupling (minimal tune distance correction)<a class="headerlink" href="#Example-39:-Coupling-(minimal-tune-distance-correction)" title="Link to this heading"></a></h1>
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># In this example point derivative of dQmin (minimal tune distance) is used for coupling correction illustration</span>
+<span class="c1"># A pair of skew quadrupole errors are added and correction is performed with GD</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import</span>
@@ -13680,7 +13750,7 @@ False
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set data type and device</span>
@@ -13691,7 +13761,7 @@ False
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set elements</span>
@@ -13735,7 +13805,7 @@ False
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set transport maps between observation points (close tunes, bends are replaced with drifts)</span>
@@ -13793,7 +13863,7 @@ tensor([0., 0., 0., 0.], dtype=torch.float64)
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute fixed point</span>
@@ -13815,7 +13885,7 @@ tensor([0., 0., 0., 0.], dtype=torch.float64)
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute parametric fixed point</span>
@@ -13827,7 +13897,7 @@ tensor([0., 0., 0., 0.], dtype=torch.float64)
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -13840,7 +13910,7 @@ tensor([0., 0., 0., 0.], dtype=torch.float64)
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Propagate parametric fixed point</span>
@@ -13852,7 +13922,7 @@ tensor([0., 0., 0., 0.], dtype=torch.float64)
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -13865,7 +13935,7 @@ tensor([0., 0., 0., 0.], dtype=torch.float64)
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Propagate parametric identity (surrogate model for linear dynamics)</span>
@@ -13875,13 +13945,13 @@ tensor([0., 0., 0., 0.], dtype=torch.float64)
 </pre></div>
 </div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute derivative of dQmin with respect to skew knobs</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Minimal tuen distance (using 1st order parametric matrix arounf closed orbit)</span>
 
-<span class="k">def</span> <span class="nf">target</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">dQmin</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
     <span class="n">m</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">jet</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">k</span><span class="p">]),</span> <span class="n">fp</span><span class="p">,</span> <span class="n">intermediate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="p">(</span><span class="n">nux</span><span class="p">,</span> <span class="n">nuy</span><span class="p">),</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">twiss</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
     <span class="n">mux</span><span class="p">,</span> <span class="n">muy</span> <span class="o">=</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">nux</span><span class="p">,</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">nuy</span>
@@ -13889,58 +13959,83 @@ tensor([0., 0., 0., 0.], dtype=torch.float64)
     <span class="n">C</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="mi">2</span><span class="p">:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span>
     <span class="p">(</span><span class="n">m11</span><span class="p">,</span> <span class="n">m12</span><span class="p">),</span> <span class="p">(</span><span class="n">m21</span><span class="p">,</span> <span class="n">m22</span><span class="p">)</span> <span class="o">=</span> <span class="n">C</span> <span class="o">+</span> <span class="n">symplectic_conjugate</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
     <span class="k">return</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">m11</span><span class="o">*</span><span class="n">m22</span> <span class="o">-</span> <span class="n">m12</span><span class="o">*</span><span class="n">m21</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">sqrt</span><span class="p">()</span><span class="o">/</span><span class="p">(</span><span class="n">mux</span><span class="o">.</span><span class="n">sin</span><span class="p">()</span> <span class="o">+</span> <span class="n">muy</span><span class="o">.</span><span class="n">sin</span><span class="p">())</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
-
-<span class="n">gradient</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">k</span> <span class="o">+</span> <span class="mf">1.0E-16</span><span class="p">,</span> <span class="n">intermediate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">gradient</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-tensor([1.835e+00, 1.715e+00], dtype=torch.float64)
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set skew errors</span>
 
-<span class="n">dkf</span> <span class="o">=</span> <span class="mf">1.0E-3</span>
-<span class="n">dkd</span> <span class="o">=</span> <span class="mf">1.0E-3</span>
+<span class="n">dkf</span> <span class="o">=</span> <span class="mf">1.0E-2</span>
+<span class="n">dkd</span> <span class="o">=</span> <span class="mf">1.0E-2</span>
 
 <span class="n">dk</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">dkf</span><span class="p">,</span> <span class="n">dkd</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Note, the sign flip doesn&#39;t change dQmin value</span>
 
-<span class="n">derivative</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">k</span> <span class="o">+</span> <span class="n">dk</span><span class="p">,</span> <span class="n">intermediate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
+<span class="n">dQmin</span><span class="p">(</span><span class="o">+</span><span class="n">dk</span><span class="p">)</span> <span class="o">-</span> <span class="n">dQmin</span><span class="p">(</span><span class="o">-</span><span class="n">dk</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-tensor([1.835e+00, 1.715e+00], dtype=torch.float64)
+tensor(0., dtype=torch.float64)
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Use model (i.e. derivative at (near) zero for coupling correction)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute dQmin and gradient</span>
+
+<span class="n">derivative</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">dQmin</span><span class="p">,</span> <span class="n">k</span> <span class="o">+</span> <span class="n">dk</span><span class="p">,</span> <span class="n">intermediate</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[tensor(3.574e-02, dtype=torch.float64),
+ tensor([1.871e+00, 1.751e+00], dtype=torch.float64)]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Correction setup (minimize dQmin)</span>
 
 <span class="c1"># Set objective</span>
+<span class="c1"># Note, this objective represents a model with errors, the task is to find knob values that minimize it</span>
 
-<span class="n">objective</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="n">target</span><span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="n">dk</span><span class="p">)</span>
+<span class="n">error</span> <span class="o">=</span> <span class="n">dk</span>
+<span class="n">objective</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">knobs</span><span class="p">:</span> <span class="n">dQmin</span><span class="p">(</span><span class="n">knobs</span> <span class="o">+</span> <span class="n">error</span><span class="p">)</span>
 
-<span class="n">solution</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">dk</span><span class="p">)</span>
+<span class="c1"># Exact solution</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">objective</span><span class="p">(</span><span class="o">-</span><span class="n">dk</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">objective</span><span class="p">(</span><span class="o">-</span><span class="n">error</span><span class="p">))</span>
+
+<span class="c1"># Set initial guess (zero knobs values in this example)</span>
+
+<span class="n">solution</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+
+<span class="c1"># Evaluate objective for initial guess</span>
+
 <span class="nb">print</span><span class="p">(</span><span class="n">objective</span><span class="p">(</span><span class="n">solution</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -13951,67 +14046,287 @@ tensor([1.835e+00, 1.715e+00], dtype=torch.float64)
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 tensor(0., dtype=torch.float64)
-tensor(3.550e-03, dtype=torch.float64)
+tensor(3.574e-02, dtype=torch.float64)
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Correction loop (fixed gradient)</span>
-<span class="c1"># Note, the direction might be wrong depending on signs of skew quadrupole errors</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Correction loop (gradient descent)</span>
 
+<span class="c1"># Note, small learning rate is required here for convergence</span>
+
+<span class="n">ni</span> <span class="o">=</span> <span class="mi">2048</span>
+<span class="n">lr</span> <span class="o">=</span> <span class="mf">2.5E-6</span>
 <span class="n">xs</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">solution</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">dk</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2048</span><span class="p">):</span>
-    <span class="n">solution</span> <span class="o">-=</span> <span class="mf">0.5E-6</span><span class="o">*</span><span class="n">gradient</span>
-    <span class="n">xs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">objective</span><span class="p">(</span><span class="n">solution</span><span class="p">))</span>
-<span class="n">xs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">xs</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-6.531871071150959e-07
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Correction loop (update gradient)</span>
 
-<span class="n">ys</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">solution</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">dk</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2048</span><span class="p">):</span>
-    <span class="n">solution</span> <span class="o">-=</span> <span class="mf">0.5E-6</span><span class="o">*</span><span class="n">derivative</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">objective</span><span class="p">,</span> <span class="n">solution</span><span class="p">,</span> <span class="n">intermediate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">ys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">objective</span><span class="p">(</span><span class="n">solution</span><span class="p">))</span>
-<span class="n">ys</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">ys</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">ys</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-3.247979234283303e-07
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compare</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ni</span><span class="p">):</span>
+    <span class="n">solution</span> <span class="o">-=</span> <span class="n">lr</span><span class="o">*</span><span class="n">derivative</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">objective</span><span class="p">,</span> <span class="n">solution</span><span class="p">,</span> <span class="n">intermediate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">xs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">objective</span><span class="p">(</span><span class="n">solution</span><span class="p">))</span>
+
+<span class="n">xs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
+
+<span class="c1"># Evaluate objective for final solution</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">dk</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="o">-</span><span class="n">solution</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">objective</span><span class="p">(</span><span class="n">solution</span><span class="p">))</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ys</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+tensor([1.000e-02, 1.000e-02], dtype=torch.float64)
+tensor([9.462e-03, 8.845e-03], dtype=torch.float64)
+tensor(2.966e-03, dtype=torch.float64)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_ndmap_523_1.png" src="../_images/examples_ndmap_523_1.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Another (prefered) approach would be to fit our model to observation</span>
+<span class="c1"># In this case, observer value is computed first, the task is to find knob values that fit our model to the observed</span>
+<span class="c1"># The next step is to interact with experemental model by applying fitted negativd knob values</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set objective</span>
+
+<span class="n">dQmin_observed</span> <span class="o">=</span> <span class="n">dQmin</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+<span class="n">objective</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">knobs</span><span class="p">:</span> <span class="p">(</span><span class="n">dQmin</span><span class="p">(</span><span class="n">knobs</span><span class="p">)</span> <span class="o">-</span> <span class="n">dQmin_observed</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">solution</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">dQmin</span><span class="p">(</span><span class="n">error</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dQmin</span><span class="p">(</span><span class="n">error</span> <span class="o">-</span> <span class="n">error</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">objective</span><span class="p">(</span><span class="n">error</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+tensor(3.574e-02, dtype=torch.float64)
+tensor(0., dtype=torch.float64)
+tensor(0., dtype=torch.float64)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The derivative at zero initial guess is not defined</span>
+
+<span class="n">derivative</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">objective</span><span class="p">,</span> <span class="n">solution</span><span class="p">,</span> <span class="n">intermediate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+tensor([nan, nan], dtype=torch.float64)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set random initial guess</span>
+
+<span class="n">solution</span> <span class="o">=</span> <span class="mf">1.0E-3</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">randn_like</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+<span class="n">derivative</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">objective</span><span class="p">,</span> <span class="n">solution</span><span class="p">,</span> <span class="n">intermediate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+tensor([-1.238e-01, -1.151e-01], dtype=torch.float64)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Correction loop (gradient descent)</span>
+
+<span class="c1"># Note, in this case learning rate is not as small as in the previouse case</span>
+<span class="c1"># Thus, the number of iterations is also reduced</span>
+
+<span class="n">ni</span> <span class="o">=</span> <span class="mi">256</span>
+<span class="n">lr</span> <span class="o">=</span> <span class="mf">5.0E-3</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ni</span><span class="p">):</span>
+    <span class="n">solution</span> <span class="o">-=</span> <span class="n">lr</span><span class="o">*</span><span class="n">derivative</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">objective</span><span class="p">,</span> <span class="n">solution</span><span class="p">,</span> <span class="n">intermediate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">xs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">objective</span><span class="p">(</span><span class="n">solution</span><span class="p">))</span>
+
+<span class="n">k1</span> <span class="o">=</span> <span class="n">solution</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
+
+<span class="c1"># Evaluate objective for final solution</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">dk</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="o">-</span><span class="n">k1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">objective</span><span class="p">(</span><span class="n">k1</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+tensor([1.000e-02, 1.000e-02], dtype=torch.float64)
+tensor([-9.920e-03, -1.009e-02], dtype=torch.float64)
+tensor(1.014e-18, dtype=torch.float64)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_ndmap_528_1.png" src="../_images/examples_ndmap_528_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># While objective is minimized, the knob values do not correspond to the set errors</span>
+<span class="c1"># Note, objective values with &#39;+&#39; and &#39;-&#39; are the same here</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">objective</span><span class="p">(</span><span class="o">-</span><span class="n">error</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">objective</span><span class="p">(</span><span class="o">+</span><span class="n">k1</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">objective</span><span class="p">(</span><span class="o">-</span><span class="n">k1</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+tensor(0., dtype=torch.float64)
+tensor(1.014e-18, dtype=torch.float64)
+tensor(1.014e-18, dtype=torch.float64)
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Now, if we apply the obtained negative solution to the observed system, dQmin value will be reduced, but not as much as if the exact errors were recovered</span>
+
+<span class="c1"># Note, a fraction of a fitted solution can be applied</span>
+<span class="c1"># Also, new correction step can be performed using new observed value</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">dQmin</span><span class="p">(</span><span class="n">error</span> <span class="o">-</span> <span class="mf">0.00</span><span class="o">*</span><span class="n">k1</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dQmin</span><span class="p">(</span><span class="n">error</span> <span class="o">-</span> <span class="mf">0.25</span><span class="o">*</span><span class="n">k1</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dQmin</span><span class="p">(</span><span class="n">error</span> <span class="o">-</span> <span class="mf">0.50</span><span class="o">*</span><span class="n">k1</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dQmin</span><span class="p">(</span><span class="n">error</span> <span class="o">-</span> <span class="mf">1.00</span><span class="o">*</span><span class="n">k1</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+tensor(3.574e-02, dtype=torch.float64)
+tensor(2.672e-02, dtype=torch.float64)
+tensor(1.778e-02, dtype=torch.float64)
+tensor(1.860e-05, dtype=torch.float64)
+
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Perform next correction step</span>
+
+<span class="n">dQmin_observed</span> <span class="o">=</span> <span class="n">dQmin</span><span class="p">(</span><span class="n">error</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">k1</span><span class="p">)</span>
+<span class="n">objective</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">knobs</span><span class="p">:</span> <span class="p">(</span><span class="n">dQmin</span><span class="p">(</span><span class="n">knobs</span><span class="p">)</span> <span class="o">-</span> <span class="n">dQmin_observed</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set random initial guess</span>
+
+<span class="n">solution</span> <span class="o">=</span> <span class="mf">1.0E-3</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">randn_like</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+<span class="n">derivative</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">objective</span><span class="p">,</span> <span class="n">solution</span><span class="p">,</span> <span class="n">intermediate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+tensor([-6.831e-02, -6.745e-02], dtype=torch.float64)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Correction loop</span>
+
+<span class="n">ni</span> <span class="o">=</span> <span class="mi">256</span>
+<span class="n">lr</span> <span class="o">=</span> <span class="mf">5.0E-3</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ni</span><span class="p">):</span>
+    <span class="n">solution</span> <span class="o">-=</span> <span class="n">lr</span><span class="o">*</span><span class="n">derivative</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">objective</span><span class="p">,</span> <span class="n">solution</span><span class="p">,</span> <span class="n">intermediate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">xs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">objective</span><span class="p">(</span><span class="n">solution</span><span class="p">))</span>
+
+<span class="n">k2</span> <span class="o">=</span> <span class="n">solution</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -14021,7 +14336,726 @@ tensor(3.550e-03, dtype=torch.float64)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_ndmap_520_0.png" src="../_images/examples_ndmap_520_0.png" />
+<img alt="../_images/examples_ndmap_533_0.png" src="../_images/examples_ndmap_533_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">dQmin</span><span class="p">(</span><span class="n">error</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dQmin</span><span class="p">(</span><span class="n">error</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">k1</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dQmin</span><span class="p">(</span><span class="n">error</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">k1</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">k2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+tensor(3.574e-02, dtype=torch.float64)
+tensor(1.778e-02, dtype=torch.float64)
+tensor(8.876e-03, dtype=torch.float64)
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Note, there seems to be no guarantee for the above procedure to converge</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Example-40:-Coupling-(amplitude-ratio-correction)">
+<h1>Example-40: Coupling (amplitude ratio correction)<a class="headerlink" href="#Example-40:-Coupling-(amplitude-ratio-correction)" title="Link to this heading"></a></h1>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># In this example an objective function constructed from ratio of coupled and uncoupled amplitudes is used to minimize coupling</span>
+<span class="c1"># Amplitudes can be computed from simulated TbT data at one or several locations</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="kn">from</span> <span class="nn">ndmap.derivative</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="kn">from</span> <span class="nn">ndmap.signature</span> <span class="kn">import</span> <span class="n">chop</span>
+<span class="kn">from</span> <span class="nn">ndmap.series</span> <span class="kn">import</span> <span class="n">series</span>
+<span class="kn">from</span> <span class="nn">ndmap.series</span> <span class="kn">import</span> <span class="n">clean</span>
+<span class="kn">from</span> <span class="nn">ndmap.evaluate</span> <span class="kn">import</span> <span class="n">evaluate</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">identity</span>
+<span class="kn">from</span> <span class="nn">ndmap.propagate</span> <span class="kn">import</span> <span class="n">propagate</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">fixed_point</span>
+<span class="kn">from</span> <span class="nn">ndmap.pfp</span> <span class="kn">import</span> <span class="n">parametric_fixed_point</span>
+
+<span class="kn">from</span> <span class="nn">twiss.wolski</span> <span class="kn">import</span> <span class="n">twiss</span>
+<span class="kn">from</span> <span class="nn">twiss.convert</span> <span class="kn">import</span> <span class="n">wolski_to_cs</span>
+<span class="kn">from</span> <span class="nn">twiss.matrix</span> <span class="kn">import</span> <span class="n">symplectic_conjugate</span>
+
+<span class="n">torch</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">sci_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
+
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+False
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set data type and device</span>
+
+<span class="n">dtype</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">float64</span>
+<span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set elements</span>
+
+<span class="k">def</span> <span class="nf">drif</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">l</span><span class="p">):</span>
+    <span class="p">(</span><span class="n">qx</span><span class="p">,</span> <span class="n">px</span><span class="p">,</span> <span class="n">qy</span><span class="p">,</span> <span class="n">py</span><span class="p">),</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="p">),</span> <span class="n">l</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">l</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">qx</span> <span class="o">+</span> <span class="n">l</span><span class="o">*</span><span class="n">px</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">w</span><span class="p">),</span> <span class="n">px</span><span class="p">,</span> <span class="n">qy</span> <span class="o">+</span> <span class="n">l</span><span class="o">*</span><span class="n">py</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">w</span><span class="p">),</span> <span class="n">py</span><span class="p">])</span>
+
+<span class="k">def</span> <span class="nf">quad</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">kq</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+    <span class="p">(</span><span class="n">qx</span><span class="p">,</span> <span class="n">px</span><span class="p">,</span> <span class="n">qy</span><span class="p">,</span> <span class="n">py</span><span class="p">),</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="p">),</span> <span class="n">kq</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">kq</span><span class="p">,</span> <span class="n">l</span><span class="o">/</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">qx</span><span class="p">,</span> <span class="n">qy</span> <span class="o">=</span> <span class="n">qx</span> <span class="o">+</span> <span class="n">l</span><span class="o">*</span><span class="n">px</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">w</span><span class="p">),</span> <span class="n">qy</span> <span class="o">+</span> <span class="n">l</span><span class="o">*</span><span class="n">py</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">w</span><span class="p">)</span>
+        <span class="n">px</span><span class="p">,</span> <span class="n">py</span> <span class="o">=</span> <span class="n">px</span> <span class="o">-</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">l</span><span class="o">*</span><span class="n">kq</span><span class="o">*</span><span class="n">qx</span><span class="p">,</span> <span class="n">py</span> <span class="o">+</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">l</span><span class="o">*</span><span class="n">kq</span><span class="o">*</span><span class="n">qy</span>
+        <span class="n">qx</span><span class="p">,</span> <span class="n">qy</span> <span class="o">=</span> <span class="n">qx</span> <span class="o">+</span> <span class="n">l</span><span class="o">*</span><span class="n">px</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">w</span><span class="p">),</span> <span class="n">qy</span> <span class="o">+</span> <span class="n">l</span><span class="o">*</span><span class="n">py</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">w</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">qx</span><span class="p">,</span> <span class="n">px</span><span class="p">,</span> <span class="n">qy</span><span class="p">,</span> <span class="n">py</span><span class="p">])</span>
+
+<span class="k">def</span> <span class="nf">sext</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">ks</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="p">(</span><span class="n">qx</span><span class="p">,</span> <span class="n">px</span><span class="p">,</span> <span class="n">qy</span><span class="p">,</span> <span class="n">py</span><span class="p">),</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="p">),</span> <span class="n">ks</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">ks</span><span class="p">,</span> <span class="n">l</span><span class="o">/</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">qx</span><span class="p">,</span> <span class="n">qy</span> <span class="o">=</span> <span class="n">qx</span> <span class="o">+</span> <span class="n">l</span><span class="o">*</span><span class="n">px</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">w</span><span class="p">),</span> <span class="n">qy</span> <span class="o">+</span> <span class="n">l</span><span class="o">*</span><span class="n">py</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">w</span><span class="p">)</span>
+        <span class="n">px</span><span class="p">,</span> <span class="n">py</span> <span class="o">=</span> <span class="n">px</span> <span class="o">-</span> <span class="mf">1.0</span><span class="o">*</span><span class="n">l</span><span class="o">*</span><span class="n">ks</span><span class="o">*</span><span class="p">(</span><span class="n">qx</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">qy</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span> <span class="n">py</span> <span class="o">+</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">l</span><span class="o">*</span><span class="n">ks</span><span class="o">*</span><span class="n">qx</span><span class="o">*</span><span class="n">qy</span>
+        <span class="n">qx</span><span class="p">,</span> <span class="n">qy</span> <span class="o">=</span> <span class="n">qx</span> <span class="o">+</span> <span class="n">l</span><span class="o">*</span><span class="n">px</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">w</span><span class="p">),</span> <span class="n">qy</span> <span class="o">+</span> <span class="n">l</span><span class="o">*</span><span class="n">py</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">w</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">qx</span><span class="p">,</span> <span class="n">px</span><span class="p">,</span> <span class="n">qy</span><span class="p">,</span> <span class="n">py</span><span class="p">])</span>
+
+<span class="k">def</span> <span class="nf">bend</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">kq</span><span class="p">,</span> <span class="n">ks</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+    <span class="p">(</span><span class="n">qx</span><span class="p">,</span> <span class="n">px</span><span class="p">,</span> <span class="n">qy</span><span class="p">,</span> <span class="n">py</span><span class="p">),</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="p">),</span> <span class="n">r</span><span class="p">,</span> <span class="n">kq</span><span class="p">,</span> <span class="n">ks</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">kq</span><span class="p">,</span> <span class="n">ks</span><span class="p">,</span> <span class="n">l</span><span class="o">/</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">qx</span><span class="p">,</span> <span class="n">qy</span> <span class="o">=</span> <span class="n">qx</span> <span class="o">+</span> <span class="n">l</span><span class="o">*</span><span class="n">px</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">w</span><span class="p">),</span> <span class="n">qy</span> <span class="o">+</span> <span class="n">l</span><span class="o">*</span><span class="n">py</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">w</span><span class="p">)</span>
+        <span class="n">px</span><span class="p">,</span> <span class="n">py</span> <span class="o">=</span> <span class="n">px</span> <span class="o">-</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">l</span><span class="o">*</span><span class="n">kq</span><span class="o">*</span><span class="n">qx</span> <span class="o">-</span> <span class="mf">1.0</span><span class="o">*</span><span class="n">l</span><span class="o">*</span><span class="n">ks</span><span class="o">*</span><span class="p">(</span><span class="n">qx</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">qy</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">l</span><span class="o">/</span><span class="n">r</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">w</span><span class="o">*</span><span class="n">r</span> <span class="o">-</span> <span class="n">qx</span><span class="p">),</span> <span class="n">py</span> <span class="o">+</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">l</span><span class="o">*</span><span class="n">kq</span><span class="o">*</span><span class="n">qy</span> <span class="o">+</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">l</span><span class="o">*</span><span class="n">ks</span><span class="o">*</span><span class="n">qx</span><span class="o">*</span><span class="n">qy</span>
+        <span class="n">qx</span><span class="p">,</span> <span class="n">qy</span> <span class="o">=</span> <span class="n">qx</span> <span class="o">+</span> <span class="n">l</span><span class="o">*</span><span class="n">px</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">w</span><span class="p">),</span> <span class="n">qy</span> <span class="o">+</span> <span class="n">l</span><span class="o">*</span><span class="n">py</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">w</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">qx</span><span class="p">,</span> <span class="n">px</span><span class="p">,</span> <span class="n">qy</span><span class="p">,</span> <span class="n">py</span><span class="p">])</span>
+
+<span class="k">def</span> <span class="nf">roll</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+    <span class="p">(</span><span class="n">qx</span><span class="p">,</span> <span class="n">px</span><span class="p">,</span> <span class="n">qy</span><span class="p">,</span> <span class="n">py</span><span class="p">),</span> <span class="n">cn</span><span class="p">,</span> <span class="n">sn</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">cos</span><span class="p">(),</span> <span class="n">a</span><span class="o">.</span><span class="n">sin</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">qx</span><span class="o">*</span><span class="n">cn</span> <span class="o">+</span> <span class="n">qy</span><span class="o">*</span><span class="n">sn</span><span class="p">,</span> <span class="n">px</span><span class="o">*</span><span class="n">cn</span> <span class="o">+</span> <span class="n">py</span><span class="o">*</span><span class="n">sn</span><span class="p">,</span> <span class="n">qy</span><span class="o">*</span><span class="n">cn</span> <span class="o">-</span> <span class="n">qx</span><span class="o">*</span><span class="n">sn</span><span class="p">,</span> <span class="n">py</span><span class="o">*</span><span class="n">cn</span> <span class="o">-</span> <span class="n">py</span><span class="o">*</span><span class="n">sn</span><span class="p">])</span>
+
+<span class="k">def</span> <span class="nf">kick</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">kn</span><span class="p">,</span> <span class="n">ks</span><span class="p">):</span>
+    <span class="p">(</span><span class="n">qx</span><span class="p">,</span> <span class="n">px</span><span class="p">,</span> <span class="n">qy</span><span class="p">,</span> <span class="n">py</span><span class="p">),</span> <span class="n">kn</span><span class="p">,</span> <span class="n">ks</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">kn</span><span class="p">,</span> <span class="n">ks</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">qx</span><span class="p">,</span> <span class="n">px</span> <span class="o">-</span> <span class="n">kn</span><span class="o">*</span><span class="n">qx</span> <span class="o">+</span> <span class="n">ks</span><span class="o">*</span><span class="n">qy</span><span class="p">,</span> <span class="n">qy</span><span class="p">,</span> <span class="n">py</span> <span class="o">+</span> <span class="n">ks</span><span class="o">*</span><span class="n">qx</span> <span class="o">+</span> <span class="n">kn</span><span class="o">*</span><span class="n">qy</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set transport maps between observation points</span>
+
+<span class="k">def</span> <span class="nf">map_01_02</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+    <span class="n">kf</span><span class="p">,</span> <span class="n">kd</span> <span class="o">=</span> <span class="n">k</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">kick</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">kf</span><span class="o">/</span><span class="mf">2.0</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">quad</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">],</span> <span class="mf">0.21</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">drif</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">],</span> <span class="mf">0.45</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">sext</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">drif</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">],</span> <span class="mf">0.45</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">drif</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">],</span> <span class="mf">3.0</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">drif</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">],</span> <span class="mf">0.45</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">sext</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">drif</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">],</span> <span class="mf">0.45</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">quad</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">],</span> <span class="o">-</span><span class="mf">0.18</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">kick</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">kd</span><span class="o">/</span><span class="mf">2.0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span>
+
+<span class="k">def</span> <span class="nf">map_02_03</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+    <span class="n">kf</span><span class="p">,</span> <span class="n">kd</span> <span class="o">=</span> <span class="n">k</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">kick</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">kd</span><span class="o">/</span><span class="mf">2.0</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">quad</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">],</span> <span class="o">-</span><span class="mf">0.18</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">drif</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">],</span> <span class="mf">0.45</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">sext</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">drif</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">],</span> <span class="mf">0.45</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">drif</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">],</span> <span class="mf">3.0</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">drif</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">],</span> <span class="mf">0.45</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">sext</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">drif</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">],</span> <span class="mf">0.45</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">quad</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">],</span> <span class="mf">0.21</span><span class="p">,</span> <span class="mf">0.50</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">kick</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">kf</span><span class="o">/</span><span class="mf">2.0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span>
+
+<span class="n">transport</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">map_01_02</span><span class="p">,</span>
+    <span class="n">map_02_03</span>
+<span class="p">]</span>
+
+<span class="c1"># Define one-turn transport</span>
+
+<span class="k">def</span> <span class="nf">fodo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">mapping</span> <span class="ow">in</span> <span class="n">transport</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="p">[</span><span class="mf">0.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+<span class="n">k</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="p">[</span><span class="mf">0.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">fodo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+tensor([0., 0., 0., 0.], dtype=torch.float64)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute fixed point</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="p">[</span><span class="mf">0.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+<span class="n">k</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="p">[</span><span class="mf">0.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+
+<span class="n">fp</span> <span class="o">=</span> <span class="n">fixed_point</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="n">fodo</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+tensor([0., 0., 0., 0.], dtype=torch.float64)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compute parametric fixed point</span>
+
+<span class="n">pfp</span> <span class="o">=</span> <span class="n">parametric_fixed_point</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="p">),</span> <span class="n">fp</span><span class="p">,</span> <span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">fodo</span><span class="p">)</span>
+<span class="n">chop</span><span class="p">(</span><span class="n">pfp</span><span class="p">)</span>
+<span class="n">pfp</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[[tensor([0., 0., 0., 0.], dtype=torch.float64),
+  tensor([[0., 0.],
+          [0., 0.],
+          [0., 0.],
+          [0., 0.]], dtype=torch.float64)]]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Propagate parametric fixed point</span>
+
+<span class="n">out</span> <span class="o">=</span> <span class="n">propagate</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">pfp</span><span class="p">,</span> <span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">fodo</span><span class="p">)</span>
+<span class="n">chop</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+<span class="n">out</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[[tensor([0., 0., 0., 0.], dtype=torch.float64),
+  tensor([[0., 0.],
+          [0., 0.],
+          [0., 0.],
+          [0., 0.]], dtype=torch.float64)]]
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Propagate parametric identity (surrogate model for linear dynamics)</span>
+
+<span class="n">jet</span> <span class="o">=</span> <span class="n">identity</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">fp</span><span class="p">,</span> <span class="n">parametric</span><span class="o">=</span><span class="n">pfp</span><span class="p">)</span>
+<span class="n">jet</span> <span class="o">=</span> <span class="n">propagate</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">jet</span><span class="p">,</span> <span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">fodo</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dQmin (TEAPOT manual, appendix G, 1996)</span>
+
+<span class="k">def</span> <span class="nf">dQmin</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+
+    <span class="n">m</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">jet</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">k</span><span class="p">]),</span> <span class="n">fp</span><span class="p">,</span> <span class="n">intermediate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="p">(</span><span class="n">nux</span><span class="p">,</span> <span class="n">nuy</span><span class="p">),</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">twiss</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+    <span class="n">mux</span><span class="p">,</span> <span class="n">muy</span> <span class="o">=</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">nux</span><span class="p">,</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">nuy</span>
+
+    <span class="n">B</span> <span class="o">=</span> <span class="n">m</span><span class="p">[:</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">:]</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="mi">2</span><span class="p">:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="p">(</span><span class="n">m11</span><span class="p">,</span> <span class="n">m12</span><span class="p">),</span> <span class="p">(</span><span class="n">m21</span><span class="p">,</span> <span class="n">m22</span><span class="p">)</span> <span class="o">=</span> <span class="n">C</span> <span class="o">+</span> <span class="n">symplectic_conjugate</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">m11</span><span class="o">*</span><span class="n">m22</span> <span class="o">-</span> <span class="n">m12</span><span class="o">*</span><span class="n">m21</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">sqrt</span><span class="p">()</span><span class="o">/</span><span class="p">(</span><span class="n">mux</span><span class="o">.</span><span class="n">sin</span><span class="p">()</span> <span class="o">+</span> <span class="n">muy</span><span class="o">.</span><span class="n">sin</span><span class="p">())</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set skew errors</span>
+
+<span class="n">dkf</span> <span class="o">=</span> <span class="o">+</span><span class="mf">1.0E-2</span>
+<span class="n">dkd</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0E-2</span>
+
+<span class="n">dk</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">dkf</span><span class="p">,</span> <span class="n">dkd</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+
+<span class="n">dQmin</span><span class="p">(</span><span class="n">dk</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+tensor(1.914e-03, dtype=torch.float64)
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Given qx TbT data, in linear approximation qx(n) = (cxx cos(mux n) + sxx sin(mux n)) +  (cxy cos(muy n) + sxy sin(muy n))</span>
+<span class="c1"># Amplitudes axx^2 = cxx^2 + sxx^2 and axy^2 = cxy^2 + cyx^2 are used to compute ratio axy/axx</span>
+<span class="c1"># Similary, ayx/ayy can be computed using qy</span>
+<span class="c1"># These ration are computed at each observation point</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Observation function</span>
+
+<span class="c1"># Fit &#39;experiment&#39; to &#39;model&#39; (&#39;experiment&#39; is &#39;model&#39; with errors)</span>
+<span class="c1"># The goal is to fit knobs so that &#39;experiment&#39; observation matches &#39;model&#39; observation (ratios are zero)</span>
+
+<span class="c1"># Fit &#39;model&#39; to &#39;experiment&#39;</span>
+<span class="c1"># The goal is to fit knobs so that &#39;model&#39; observation matches &#39;experiment&#39; observation (final ratios are non-zero)</span>
+
+<span class="c1"># Set initial condition for TbT</span>
+<span class="c1"># Exact value is not important, since the underlying model is linear</span>
+<span class="c1"># Also, this initial should be set relative to (parametric) closed orbit</span>
+
+<span class="n">initial</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+
+<span class="c1"># Normalized window for computation of amplitudes</span>
+
+<span class="k">def</span> <span class="nf">window</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">):</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span><span class="o">/</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="o">/</span><span class="p">((</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span><span class="o">**</span><span class="n">s</span><span class="o">*</span><span class="n">t</span><span class="o">**</span><span class="n">s</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">f</span><span class="o">/</span><span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">fn</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">error</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">k</span> <span class="o">+</span> <span class="n">dk</span>
+
+    <span class="n">w</span> <span class="o">=</span> <span class="n">window</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="n">matrix</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">jet</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">k</span><span class="p">]),</span> <span class="n">fp</span><span class="p">,</span> <span class="n">intermediate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">nux</span><span class="p">,</span> <span class="n">nuy</span><span class="p">),</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">twiss</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+
+    <span class="n">mux</span> <span class="o">=</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">nux</span>
+    <span class="n">muy</span> <span class="o">=</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">nuy</span>
+
+    <span class="n">xs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">mapping</span> <span class="ow">in</span> <span class="n">transport</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+            <span class="n">xs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">xs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">transport</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">cxx</span><span class="p">,</span> <span class="n">cxy</span><span class="p">,</span> <span class="n">cyx</span><span class="p">,</span> <span class="n">cyy</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="n">sxx</span><span class="p">,</span> <span class="n">sxy</span><span class="p">,</span> <span class="n">syx</span><span class="p">,</span> <span class="n">syy</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xs</span><span class="p">:</span>
+
+        <span class="n">qx</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">qy</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">x</span>
+
+        <span class="n">cxx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="o">*</span><span class="n">qx</span> <span class="o">@</span> <span class="p">(</span><span class="n">mux</span><span class="o">*</span><span class="n">t</span><span class="p">)</span><span class="o">.</span><span class="n">cos</span><span class="p">())</span>
+        <span class="n">cxy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="o">*</span><span class="n">qx</span> <span class="o">@</span> <span class="p">(</span><span class="n">muy</span><span class="o">*</span><span class="n">t</span><span class="p">)</span><span class="o">.</span><span class="n">cos</span><span class="p">())</span>
+        <span class="n">cyx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="o">*</span><span class="n">qy</span> <span class="o">@</span> <span class="p">(</span><span class="n">mux</span><span class="o">*</span><span class="n">t</span><span class="p">)</span><span class="o">.</span><span class="n">cos</span><span class="p">())</span>
+        <span class="n">cyy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="o">*</span><span class="n">qy</span> <span class="o">@</span> <span class="p">(</span><span class="n">muy</span><span class="o">*</span><span class="n">t</span><span class="p">)</span><span class="o">.</span><span class="n">cos</span><span class="p">())</span>
+
+        <span class="n">sxx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="o">*</span><span class="n">qx</span> <span class="o">@</span> <span class="p">(</span><span class="n">mux</span><span class="o">*</span><span class="n">t</span><span class="p">)</span><span class="o">.</span><span class="n">sin</span><span class="p">())</span>
+        <span class="n">sxy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="o">*</span><span class="n">qx</span> <span class="o">@</span> <span class="p">(</span><span class="n">muy</span><span class="o">*</span><span class="n">t</span><span class="p">)</span><span class="o">.</span><span class="n">sin</span><span class="p">())</span>
+        <span class="n">syx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="o">*</span><span class="n">qy</span> <span class="o">@</span> <span class="p">(</span><span class="n">mux</span><span class="o">*</span><span class="n">t</span><span class="p">)</span><span class="o">.</span><span class="n">sin</span><span class="p">())</span>
+        <span class="n">syy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="o">*</span><span class="n">qy</span> <span class="o">@</span> <span class="p">(</span><span class="n">muy</span><span class="o">*</span><span class="n">t</span><span class="p">)</span><span class="o">.</span><span class="n">sin</span><span class="p">())</span>
+
+    <span class="n">cxx</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">cxx</span><span class="p">)</span>
+    <span class="n">cxy</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">cxy</span><span class="p">)</span>
+    <span class="n">cyx</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">cyx</span><span class="p">)</span>
+    <span class="n">cyy</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">cyy</span><span class="p">)</span>
+
+    <span class="n">sxx</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">sxx</span><span class="p">)</span>
+    <span class="n">sxy</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">sxy</span><span class="p">)</span>
+    <span class="n">syx</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">syx</span><span class="p">)</span>
+    <span class="n">syy</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">syy</span><span class="p">)</span>
+
+    <span class="n">axx</span> <span class="o">=</span> <span class="p">(</span><span class="n">cxx</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">sxx</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sqrt</span><span class="p">()</span>
+    <span class="n">axy</span> <span class="o">=</span> <span class="p">(</span><span class="n">cxy</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">sxy</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sqrt</span><span class="p">()</span>
+    <span class="n">ayx</span> <span class="o">=</span> <span class="p">(</span><span class="n">cyx</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">syx</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sqrt</span><span class="p">()</span>
+    <span class="n">ayy</span> <span class="o">=</span> <span class="p">(</span><span class="n">cyy</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">syy</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sqrt</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">axy</span><span class="o">/</span><span class="n">axx</span><span class="p">,</span> <span class="n">ayx</span><span class="o">/</span><span class="n">ayy</span><span class="p">])</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The above function returns ratios (as a vector, so that the derivative is a matrix)</span>
+<span class="c1"># rx_1, rx_2, ..., ry_1, ry_2, ...</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Without errors, the ratios should be zero</span>
+<span class="c1"># The accuracy is determined by the TbT data length</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">fn</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="n">initial</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">fn</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="n">initial</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">fn</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="n">initial</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">fn</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="n">initial</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">fn</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="n">initial</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">fn</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="n">initial</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+tensor([1.041e-04, 1.041e-04, 1.041e-04, 1.041e-04], dtype=torch.float64)
+tensor([4.081e-06, 4.081e-06, 4.081e-06, 4.081e-06], dtype=torch.float64)
+tensor([7.097e-09, 7.097e-09, 7.097e-09, 7.097e-09], dtype=torch.float64)
+
+tensor([5.047e-02, 4.771e-03, 1.535e-02, 1.492e-02], dtype=torch.float64)
+tensor([5.034e-02, 4.611e-03, 1.539e-02, 1.511e-02], dtype=torch.float64)
+tensor([5.011e-02, 4.638e-03, 1.531e-02, 1.517e-02], dtype=torch.float64)
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Correction (&#39;experiment&#39; to &#39;model&#39;)</span>
+
+<span class="c1"># Learning rate</span>
+
+<span class="n">lr</span> <span class="o">=</span> <span class="mf">0.75</span>
+
+<span class="c1"># Target values</span>
+
+<span class="n">vf</span> <span class="o">=</span> <span class="n">fn</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="n">initial</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># Initial solution</span>
+
+<span class="n">solution</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">dk</span><span class="p">)</span>
+
+<span class="c1"># Correction loop</span>
+
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">16</span><span class="p">):</span>
+
+    <span class="n">vi</span><span class="p">,</span> <span class="n">jacobian</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">solution</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="n">initial</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">intermediate</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">dv</span> <span class="o">=</span> <span class="n">vf</span> <span class="o">-</span> <span class="n">vi</span>
+    <span class="n">solution</span> <span class="o">+=</span> <span class="n">lr</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">jacobian</span><span class="p">)</span> <span class="o">@</span> <span class="n">dv</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">solution</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">dv</span><span class="o">.</span><span class="n">norm</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+tensor([-7.530e-03, 7.530e-03], dtype=torch.float64)
+tensor(5.496e-02, dtype=torch.float64)
+
+tensor([-9.381e-03, 9.381e-03], dtype=torch.float64)
+tensor(1.358e-02, dtype=torch.float64)
+
+tensor([-9.844e-03, 9.844e-03], dtype=torch.float64)
+tensor(3.396e-03, dtype=torch.float64)
+
+tensor([-9.960e-03, 9.960e-03], dtype=torch.float64)
+tensor(8.491e-04, dtype=torch.float64)
+
+tensor([-9.989e-03, 9.989e-03], dtype=torch.float64)
+tensor(2.124e-04, dtype=torch.float64)
+
+tensor([-9.996e-03, 9.996e-03], dtype=torch.float64)
+tensor(5.366e-05, dtype=torch.float64)
+
+tensor([-9.998e-03, 9.998e-03], dtype=torch.float64)
+tensor(1.407e-05, dtype=torch.float64)
+
+tensor([-9.999e-03, 9.999e-03], dtype=torch.float64)
+tensor(4.173e-06, dtype=torch.float64)
+
+tensor([-9.999e-03, 9.999e-03], dtype=torch.float64)
+tensor(2.449e-06, dtype=torch.float64)
+
+tensor([-9.999e-03, 9.999e-03], dtype=torch.float64)
+tensor(2.293e-06, dtype=torch.float64)
+
+tensor([-9.999e-03, 9.999e-03], dtype=torch.float64)
+tensor(2.282e-06, dtype=torch.float64)
+
+tensor([-9.999e-03, 9.999e-03], dtype=torch.float64)
+tensor(2.281e-06, dtype=torch.float64)
+
+tensor([-9.999e-03, 9.999e-03], dtype=torch.float64)
+tensor(2.281e-06, dtype=torch.float64)
+
+tensor([-9.999e-03, 9.999e-03], dtype=torch.float64)
+tensor(2.281e-06, dtype=torch.float64)
+
+tensor([-9.999e-03, 9.999e-03], dtype=torch.float64)
+tensor(2.281e-06, dtype=torch.float64)
+
+tensor([-9.999e-03, 9.999e-03], dtype=torch.float64)
+tensor(2.281e-06, dtype=torch.float64)
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Test final solution</span>
+
+<span class="nb">print</span><span class="p">((</span><span class="n">vf</span> <span class="o">-</span> <span class="n">fn</span><span class="p">(</span><span class="mf">0.0</span><span class="o">*</span><span class="n">solution</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="n">initial</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">norm</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">((</span><span class="n">vf</span> <span class="o">-</span> <span class="n">fn</span><span class="p">(</span><span class="mf">1.0</span><span class="o">*</span><span class="n">solution</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="n">initial</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">norm</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">dQmin</span><span class="p">(</span><span class="n">dk</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dQmin</span><span class="p">(</span><span class="n">dk</span> <span class="o">+</span> <span class="n">solution</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+tensor(5.496e-02, dtype=torch.float64)
+tensor(2.281e-06, dtype=torch.float64)
+
+tensor(1.914e-03, dtype=torch.float64)
+tensor(3.542e-10, dtype=torch.float64)
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Correction (&#39;model&#39; to &#39;experiment&#39;)</span>
+
+<span class="c1"># Learning rate</span>
+
+<span class="n">lr</span> <span class="o">=</span> <span class="mf">0.75</span>
+
+<span class="c1"># Target values</span>
+
+<span class="n">vf</span> <span class="o">=</span> <span class="n">fn</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="n">initial</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Initial solution</span>
+
+<span class="n">solution</span> <span class="o">=</span> <span class="mf">1.0E-2</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">randn_like</span><span class="p">(</span><span class="n">dk</span><span class="p">)</span>
+
+<span class="c1"># Correction loop</span>
+
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">16</span><span class="p">):</span>
+
+    <span class="n">vi</span><span class="p">,</span> <span class="n">jacobian</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">solution</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="n">initial</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">intermediate</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">dv</span> <span class="o">=</span> <span class="n">vf</span> <span class="o">-</span> <span class="n">vi</span>
+    <span class="n">solution</span> <span class="o">+=</span> <span class="n">lr</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">jacobian</span><span class="p">)</span> <span class="o">@</span> <span class="n">dv</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">solution</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">dv</span><span class="o">.</span><span class="n">norm</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+tensor([-3.260e-02, 1.680e-02], dtype=torch.float64)
+tensor(8.469e-01, dtype=torch.float64)
+
+tensor([-1.322e-02, 9.416e-03], dtype=torch.float64)
+tensor(4.427e-01, dtype=torch.float64)
+
+tensor([-7.323e-03, 5.821e-03], dtype=torch.float64)
+tensor(1.120e-01, dtype=torch.float64)
+
+tensor([-6.241e-03, 5.171e-03], dtype=torch.float64)
+tensor(2.335e-02, dtype=torch.float64)
+
+tensor([-5.986e-03, 5.017e-03], dtype=torch.float64)
+tensor(5.692e-03, dtype=torch.float64)
+
+tensor([-5.923e-03, 4.979e-03], dtype=torch.float64)
+tensor(1.656e-03, dtype=torch.float64)
+
+tensor([-5.908e-03, 4.969e-03], dtype=torch.float64)
+tensor(9.644e-04, dtype=torch.float64)
+
+tensor([-5.904e-03, 4.967e-03], dtype=torch.float64)
+tensor(9.043e-04, dtype=torch.float64)
+
+tensor([-5.903e-03, 4.966e-03], dtype=torch.float64)
+tensor(9.004e-04, dtype=torch.float64)
+
+tensor([-5.902e-03, 4.966e-03], dtype=torch.float64)
+tensor(9.002e-04, dtype=torch.float64)
+
+tensor([-5.902e-03, 4.966e-03], dtype=torch.float64)
+tensor(9.002e-04, dtype=torch.float64)
+
+tensor([-5.902e-03, 4.966e-03], dtype=torch.float64)
+tensor(9.002e-04, dtype=torch.float64)
+
+tensor([-5.902e-03, 4.966e-03], dtype=torch.float64)
+tensor(9.002e-04, dtype=torch.float64)
+
+tensor([-5.902e-03, 4.966e-03], dtype=torch.float64)
+tensor(9.002e-04, dtype=torch.float64)
+
+tensor([-5.902e-03, 4.966e-03], dtype=torch.float64)
+tensor(9.002e-04, dtype=torch.float64)
+
+tensor([-5.902e-03, 4.966e-03], dtype=torch.float64)
+tensor(9.002e-04, dtype=torch.float64)
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Test final solution</span>
+
+<span class="nb">print</span><span class="p">((</span><span class="n">vf</span> <span class="o">-</span> <span class="n">fn</span><span class="p">(</span><span class="mf">0.0</span><span class="o">*</span><span class="n">solution</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="n">initial</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span><span class="o">.</span><span class="n">norm</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">((</span><span class="n">vf</span> <span class="o">-</span> <span class="n">fn</span><span class="p">(</span><span class="mf">1.0</span><span class="o">*</span><span class="n">solution</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="n">initial</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span><span class="o">.</span><span class="n">norm</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">dQmin</span><span class="p">(</span><span class="n">dk</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dQmin</span><span class="p">(</span><span class="n">solution</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dQmin</span><span class="p">(</span><span class="n">dk</span> <span class="o">+</span> <span class="n">solution</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dQmin</span><span class="p">(</span><span class="n">dk</span> <span class="o">-</span> <span class="n">solution</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+tensor(5.496e-02, dtype=torch.float64)
+tensor(9.002e-04, dtype=torch.float64)
+
+tensor(1.914e-03, dtype=torch.float64)
+tensor(1.960e-03, dtype=torch.float64)
+tensor(4.270e-04, dtype=torch.float64)
+tensor(4.138e-04, dtype=torch.float64)
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">factors</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">factors</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">dQmin</span><span class="p">(</span><span class="n">dk</span> <span class="o">+</span> <span class="n">factor</span><span class="o">*</span><span class="n">solution</span><span class="p">)</span> <span class="k">for</span> <span class="n">factor</span> <span class="ow">in</span> <span class="n">factors</span><span class="p">]),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_ndmap_556_0.png" src="../_images/examples_ndmap_556_0.png" />
 </div>
 </div>
 <div class="nbinput nblast docutils container">
