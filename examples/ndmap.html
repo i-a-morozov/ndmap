@@ -13696,6 +13696,34 @@ tensor([1.831e+00, 1.725e+00], dtype=torch.float64)
 
 </pre></div></div>
 </div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot dQmin and its derivative norm on a grid</span>
+
+<span class="n">dkf</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">5.0E-3</span><span class="p">,</span> <span class="o">+</span><span class="mf">5.0E-3</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+<span class="n">dkd</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">5.0E-3</span><span class="p">,</span> <span class="o">+</span><span class="mf">5.0E-3</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+
+<span class="n">dk</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">dkf</span><span class="p">,</span> <span class="n">dkd</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s1">&#39;ij&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">128</span><span class="o">*</span><span class="mi">128</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">dQ</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">dQmin</span><span class="p">)(</span><span class="n">dk</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">dQ</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;plasma&#39;</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;bilinear&#39;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;upper&#39;</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">5.0E-3</span><span class="p">,</span> <span class="o">+</span><span class="mf">5.0E-3</span><span class="p">,</span> <span class="o">-</span><span class="mf">5.0E-3</span><span class="p">,</span> <span class="o">+</span><span class="mf">5.0E-3</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">fraction</span><span class="o">=</span><span class="mf">0.045</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">dQ</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">extend</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">5.0E-3</span><span class="p">,</span> <span class="o">+</span><span class="mf">5.0E-3</span><span class="p">,</span> <span class="o">-</span><span class="mf">5.0E-3</span><span class="p">,</span> <span class="o">+</span><span class="mf">5.0E-3</span><span class="p">),</span> <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_ndmap_508_0.png" src="../_images/examples_ndmap_508_0.png" />
+</div>
+</div>
 </section>
 <section id="Example-39:-Coupling-(minimal-tune-distance-correction)">
 <h1>Example-39: Coupling (minimal tune distance correction)<a class="headerlink" href="#Example-39:-Coupling-(minimal-tune-distance-correction)" title="Link to this heading"></a></h1>
@@ -14094,7 +14122,7 @@ tensor(2.966e-03, dtype=torch.float64)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_ndmap_523_1.png" src="../_images/examples_ndmap_523_1.png" />
+<img alt="../_images/examples_ndmap_524_1.png" src="../_images/examples_ndmap_524_1.png" />
 </div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -14170,7 +14198,7 @@ tensor([nan, nan], dtype=torch.float64)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-tensor([-1.238e-01, -1.151e-01], dtype=torch.float64)
+tensor([-1.113e-01, -1.049e-01], dtype=torch.float64)
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -14212,15 +14240,15 @@ tensor([-1.238e-01, -1.151e-01], dtype=torch.float64)
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 tensor([1.000e-02, 1.000e-02], dtype=torch.float64)
-tensor([-9.920e-03, -1.009e-02], dtype=torch.float64)
-tensor(1.014e-18, dtype=torch.float64)
+tensor([-1.170e-02, -8.184e-03], dtype=torch.float64)
+tensor(8.324e-19, dtype=torch.float64)
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_ndmap_528_1.png" src="../_images/examples_ndmap_528_1.png" />
+<img alt="../_images/examples_ndmap_529_1.png" src="../_images/examples_ndmap_529_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -14243,8 +14271,8 @@ tensor(1.014e-18, dtype=torch.float64)
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 tensor(0., dtype=torch.float64)
-tensor(1.014e-18, dtype=torch.float64)
-tensor(1.014e-18, dtype=torch.float64)
+tensor(8.324e-19, dtype=torch.float64)
+tensor(8.324e-19, dtype=torch.float64)
 
 </pre></div></div>
 </div>
@@ -14272,8 +14300,8 @@ tensor(1.014e-18, dtype=torch.float64)
 <div class="highlight"><pre>
 tensor(3.574e-02, dtype=torch.float64)
 tensor(2.672e-02, dtype=torch.float64)
-tensor(1.778e-02, dtype=torch.float64)
-tensor(1.860e-05, dtype=torch.float64)
+tensor(1.777e-02, dtype=torch.float64)
+tensor(3.969e-04, dtype=torch.float64)
 
 </pre></div></div>
 </div>
@@ -14305,7 +14333,7 @@ tensor(1.860e-05, dtype=torch.float64)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-tensor([-6.831e-02, -6.745e-02], dtype=torch.float64)
+tensor([-5.780e-02, -5.374e-02], dtype=torch.float64)
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -14336,7 +14364,7 @@ tensor([-6.831e-02, -6.745e-02], dtype=torch.float64)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_ndmap_533_0.png" src="../_images/examples_ndmap_533_0.png" />
+<img alt="../_images/examples_ndmap_534_0.png" src="../_images/examples_ndmap_534_0.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -14355,8 +14383,8 @@ tensor([-6.831e-02, -6.745e-02], dtype=torch.float64)
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 tensor(3.574e-02, dtype=torch.float64)
-tensor(1.778e-02, dtype=torch.float64)
-tensor(8.876e-03, dtype=torch.float64)
+tensor(1.777e-02, dtype=torch.float64)
+tensor(8.875e-03, dtype=torch.float64)
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -14649,8 +14677,8 @@ tensor([0., 0., 0., 0.], dtype=torch.float64)
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set skew errors</span>
 
-<span class="n">dkf</span> <span class="o">=</span> <span class="o">+</span><span class="mf">1.0E-2</span>
-<span class="n">dkd</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0E-2</span>
+<span class="n">dkf</span> <span class="o">=</span> <span class="o">+</span><span class="mf">1.5E-3</span>
+<span class="n">dkd</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5E-3</span>
 
 <span class="n">dk</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">dkf</span><span class="p">,</span> <span class="n">dkd</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
 
@@ -14664,7 +14692,7 @@ tensor([0., 0., 0., 0.], dtype=torch.float64)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-tensor(1.914e-03, dtype=torch.float64)
+tensor(1.881e-03, dtype=torch.float64)
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -14797,9 +14825,9 @@ tensor([1.041e-04, 1.041e-04, 1.041e-04, 1.041e-04], dtype=torch.float64)
 tensor([4.081e-06, 4.081e-06, 4.081e-06, 4.081e-06], dtype=torch.float64)
 tensor([7.097e-09, 7.097e-09, 7.097e-09, 7.097e-09], dtype=torch.float64)
 
-tensor([5.047e-02, 4.771e-03, 1.535e-02, 1.492e-02], dtype=torch.float64)
-tensor([5.034e-02, 4.611e-03, 1.539e-02, 1.511e-02], dtype=torch.float64)
-tensor([5.011e-02, 4.638e-03, 1.531e-02, 1.517e-02], dtype=torch.float64)
+tensor([3.210e-02, 6.907e-03, 2.517e-02, 8.844e-03], dtype=torch.float64)
+tensor([3.200e-02, 7.011e-03, 2.507e-02, 8.946e-03], dtype=torch.float64)
+tensor([3.200e-02, 7.007e-03, 2.508e-02, 8.942e-03], dtype=torch.float64)
 
 </pre></div></div>
 </div>
@@ -14808,6 +14836,7 @@ tensor([5.011e-02, 4.638e-03, 1.531e-02, 1.517e-02], dtype=torch.float64)
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Correction (&#39;experiment&#39; to &#39;model&#39;)</span>
+<span class="c1"># Target system is &#39;model&#39;</span>
 
 <span class="c1"># Learning rate</span>
 
@@ -14830,6 +14859,8 @@ tensor([5.011e-02, 4.638e-03, 1.531e-02, 1.517e-02], dtype=torch.float64)
     <span class="n">solution</span> <span class="o">+=</span> <span class="n">lr</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">jacobian</span><span class="p">)</span> <span class="o">@</span> <span class="n">dv</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="n">solution</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">vf</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">vi</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">dv</span><span class="o">.</span><span class="n">norm</span><span class="p">())</span>
     <span class="nb">print</span><span class="p">()</span>
 </pre></div>
@@ -14840,53 +14871,85 @@ tensor([5.011e-02, 4.638e-03, 1.531e-02, 1.517e-02], dtype=torch.float64)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-tensor([-7.530e-03, 7.530e-03], dtype=torch.float64)
-tensor(5.496e-02, dtype=torch.float64)
+tensor([-1.094e-03, 3.652e-04], dtype=torch.float64)
+tensor([4.081e-06, 4.081e-06, 4.081e-06, 4.081e-06], dtype=torch.float64)
+tensor([3.200e-02, 7.011e-03, 2.507e-02, 8.946e-03], dtype=torch.float64)
+tensor(4.220e-02, dtype=torch.float64)
 
-tensor([-9.381e-03, 9.381e-03], dtype=torch.float64)
-tensor(1.358e-02, dtype=torch.float64)
+tensor([-1.396e-03, 4.657e-04], dtype=torch.float64)
+tensor([4.081e-06, 4.081e-06, 4.081e-06, 4.081e-06], dtype=torch.float64)
+tensor([8.467e-03, 1.954e-03, 6.640e-03, 2.491e-03], dtype=torch.float64)
+tensor(1.121e-02, dtype=torch.float64)
 
-tensor([-9.844e-03, 9.844e-03], dtype=torch.float64)
-tensor(3.396e-03, dtype=torch.float64)
+tensor([-1.474e-03, 4.915e-04], dtype=torch.float64)
+tensor([4.081e-06, 4.081e-06, 4.081e-06, 4.081e-06], dtype=torch.float64)
+tensor([2.153e-03, 5.078e-04, 1.689e-03, 6.460e-04], dtype=torch.float64)
+tensor(2.850e-03, dtype=torch.float64)
 
-tensor([-9.960e-03, 9.960e-03], dtype=torch.float64)
-tensor(8.491e-04, dtype=torch.float64)
+tensor([-1.493e-03, 4.980e-04], dtype=torch.float64)
+tensor([4.081e-06, 4.081e-06, 4.081e-06, 4.081e-06], dtype=torch.float64)
+tensor([5.430e-04, 1.326e-04, 4.266e-04, 1.674e-04], dtype=torch.float64)
+tensor(7.156e-04, dtype=torch.float64)
 
-tensor([-9.989e-03, 9.989e-03], dtype=torch.float64)
-tensor(2.124e-04, dtype=torch.float64)
+tensor([-1.498e-03, 4.996e-04], dtype=torch.float64)
+tensor([4.081e-06, 4.081e-06, 4.081e-06, 4.081e-06], dtype=torch.float64)
+tensor([1.385e-04, 3.790e-05, 1.093e-04, 4.665e-05], dtype=torch.float64)
+tensor(1.791e-04, dtype=torch.float64)
 
-tensor([-9.996e-03, 9.996e-03], dtype=torch.float64)
-tensor(5.366e-05, dtype=torch.float64)
+tensor([-1.499e-03, 5.000e-04], dtype=torch.float64)
+tensor([4.081e-06, 4.081e-06, 4.081e-06, 4.081e-06], dtype=torch.float64)
+tensor([3.719e-05, 1.418e-05, 2.991e-05, 1.639e-05], dtype=torch.float64)
+tensor(4.491e-05, dtype=torch.float64)
 
-tensor([-9.998e-03, 9.998e-03], dtype=torch.float64)
-tensor(1.407e-05, dtype=torch.float64)
+tensor([-1.500e-03, 5.001e-04], dtype=torch.float64)
+tensor([4.081e-06, 4.081e-06, 4.081e-06, 4.081e-06], dtype=torch.float64)
+tensor([1.188e-05, 8.259e-06, 1.005e-05, 8.816e-06], dtype=torch.float64)
+tensor(1.167e-05, dtype=torch.float64)
 
-tensor([-9.999e-03, 9.999e-03], dtype=torch.float64)
-tensor(4.173e-06, dtype=torch.float64)
+tensor([-1.500e-03, 5.002e-04], dtype=torch.float64)
+tensor([4.081e-06, 4.081e-06, 4.081e-06, 4.081e-06], dtype=torch.float64)
+tensor([5.555e-06, 6.783e-06, 5.081e-06, 6.915e-06], dtype=torch.float64)
+tensor(4.302e-06, dtype=torch.float64)
 
-tensor([-9.999e-03, 9.999e-03], dtype=torch.float64)
-tensor(2.449e-06, dtype=torch.float64)
+tensor([-1.500e-03, 5.002e-04], dtype=torch.float64)
+tensor([4.081e-06, 4.081e-06, 4.081e-06, 4.081e-06], dtype=torch.float64)
+tensor([3.961e-06, 6.415e-06, 3.839e-06, 6.430e-06], dtype=torch.float64)
+tensor(3.323e-06, dtype=torch.float64)
 
-tensor([-9.999e-03, 9.999e-03], dtype=torch.float64)
-tensor(2.293e-06, dtype=torch.float64)
+tensor([-1.500e-03, 5.002e-04], dtype=torch.float64)
+tensor([4.081e-06, 4.081e-06, 4.081e-06, 4.081e-06], dtype=torch.float64)
+tensor([3.551e-06, 6.324e-06, 3.529e-06, 6.305e-06], dtype=torch.float64)
+tensor(3.249e-06, dtype=torch.float64)
 
-tensor([-9.999e-03, 9.999e-03], dtype=torch.float64)
-tensor(2.282e-06, dtype=torch.float64)
+tensor([-1.500e-03, 5.002e-04], dtype=torch.float64)
+tensor([4.081e-06, 4.081e-06, 4.081e-06, 4.081e-06], dtype=torch.float64)
+tensor([3.445e-06, 6.301e-06, 3.452e-06, 6.272e-06], dtype=torch.float64)
+tensor(3.245e-06, dtype=torch.float64)
 
-tensor([-9.999e-03, 9.999e-03], dtype=torch.float64)
-tensor(2.281e-06, dtype=torch.float64)
+tensor([-1.500e-03, 5.002e-04], dtype=torch.float64)
+tensor([4.081e-06, 4.081e-06, 4.081e-06, 4.081e-06], dtype=torch.float64)
+tensor([3.418e-06, 6.295e-06, 3.432e-06, 6.263e-06], dtype=torch.float64)
+tensor(3.244e-06, dtype=torch.float64)
 
-tensor([-9.999e-03, 9.999e-03], dtype=torch.float64)
-tensor(2.281e-06, dtype=torch.float64)
+tensor([-1.500e-03, 5.002e-04], dtype=torch.float64)
+tensor([4.081e-06, 4.081e-06, 4.081e-06, 4.081e-06], dtype=torch.float64)
+tensor([3.411e-06, 6.293e-06, 3.427e-06, 6.261e-06], dtype=torch.float64)
+tensor(3.244e-06, dtype=torch.float64)
 
-tensor([-9.999e-03, 9.999e-03], dtype=torch.float64)
-tensor(2.281e-06, dtype=torch.float64)
+tensor([-1.500e-03, 5.002e-04], dtype=torch.float64)
+tensor([4.081e-06, 4.081e-06, 4.081e-06, 4.081e-06], dtype=torch.float64)
+tensor([3.409e-06, 6.293e-06, 3.426e-06, 6.261e-06], dtype=torch.float64)
+tensor(3.244e-06, dtype=torch.float64)
 
-tensor([-9.999e-03, 9.999e-03], dtype=torch.float64)
-tensor(2.281e-06, dtype=torch.float64)
+tensor([-1.500e-03, 5.002e-04], dtype=torch.float64)
+tensor([4.081e-06, 4.081e-06, 4.081e-06, 4.081e-06], dtype=torch.float64)
+tensor([3.408e-06, 6.293e-06, 3.426e-06, 6.261e-06], dtype=torch.float64)
+tensor(3.244e-06, dtype=torch.float64)
 
-tensor([-9.999e-03, 9.999e-03], dtype=torch.float64)
-tensor(2.281e-06, dtype=torch.float64)
+tensor([-1.500e-03, 5.002e-04], dtype=torch.float64)
+tensor([4.081e-06, 4.081e-06, 4.081e-06, 4.081e-06], dtype=torch.float64)
+tensor([3.408e-06, 6.293e-06, 3.426e-06, 6.260e-06], dtype=torch.float64)
+tensor(3.244e-06, dtype=torch.float64)
 
 </pre></div></div>
 </div>
@@ -14911,11 +14974,11 @@ tensor(2.281e-06, dtype=torch.float64)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-tensor(5.496e-02, dtype=torch.float64)
-tensor(2.281e-06, dtype=torch.float64)
+tensor(4.220e-02, dtype=torch.float64)
+tensor(3.244e-06, dtype=torch.float64)
 
-tensor(1.914e-03, dtype=torch.float64)
-tensor(3.542e-10, dtype=torch.float64)
+tensor(1.881e-03, dtype=torch.float64)
+tensor(5.079e-07, dtype=torch.float64)
 
 </pre></div></div>
 </div>
@@ -14924,6 +14987,7 @@ tensor(3.542e-10, dtype=torch.float64)
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Correction (&#39;model&#39; to &#39;experiment&#39;)</span>
+<span class="c1"># Target system is &#39;experiment&#39;</span>
 
 <span class="c1"># Learning rate</span>
 
@@ -14933,11 +14997,8 @@ tensor(3.542e-10, dtype=torch.float64)
 
 <span class="n">vf</span> <span class="o">=</span> <span class="n">fn</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="n">initial</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
 
-<span class="c1"># Initial solution</span>
 
-<span class="n">solution</span> <span class="o">=</span> <span class="mf">1.0E-2</span><span class="o">*</span><span class="n">torch</span><span class="o">.</span><span class="n">randn_like</span><span class="p">(</span><span class="n">dk</span><span class="p">)</span>
-
-<span class="c1"># Correction loop</span>
+<span class="n">solution</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">dk</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">16</span><span class="p">):</span>
 
@@ -14946,6 +15007,8 @@ tensor(3.542e-10, dtype=torch.float64)
     <span class="n">solution</span> <span class="o">+=</span> <span class="n">lr</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">jacobian</span><span class="p">)</span> <span class="o">@</span> <span class="n">dv</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="n">solution</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">vf</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">vi</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">dv</span><span class="o">.</span><span class="n">norm</span><span class="p">())</span>
     <span class="nb">print</span><span class="p">()</span>
 </pre></div>
@@ -14956,58 +15019,90 @@ tensor(3.542e-10, dtype=torch.float64)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-tensor([-3.260e-02, 1.680e-02], dtype=torch.float64)
-tensor(8.469e-01, dtype=torch.float64)
+tensor([-1.019e-03, 3.612e-04], dtype=torch.float64)
+tensor([3.200e-02, 7.011e-03, 2.507e-02, 8.946e-03], dtype=torch.float64)
+tensor([4.081e-06, 4.081e-06, 4.081e-06, 4.081e-06], dtype=torch.float64)
+tensor(4.220e-02, dtype=torch.float64)
 
-tensor([-1.322e-02, 9.416e-03], dtype=torch.float64)
-tensor(4.427e-01, dtype=torch.float64)
+tensor([-1.443e-03, 4.881e-04], dtype=torch.float64)
+tensor([3.200e-02, 7.011e-03, 2.507e-02, 8.946e-03], dtype=torch.float64)
+tensor([2.008e-02, 4.856e-03, 1.556e-02, 6.267e-03], dtype=torch.float64)
+tensor(1.563e-02, dtype=torch.float64)
 
-tensor([-7.323e-03, 5.821e-03], dtype=torch.float64)
-tensor(1.120e-01, dtype=torch.float64)
+tensor([-1.553e-03, 5.221e-04], dtype=torch.float64)
+tensor([3.200e-02, 7.011e-03, 2.507e-02, 8.946e-03], dtype=torch.float64)
+tensor([2.867e-02, 7.133e-03, 2.241e-02, 9.127e-03], dtype=torch.float64)
+tensor(4.267e-03, dtype=torch.float64)
 
-tensor([-6.241e-03, 5.171e-03], dtype=torch.float64)
-tensor(2.335e-02, dtype=torch.float64)
+tensor([-1.582e-03, 5.310e-04], dtype=torch.float64)
+tensor([3.200e-02, 7.011e-03, 2.507e-02, 8.946e-03], dtype=torch.float64)
+tensor([3.087e-02, 7.729e-03, 2.416e-02, 9.878e-03], dtype=torch.float64)
+tensor(1.869e-03, dtype=torch.float64)
 
-tensor([-5.986e-03, 5.017e-03], dtype=torch.float64)
-tensor(5.692e-03, dtype=torch.float64)
+tensor([-1.589e-03, 5.332e-04], dtype=torch.float64)
+tensor([3.200e-02, 7.011e-03, 2.507e-02, 8.946e-03], dtype=torch.float64)
+tensor([3.142e-02, 7.878e-03, 2.459e-02, 1.007e-02], dtype=torch.float64)
+tensor(1.603e-03, dtype=torch.float64)
 
-tensor([-5.923e-03, 4.979e-03], dtype=torch.float64)
-tensor(1.656e-03, dtype=torch.float64)
+tensor([-1.590e-03, 5.338e-04], dtype=torch.float64)
+tensor([3.200e-02, 7.011e-03, 2.507e-02, 8.946e-03], dtype=torch.float64)
+tensor([3.156e-02, 7.916e-03, 2.470e-02, 1.011e-02], dtype=torch.float64)
+tensor(1.585e-03, dtype=torch.float64)
 
-tensor([-5.908e-03, 4.969e-03], dtype=torch.float64)
-tensor(9.644e-04, dtype=torch.float64)
+tensor([-1.591e-03, 5.340e-04], dtype=torch.float64)
+tensor([3.200e-02, 7.011e-03, 2.507e-02, 8.946e-03], dtype=torch.float64)
+tensor([3.159e-02, 7.925e-03, 2.473e-02, 1.013e-02], dtype=torch.float64)
+tensor(1.584e-03, dtype=torch.float64)
 
-tensor([-5.904e-03, 4.967e-03], dtype=torch.float64)
-tensor(9.043e-04, dtype=torch.float64)
+tensor([-1.591e-03, 5.340e-04], dtype=torch.float64)
+tensor([3.200e-02, 7.011e-03, 2.507e-02, 8.946e-03], dtype=torch.float64)
+tensor([3.160e-02, 7.927e-03, 2.474e-02, 1.013e-02], dtype=torch.float64)
+tensor(1.584e-03, dtype=torch.float64)
 
-tensor([-5.903e-03, 4.966e-03], dtype=torch.float64)
-tensor(9.004e-04, dtype=torch.float64)
+tensor([-1.591e-03, 5.340e-04], dtype=torch.float64)
+tensor([3.200e-02, 7.011e-03, 2.507e-02, 8.946e-03], dtype=torch.float64)
+tensor([3.160e-02, 7.928e-03, 2.474e-02, 1.013e-02], dtype=torch.float64)
+tensor(1.584e-03, dtype=torch.float64)
 
-tensor([-5.902e-03, 4.966e-03], dtype=torch.float64)
-tensor(9.002e-04, dtype=torch.float64)
+tensor([-1.591e-03, 5.340e-04], dtype=torch.float64)
+tensor([3.200e-02, 7.011e-03, 2.507e-02, 8.946e-03], dtype=torch.float64)
+tensor([3.160e-02, 7.928e-03, 2.474e-02, 1.013e-02], dtype=torch.float64)
+tensor(1.584e-03, dtype=torch.float64)
 
-tensor([-5.902e-03, 4.966e-03], dtype=torch.float64)
-tensor(9.002e-04, dtype=torch.float64)
+tensor([-1.591e-03, 5.340e-04], dtype=torch.float64)
+tensor([3.200e-02, 7.011e-03, 2.507e-02, 8.946e-03], dtype=torch.float64)
+tensor([3.160e-02, 7.928e-03, 2.474e-02, 1.013e-02], dtype=torch.float64)
+tensor(1.584e-03, dtype=torch.float64)
 
-tensor([-5.902e-03, 4.966e-03], dtype=torch.float64)
-tensor(9.002e-04, dtype=torch.float64)
+tensor([-1.591e-03, 5.340e-04], dtype=torch.float64)
+tensor([3.200e-02, 7.011e-03, 2.507e-02, 8.946e-03], dtype=torch.float64)
+tensor([3.160e-02, 7.928e-03, 2.474e-02, 1.013e-02], dtype=torch.float64)
+tensor(1.584e-03, dtype=torch.float64)
 
-tensor([-5.902e-03, 4.966e-03], dtype=torch.float64)
-tensor(9.002e-04, dtype=torch.float64)
+tensor([-1.591e-03, 5.340e-04], dtype=torch.float64)
+tensor([3.200e-02, 7.011e-03, 2.507e-02, 8.946e-03], dtype=torch.float64)
+tensor([3.160e-02, 7.928e-03, 2.474e-02, 1.013e-02], dtype=torch.float64)
+tensor(1.584e-03, dtype=torch.float64)
 
-tensor([-5.902e-03, 4.966e-03], dtype=torch.float64)
-tensor(9.002e-04, dtype=torch.float64)
+tensor([-1.591e-03, 5.340e-04], dtype=torch.float64)
+tensor([3.200e-02, 7.011e-03, 2.507e-02, 8.946e-03], dtype=torch.float64)
+tensor([3.160e-02, 7.928e-03, 2.474e-02, 1.013e-02], dtype=torch.float64)
+tensor(1.584e-03, dtype=torch.float64)
 
-tensor([-5.902e-03, 4.966e-03], dtype=torch.float64)
-tensor(9.002e-04, dtype=torch.float64)
+tensor([-1.591e-03, 5.340e-04], dtype=torch.float64)
+tensor([3.200e-02, 7.011e-03, 2.507e-02, 8.946e-03], dtype=torch.float64)
+tensor([3.160e-02, 7.928e-03, 2.474e-02, 1.013e-02], dtype=torch.float64)
+tensor(1.584e-03, dtype=torch.float64)
 
-tensor([-5.902e-03, 4.966e-03], dtype=torch.float64)
-tensor(9.002e-04, dtype=torch.float64)
+tensor([-1.591e-03, 5.340e-04], dtype=torch.float64)
+tensor([3.200e-02, 7.011e-03, 2.507e-02, 8.946e-03], dtype=torch.float64)
+tensor([3.160e-02, 7.928e-03, 2.474e-02, 1.013e-02], dtype=torch.float64)
+tensor(1.584e-03, dtype=torch.float64)
 
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Test final solution</span>
@@ -15029,21 +15124,23 @@ tensor(9.002e-04, dtype=torch.float64)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-tensor(5.496e-02, dtype=torch.float64)
-tensor(9.002e-04, dtype=torch.float64)
+tensor(4.220e-02, dtype=torch.float64)
+tensor(1.584e-03, dtype=torch.float64)
 
-tensor(1.914e-03, dtype=torch.float64)
-tensor(1.960e-03, dtype=torch.float64)
-tensor(4.270e-04, dtype=torch.float64)
-tensor(4.138e-04, dtype=torch.float64)
+tensor(1.881e-03, dtype=torch.float64)
+tensor(1.989e-03, dtype=torch.float64)
+tensor(1.078e-04, dtype=torch.float64)
+tensor(3.870e-03, dtype=torch.float64)
 
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">factors</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot</span>
+
+<span class="n">factors</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">factors</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">dQmin</span><span class="p">(</span><span class="n">dk</span> <span class="o">+</span> <span class="n">factor</span><span class="o">*</span><span class="n">solution</span><span class="p">)</span> <span class="k">for</span> <span class="n">factor</span> <span class="ow">in</span> <span class="n">factors</span><span class="p">]),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
@@ -15055,7 +15152,23 @@ tensor(4.138e-04, dtype=torch.float64)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/examples_ndmap_556_0.png" src="../_images/examples_ndmap_556_0.png" />
+<img alt="../_images/examples_ndmap_557_0.png" src="../_images/examples_ndmap_557_0.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
 </div>
 </div>
 <div class="nbinput nblast docutils container">
