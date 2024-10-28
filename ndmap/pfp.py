@@ -320,7 +320,7 @@ def clean_point(power:int,
     torch.Size([2, 2])
 
     """
-    point = point[torch.all(point.isnan().logical_not(), dim=1)]
+    point = point[point.prod(-1).isnan().logical_not()]
     point = [x for x in point if check_point(power, function, x, *pars, epsilon=epsilon)]
     point = torch.stack(point)
 
